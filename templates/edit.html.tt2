@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<head>
+	<title>[% title %] - 编辑模式</title>
+
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<link type="image/png" rel="icon" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version%]" />
+	<link rel="stylesheet" type="text/css" href="/css/config.css" />
+
+	<link rel="stylesheet" type="text/css" href="/css/vendor/fontawesome-all.min.css" />
+	<link rel="stylesheet" type="text/css" href="/css/vendor/jquery.toast.min.css" />
+	[% csshead %]
+
+	<script src="/js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
+	<script src="/js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
+
+	<script src="/js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="/js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="/js/edit.js?[% version%]" type="text/JAVASCRIPT"></script>
+
+</head>
+
+<body onload="set_style_from_storage(); updateOneShotArg();">
+
+	<div class='ido' style='text-align:center'>
+
+		[% IF artist %]
+		<h2 class='ih' style='text-align:center'>修改 [% arctitle %] 通过 [% artist %] </h2>
+		[% ELSE %]
+		<h2 class='ih' style='text-align:center'>编辑 [% arctitle %]</h2>
+		[% END %]
+
+		<form name='editArchiveForm' id='editArchiveForm' enctype='multipart/form-data' method='post'>
+			<table style='margin:auto; font-size:8pt;'>
+				<tbody>
+					<tr>
+						<td style='text-align:left; width:100px'>当前文件名:</td>
+						<td>
+							<input class='stdinput' type='text' style='width:100%' readonly='' size='20' value="[% file %]" name='filename'>
+						</td>
+					</tr>
+
+					<tr>
+						<td style='text-align:left; width:100px'>ID:</td>
+						<td>
+							<input id='archiveID' class='stdinput' type='text' style='width:100%' readonly='' maxlength='255' size='20'
+							 value="[% id %]" name='id'>
+						</td>
+					</tr>
+
+					<tr>
+						<td style='text-align:left; width:100px'>标题:</td>
+						<td>
+							<input id='title' class='stdinput' type='text' style='width:100%' maxlength='255' size='20' value="[% arctitle %]"
+							 name='title'>
+						</td>
+					</tr>
+
+					<tr>
+						<td style='text-align:left; width:100px; vertical-align:top'>标签 <span style="font-size:6pt">(用连字符
+								分隔, 例如 : tag1, tag2)</span> :
+						</td>
+						<td>
+							<textarea id='tagText' class='stdinput' name='tags' maxlength='5000' style='width:100%; height:125px' size='20'>[% tags %]</textarea>
+							<i class='fa fa-5x fa-cog fa-spin' style=' color:black; position:absolute; top:55%; left:52%; display:none' id='tag-spinner'></i>
+						</td>
+					</tr>
+
+					<tr>
+						<td style='text-align:left; width:100px; vertical-align:top'>从插件导入标签 : <br />
+							<input type='button' name='tag_import' value='帮助' onclick="toastHelpEdit();" class='stdbtn' style='min-width:90px;'></input>
+						</td>
+						<td id="plugin_table">
+
+							<select id="plugin" onchange="updateOneShotArg()">
+								[% FOREACH plugin IN plugins %]
+								<option value="[% plugin.namespace %]" arg="[% plugin.oneshot_arg %]">[% plugin.name %]</option>
+								[% END %]
+							</select>
+
+							<input class='stdbtn' type='button' style="min-width:90px;" onclick="saveMetadata().then(()=>getTags())" value='Go!' />
+							<br />
+
+							<span id="arg_label"></span> <br />
+							<input id='arg' class='stdinput' type='text' style='width:100%' size='20' value="">
+
+							<br />
+
+							<i class='fa fa-2x fa-exclamation-circle'></i> 使用插件将保存对存档元数据所做的
+							任何修改！
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan='2' style='text-align:center'> <br />
+							<input class='stdbtn' type='button' onclick="saveMetadata()" value='保存元数据' />
+							<input class='stdbtn' type='button' onclick=" if (confirm('您确定要删除此档案吗?')) deleteArchive('[% id %]');"
+							 value='删除档案' />
+							<input id='goback' class='stdbtn' type='button' onclick="window.location.replace('./');" value='返回资料库' />
+							<br /></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+
+	</div>
+
+	[% INCLUDE footer %]
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 档案文件夹 </h2>
+    </td>
+    <td>
+        <input class="stdinput" style="width:100%" maxlength="255" size="20" value="[% dirname %]" name="dirname" type="text"
+            [% IF forceddirname %] disabled title="此选项由环境变量强制执行。"[% END %]>
+        <br> 该处为存档存储的目录。 如果不存在，会被自动创建。
+        <br>请确保运行 LANraragi 的用户有权访问该目录。 <br>
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 最大 <br>临时存档占用 </h2>
+    </td>
+    <td>
+        <input class="stdinput" style="width:100%" maxlength="255" size="20" value="[% tempmaxsize %]" name="tempmaxsize" type="text">
+        <br>以MB为单位。 临时文件夹包含最近打开的档案，以便于后续读取。 <br>
+        当它超过此指定大小时，将自动清空。
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <input class='stdbtn' type='button' onclick="cleanTempFldr();" value='清理临时文件夹' />
+    </td>
+    <td>
+        当前大小:
+        <h2 style="display:inline"><span id="tempsize"> [%tempsize%] </span> MBs </h2>
+        <br>单击此按钮手动清空临时文件夹。
+    </td>
+</tr>
+
+<tr></tr>
+
+<tr>
+    <td class="option-td">
+        <input class='stdbtn' type='button' onclick="invalidateCache();" value='重置搜索缓存' />
+    </td>
+    <td>
+        存档索引中最后一次执行的搜索将被缓存以加快加载速度。 <br>
+        如果上述缓存出了问题，您可以通过单击此按钮将其重置。 <br> 
+        <br>
+    </td>
+</tr>
+
+<tr></tr>
+
+<tr>
+    <td class="option-td">
+        <input class='stdbtn' type='button' onclick="clearAllNew();" value='清理“NEW”标签' />
+    </td>
+    <td>
+        在您打开新归档文件之前，它们会在索引中标记为“NEW”。<br>
+        如果要清除这些标志，请单击此按钮。 <br>
+        <br>
+    </td>
+</tr>

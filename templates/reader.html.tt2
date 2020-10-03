@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<head>
+	<title>[% arcname %]</title>
+
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link type="image/png" rel="icon" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="./css/lrr.css" />
+	<link rel="stylesheet" type="text/css" href="/css/config.css" />
+
+	<link rel="stylesheet" type="text/css" href="./css/vendor/fontawesome-all.min.css" />
+	<link rel="stylesheet" type="text/css" href="./css/vendor/jquery.toast.min.css" />
+	[% csshead %]
+
+	<script src="./js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
+	<script src="./js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
+
+	<script src="./js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="./js/reader.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="./js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
+
+</head>
+
+<body onload="set_style_from_storage(); initSettingsOverlay();">
+
+	<div id="i1" class="sni">
+		<h1>[% arcname %]</h1>
+
+		<div id="i2">
+			[% INCLUDE pagesel %] [% INCLUDE arrows %]
+		</div>
+
+		<div id="i3">
+			<div class="loading-overlay">
+				<p class="loading-spinner">
+					<i id="spinner" class="fa fa-cog fa-spin"></i>
+				</p>
+			</div>
+
+			<a id="display">
+				<img id="img" class="reader-image" onload="updateMetadata()" onerror="this.src='./img/noThumb.png'" src="[% imgpath %]"
+				 usemap="#Map" />
+				<map name="Map" id="Map">
+					<area id="leftmap" style="cursor:pointer;" onclick="advancePage(-1)" shape="rect" />
+					<area id="rightmap" style="cursor:pointer;" onclick="advancePage(1)" shape="rect" />
+				</map>
+			</a>
+
+		</div>
+
+		<div id="i4">
+			[% INCLUDE pagesel %] [% INCLUDE arrows %]
+			<br />
+		</div>
+
+		<div id="i5">
+			<div class="sb">
+				<a href="./" title="看完了吗？ 返回档案索引">
+					<i class="fa fa-angle-down fa-3x"></i>
+				</a>
+			</div>
+		</div>
+
+		[% IF userlogged %]
+		<div id="i6" class="if">
+			<i class="fa fa-caret-right fa-lg"></i>
+			<a style="cursor:pointer" onclick="confirmThumbnailReset('[% id %]')">重新生成存档缩略图 </a>
+			<i class="fa fa-caret-right fa-lg"></i>
+			<a href="./reader?id=[% id %]&force_reload=1">清理存档缓存</a>
+			<i class="fa fa-caret-right fa-lg"></i>
+			<a target="_blank" href="./edit?id=[% id %]">编辑此存档的元数据</a>
+		</div>
+		[% END %]
+
+		<div id="i7" class="if">
+			<i class="fa fa-caret-right fa-lg"></i>
+			<a id="imgLink" style="cursor:pointer;">查看原图</a>
+			<i class="fa fa-caret-right fa-lg"></i>
+			<a href="./random">切换到另一个随机档案</a>
+			<a href="./">返回资料库</a>
+		</div>
+
+	</div>
+
+	<script>
+
+		pages = [% imgpaths %];
+		id = "[%id%]";
+
+		filename = "[% filename %]";
+		if ((filename.endsWith(".rar") || filename.endsWith(".cbr")) && !localStorage.rarWarningShown) {
+			localStorage.rarWarningShown = true;
+			$.toast({
+					showHideTransition: 'slide',
+					position: 'top-left', 
+					loader: false, 
+				    heading: "该文件似乎是RAR格式!",
+				    text: 'RAR存档在LANraragi中可能无法正常运行，具体取决于其压缩方式。 如果阅读时遇到错误，请考虑将存档转换为zip。',
+				    hideAfter: false,
+				    icon: 'warning'
+				});
+		}
+			
+		if (filename.endsWith(".epub") && !localStorage.epubWarningShown) {
+			localStorage.epubWarningShown = true;
+			$.toast({
+					showHideTransition: 'slide',
+					position: 'top-left', 
+					loader: false, 
+				    heading: "LANraragi中对EPUB的支持最基础",
+				    text: 'EPUB书籍只会在网络阅读器中显示图像。 如果需要文本支持，请考虑将LANraragi与 <a href= "https://sugoi.gitbook.io/lanraragi/advanced-usage/external-readers#generic-opds-readers">OPDS 配合.</a> ',
+				    hideAfter: false,
+				    icon: 'warning'
+				});
+		}
+
+		//Go straight to page number in localStorage if it exists
+		if (localStorage.nobookmark === 'true')
+			currentPage = 0;
+		else	
+			currentPage = parseInt(localStorage[id + "-reader"] || 0);
+		
+		pageNumber = pages.pages.length;
+
+		//canvas variables
+		previousPage = -1;
+		imagesLoaded = 0;
+		img1 = "";
+		img2 = "";
+		showingSinglePage = false;
+
+		//if we made it to the last page in a previous read, reset the page number
+		if (currentPage === pageNumber-1)
+			currentPage = 0;
+			
+		goToPage(currentPage);
+
+		// Remove new flag with an API call
+		clearNew(id);
+
+		//image map update on window resize
+		$(window).resize(function () {
+			updateImageMap();
+		});
+
+	</script>
+
+	<div id="overlay-shade" onclick="closeOverlay();"></div>
+	<div id="archivePagesOverlay" class="id1 base-overlay page-overlay" style="display:none" loaded="false">
+		<h2 class="ih" style="text-align:center">档案总览</h2>
+	</div>
+	<div id="settingsOverlay" class="id1 base-overlay small-overlay" style="display:none">
+		[% INCLUDE config %]
+	</div>
+
+	<canvas id="dpcanvas" style="display:none" width="100" height="100"></canvas>
+
+	[% INCLUDE footer %]
+</body>
+
+</html>
+
+
+
+[% #compute those blocks before getting to the main html %]
+
+<!-- -->
+[% BLOCK config %]
+
+<h2 class="ih" style="text-align:center">阅读器选项</h2>
+<div style="margin:auto; font-size:8pt;">
+
+	<div class="config-panel">
+		<h1 class="ih" style="display:inline"> 日式阅读顺序 </h1>
+		<input id="readorder" name="readorder" class="fa" type="checkbox" style="float:left">
+		<br /> 如果启用，页面将从右到左显示。
+	</div>
+
+	<div class="config-panel">
+		<h1 class="ih" style="display:inline"> 双页阅读 </h1>
+		<input id="doublepage" name="readorder" class="fa" type="checkbox" style="float:left">
+		<br /> 如果启用，将一次显示两页。（这不包括宽画幅）
+	</div>
+
+	<div class="config-panel">
+		<h1 class="ih" style="display:inline"> 缩放查看</h1>
+		<input id="scaletoview" name="readorder" class="fa" type="checkbox" style="float:left">
+		<br /> 如果启用，页面将按屏幕尺寸缩放。
+	</div>
+
+	<div class="config-panel">
+		<h1 class="ih" style="display:inline"> 隐藏顶层导航</h1>
+		<input id="hidetop" name="hidetop" class="fa" type="checkbox" style="float:left">
+		<br /> 如果启用，则顶部图像之前的每个元素都将被隐藏。
+	</div>
+
+	<div class="config-panel">
+			<h1 class="ih" style="display:inline"> 禁用自动书签</h1>
+			<input id="nobookmark" name="nobookmark" class="fa" type="checkbox" style="float:left">
+			<br /> 每次打开阅读器时，勾选此项将从第一页开始阅读。
+	</div>
+</div>
+
+<br />
+<br />
+<input value="保存及关闭" onclick="saveSettings()" class="stdbtn" id="goback" type="button">
+<br /> [% END %]
+<!-- -->
+[% BLOCK arrows %]
+<div class="sn">
+
+	<a onclick="goFirst()" style="cursor:pointer;">
+		<i class="fa fa-angle-double-left" style="font-size: 1.5em;"></i>
+	</a>
+
+	<a id="left" onclick="advancePage(-1)" style="cursor:pointer;">
+		<i class="fa fa-angle-left" style="font-size: 1.5em;"></i>
+	</a>
+
+	<div class="pagecount">
+		<span class="current-page"></span> /
+		<span class="max-page"></span>
+	</div>
+
+	<a id="right" onclick="advancePage(1)" style="cursor:pointer;">
+		<i class="fa fa-angle-right" style="font-size: 1.5em;"></i>
+	</a>
+
+	<a onclick="goLast()" style="cursor:pointer;">
+		<i class="fa fa-angle-double-right" style="font-size: 1.5em;"></i>
+	</a>
+</div>
+[% END %]
+<!-- -->
+[% BLOCK pagesel %]
+<div style="position: absolute; right: 20px; z-index:20" class="page_dropdown">
+
+	<a href="#" onclick="openOverlay();" title="Archive Overview">
+		<i class="fa fa-th fa-2x" style="padding-right: 10px;"></i>
+	</a>
+
+	<a href="#" onclick="openSettings();" title="Reader Settings">
+		<i class="fa fa-cog fa-2x" style="padding-right: 10px;"></i>
+	</a>
+
+	<a href="#" onclick="toastHelpReader()" title="Help">
+		<i class="fa fa-info-circle fa-2x" style="padding-right: 10px;"></i>
+	</a>
+
+</div>
+[% END %]
+<!-- -->
+[% BLOCK fileinfo %]
+<div class="file-info">
+
+</div>
+[% END %]

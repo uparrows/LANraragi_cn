@@ -1,0 +1,28 @@
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 运行状态 </h2>
+    </td>
+    <td>
+        <span id="shinobu-ok">当前后台监视进程工作 <h2 class="ih"
+                style="display:inline; color:rgb(26, 165, 26)">👍
+                正常!</h2> </span>
+        <span id="shinobu-ko">当前后台监视进程工作 <h2 class="ih"
+                style="display:inline; color:rgb(207, 37, 37)">👹
+                异常! </h2></span>
+        (PID: <span id="pid"></span>)
+        <br>该进程负责监视您的内容目录，并在新档案出现时自动
+        进行处理。 <br>
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <input id="restart-button" class='stdbtn' type='button' onclick="rebootShinobu();"
+            value='重启后台监视进程' />
+    </td>
+    <td><br>
+        如果进程已死或无响应，您可以通过单击此按钮来重新启动它。
+    </td>
+</tr>
+
+<tr></tr>

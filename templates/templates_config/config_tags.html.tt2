@@ -1,0 +1,47 @@
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 黑名单标签 </h2>
+    </td>
+    <td>
+        [% IF blackliston %]
+        <input id="blackliston" name="blackliston" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="blackliston" name="blackliston" class="fa" type="checkbox"> [% END %]
+        <br>
+        <textarea class="stdinput" size="20" style='width:100%; height:75px' name="blacklist"
+            maxlength='5000'>[% blacklist %]</textarea>
+        <br> 当使用插件标记档案时，这些标记将被自动省略。
+        <br>用逗号分隔标签。
+    </td>
+</tr>
+
+<tr></tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 自动添加标签 </h2>
+    </td>
+    <td>
+        [% IF tagregex %]
+        <input id="tagregex" name="tagregex" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="tagregex" name="tagregex" class="fa" type="checkbox"> [% END %]
+        <label for="tagregex">
+            <br>如果启用此选项，我们将尝试从上传档案的文件名中获取标签。
+            <br>如果您经常上传不符合同人志命名标准的档案，请考虑禁用它。
+        </label>
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 自动运行插件 </h2>
+    </td>
+    <td>
+        [% IF autotag %]
+        <input id="autotag" name="autotag" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="autotag" name="autotag" class="fa" type="checkbox"> [% END %]
+        <label for="autotag">
+            <br>如果启用此选项，启用的插件将在新上传的档案中自动执行。
+            <br /> 请参阅插件配置以启用/禁用插件。
+        </label>
+    </td>
+</tr>

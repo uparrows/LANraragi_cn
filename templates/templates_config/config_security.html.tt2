@@ -1,0 +1,78 @@
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 启用密码 </h2>
+    </td>
+    <td>
+        [% IF enablepass %]
+        <input id="enablepass" name="enablepass" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="enablepass" name="enablepass" class="fa" type="checkbox"> [% END %]
+        <label for="enablepass">
+            <br> 如果启用，读取所有的内容都需要输入密码。
+        </label>
+    </td>
+</tr>
+
+<tr class="passwordfields">
+    <td class="option-td">
+        <h2 class="ih"> 新密码 </h2>
+    </td>
+    <td>
+        <input class="stdinput" style="width:100%" maxlength="255" size="20" name="newpassword" type="password">
+    </td>
+</tr>
+
+<tr class="passwordfields">
+    <td class="option-td">
+        <h2 class="ih"> 确认密码 </h2>
+    </td>
+    <td>
+        <input class="stdinput" style="width:100%" maxlength="255" size="20" name="newpassword2" type="password">
+        <br> 如果要更改密码，请仅编辑这些字段。 <br />
+        否则将使用已经存储的密码。
+    </td>
+</tr>
+
+<tr class="passwordfields">
+    <td class="option-td">
+        <h2 class="ih"> 自闭模式 </h2>
+    </td>
+    <td>
+        [% IF nofunmode %]
+        <input id="nofunmode" name="nofunmode" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="nofunmode" name="nofunmode" class="fa" type="checkbox"> [% END %]
+        <label for="nofunmode">
+            <br>开启自闭模式将用密码保护所有文件 <br />
+            重启 LANraragi 后生效。
+        </label>
+    </td>
+</tr>
+
+<tr class="passwordfields">
+    <td class="option-td">
+        <h2 class="ih"> API 密钥 </h2>
+    </td>
+    <td>
+        <input id="apikey" class="stdinput" style="width:100%" maxlength="255" size="20" value="[% apikey %]"
+            name="apikey" type="text">
+        <br>如果您希望启用客户端API并输入密码，则必须在此处设置密钥。<br />
+        空密钥将 <b>不会</b> 工作！
+        <br>将会在每个受保护的API调用中提供此密钥作为<i>授权</i> 身份验证头。
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 对客户端API启用CORS </h2>
+    </td>
+    <td>
+        [% IF enablecors %]
+        <input id="enablecors" name="enablecors" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="enablecors" name="enablecors" class="fa" type="checkbox"> [% END %]
+        <label for="enablecors">
+            <br>若有API请求支持跨域资源共享，该跨域资源共享允许Web浏览器从其他域
+            访问它。
+            <br>如果您要通过在另一个域上使用/托管的基于Web的包（例如，用户脚本）访问此服务
+            ，请启用此功能。
+        </label>
+    </td>
+</tr>

@@ -1,0 +1,43 @@
+#!/bin/sh
+
+
+
+#Ensure LRR folder is writable
+chown root /root/lanraragi
+chmod 744 /root/lanraragi
+
+#Crash with an error if content folder doesn't exist
+if [ ! -d "/root/lanraragi/content" ]; then
+  echo "Content folder doesn't exist! Please ensure your Docker mappings are correct."
+  exit 1
+fi
+
+#Ensure database is writable
+chown -R root /root/lanraragi/database
+chmod -R 777 /root/lanraragi/database
+
+#Ensure thumbnail folder is writable
+chmod -R 744 /root/lanraragi/content/thumb
+
+#Ensure log folder is writable
+mkdir /root/lanraragi/log
+chown -R root /root/lanraragi/log
+chmod 744 /root/lanraragi/log
+
+#Ensure temp folder is writable
+mkdir /root/lanraragi/public/temp
+chown -R root /root/lanraragi/public/temp
+chmod 744 /root/lanraragi/public/temp
+
+#Remove hypnotoad, minion and shinobu pid files
+rm /root/lanraragi/script/hypnotoad.pid
+rm /root/lanraragi/script/shinobu.pid
+rm /root/lanraragi/script/minion.pid
+
+# https://redis.io/topics/faq#background-saving-fails-with-a-fork-error-under-linux-even-if-i-have-a-lot-of-free-ram
+OVERCOMMIT=$(cat /proc/sys/vm/overcommit_memory)
+if [ $OVERCOMMIT -eq 0 ]
+then
+        echo "WARNING: overcommit_memory is set to 0! This might lead to background saving errors if your database is too large."
+            echo "Please check https://redis.io/topics/faq#background-saving-fails-with-a-fork-error-under-linux-even-if-i-have-a-lot-of-free-ram for details."
+fi

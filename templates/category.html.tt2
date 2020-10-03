@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>[% title %] - 分类 </title>
+
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link type="image/png" rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version%]" />
+    <link rel="stylesheet" type="text/css" href="/css/vendor/fontawesome-all.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/vendor/jquery.toast.min.css" />
+    [% csshead %]
+
+    <script src="/js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
+    <script src="/js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
+
+    <script src="/js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
+    <script src="/js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
+    <script src="/js/category.js?[% version%]" type="text/JAVASCRIPT"></script>
+
+</head>
+
+<body onload="set_style_from_storage(); loadCategories()">
+
+    <div class='ido' style='text-align:center'>
+        <h2 class='ih' style='text-align:center'>分类</h2>
+        <br><br>
+        <div style='margin-left:auto; margin-right:auto;'>
+            <div style='text-align:left; font-size: 9pt; width:400px !important ' class='left-column'>
+
+                浏览“资源库”时，分类显示在窗口的顶部。<br>
+                有两种不同的分类:
+
+                <ul>
+                    <li><i class="fas fa-2x fa-folder-open" style="margin-left: -30px; width:30px"></i>
+                        静态类别是档案的任意集合，
+                        您可以在其中添加任意数量的项。
+                    </li>
+                    <li><i class="fas fa-2x fa-bolt" style="margin-left: -25px; width:25px"></i>
+                        动态类别包含与给定词匹配的所有档案, 将
+                        自动与您的资料库一起更新。
+                    </li>
+                </ul>
+
+                您可以在此处创建新分类或编辑现有分类。 </br></br>
+
+                <div style="text-align:center">
+                    <input type='button' value='新的静态分类' class='stdbtn' onclick='addNewCategory(false)'>
+                    <input type='button' value='新的动态分类' class='stdbtn' onclick='addNewCategory(true)'>
+                </div> <br>
+
+                在下面的组合框中选择一个类别，以编辑其名称，包含在存档或给定关键词中
+                <br> <b>您所有的修改都会自动保存。</b> <br></br>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <h2>分类:</h2>
+                            </td>
+                            <td>
+                                <select id="category" onchange="updateCategoryDetails()" style="font-size:20px">
+                                    <option disabled selected value> -- 无分类 -- </option>
+                                </select> </td>
+                        </tr>
+                        <tr class="tag-options">
+                            <td style="text-align: right;">名称:</td>
+                            <td>
+                                <input id="catname" value="" onchange="saveCurrentCategoryDetails()" />
+                            </td>
+                        </tr>
+                        <tr id="predicatefield" class="tag-options">
+                            <td style="text-align: right;">关键词:</td>
+                            <td>
+                                <input id="catsearch" value="" onchange="saveCurrentCategoryDetails()" />
+                                <i onclick="predicateHelp()" style="cursor:pointer" class="fas fa-question-circle"></i>
+                            </td>
+                        </tr>
+                        <tr class="tag-options">
+                            <td></td>
+                            <td>
+                                <input id="pinned" name="pinned" class="fa" type="checkbox"
+                                    onchange="saveCurrentCategoryDetails()">
+                                <label for="pinned">加密该分类</label>
+                            </td>
+                        </tr>
+                        <tr class="tag-options">
+                            <td></td>
+                            <td><input type='button' value='删除分类' class='stdbtn'
+                                    onclick='deleteSelectedCategory()'>
+                            </td>
+                        </tr>
+                        <tr class="tag-options">
+                            <td></td>
+                            <td id="status" style="font-size: 10pt;">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="id1 right-column"
+                style='text-align:center; min-width:400px; width: 60% !important; height:500px;'>
+
+                <div id="dynamicplaceholder"
+                    style="align-content: center;top: 150px; position: relative; margin-left: auto; margin-right: auto; width: 90%;">
+                    <i class="fas fa-8x fa-air-freshener"></i><br><br>
+                    <h2>如果选择静态类别，则归档将显示在此处，因此您可以从分类中添加/删除
+                        它们。</h2>
+                </div>
+
+                <ul id="archivelist" class='checklist' style="display:none">
+                    [% arclist %]
+                </ul>
+            </div>
+            <br><br>
+        </div>
+
+        <input class='stdbtn' type='button' onclick="window.location.href = '/';" value='回到资料库' />
+
+    </div>
+    [% INCLUDE footer %]
+</body>
+
+</html>

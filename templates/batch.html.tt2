@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>[% title %] - 自动-添加标签</title>
+
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link type="image/png" rel="icon" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version%]" />
+	<link rel="stylesheet" type="text/css" href="/css/vendor/fontawesome-all.min.css" />
+	<link rel="stylesheet" type="text/css" href="/css/vendor/jquery.toast.min.css" />
+	[% csshead %]
+
+	<script src="/js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
+	<script src="/js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
+
+	<script src="/js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="/js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="/js/batch.js?[% version%]" type="text/JAVASCRIPT"></script>
+
+</head>
+
+<body onload="set_style_from_storage(); checkUntagged()">
+
+	<div class='ido' style='text-align:center'>
+		<h2 class='ih' style='text-align:center'>批量添加标签</h2>
+		<br><br>
+		<div style='margin-left:auto; margin-right:auto;'>
+			<div style='text-align:left; width:400px !important' class='left-column'>
+
+				<br>
+				您可以在此处通过一项操作在多个档案中使用插件。<br><br>
+				选择您的插件，检查要使用的存档，然后滚动！ <br>
+				没有标签的档案已被预先检查。<br><br>
+				<i class="fas fa-exclamation-triangle"></i> 如果您多次调用插件，某些外部服务
+				可能会暂时
+				禁止您的计算机超负荷运行！ <br /></br>
+				请确保使用下面的选择器在档案之间设置合适的 <b>超时时间</b> 如果涉及的插件
+				您需要
+				使用。 <br /><br />
+
+				<table class="tag-options">
+					<tbody>
+						<tr>
+							<td>用户插件 :</td>
+							<td>
+								<select id="plugin" onchange="showOverride()">
+									[% FOREACH plugins %]
+									<option value="[% namespace %]">[% name %]</option>
+									[% END %]
+								</select> </td>
+						</tr>
+						<tr>
+							<td>超时 (max 20s):</td>
+							<td>
+								<input type="number" id="timeout" min="0" max="20" value="0"> 秒 </td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td>
+								<input type="checkbox" id="override" onclick="showOverride()">
+								<label for="override">覆盖插件全局参数</label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="tag-options">
+					<tbody>
+						[% FOREACH plugin IN plugins %][% IF plugin.parameters && plugin.parameters.size %]
+						[% FOREACH arg IN plugin.parameters %]
+						<tr class="arg-override [% plugin.namespace %]-arg" style="display:none">
+							<td style="max-width:250px">[% arg.desc %] :</td>
+							<td>
+								<input class="stdinput [% plugin.namespace %]-argvalue" type=[% SWITCH arg.type %] [%
+									CASE 'string' %] "text" [% CASE 'bool' %] "checkbox" value="1" [% CASE 'int'
+									%] "number" [% CASE %] "color" [% END %]>
+							</td>
+						</tr>
+						[% END %][% END %][% END %]
+
+					</tbody>
+				</table>
+
+
+
+				<div class="tag-options" style="text-align:center">
+					<br /><br />
+					<input type='button' value='选中/取消全部' class='stdbtn' checked='false'
+						onclick='checkAll(this)'>
+					<input type='button' value='开始标记' class='stdbtn' onclick='startBatch()'>
+
+				</div>
+
+				<div class="job-status" style="display:none; text-align:center">
+					<input id="cancel-job" type='button' value='Cancel' class='stdbtn'>
+					<input id="restart-job" type='button' value='Start another job' class='stdbtn'
+						onclick='restartBatchUI()'>
+					<div id="progress" style="padding-top:6px; padding-bottom:6px">
+						<div class="bar"></div>
+						当前运行 <span id="arcs"></span> 共 <span id="totalarcs"></span>
+					</div>
+					<div class="id1" style="width:400px; height:314px">
+						<pre id="log-container" class="log-panel" />
+						</div>
+				</div>
+
+			</div>
+
+			<div class="id1 right-column" style='text-align:center; min-width:400px; width: 60% !important; height:500px;'>
+				<ul class='checklist'>
+					[% arclist %]
+				</ul>
+			</div>
+			<br><br>
+		</div>
+
+		<input class='stdbtn' type='button' onclick="window.location.href = './config/plugins';" value='插件配置' />
+		<input class='stdbtn' type='button' onclick="window.location.href = './';" value='回到资料库' />
+
+	</div>
+	[% INCLUDE footer %]
+</body>
+
+</html>

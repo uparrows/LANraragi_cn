@@ -1,0 +1,102 @@
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 站点名称 </h2>
+    </td>
+    <td>
+        <input class="stdinput" style="width:100%" maxlength="255" size="20" value="[% title %]" name="htmltitle" type="text">
+        <br>网站标题在大多数页面上显示为...标题。
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 座右铭 </h2>
+    </td>
+    <td>
+        <input id="motd" class="stdinput" style="width:100%" maxlength="255" size="20" value="[% motd %]" name="motd" type="text">
+        <br>每日的座右铭，出现在主资料库的顶部（注：中文会乱码）。
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 每页显示数量 </h2>
+    </td>
+    <td>
+        <input class="stdinput" style="width:100%" maxlength="255" size="20" value="[% pagesize %]" name="pagesize" type="number">
+        <br> 单页面上显示的档案数量。
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 在阅读器中缩放图像大小 </h2>
+    </td>
+    <td>
+        [% IF enableresize %]
+        <input id="enableresize" name="enableresize" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="enableresize" name="enableresize" class="fa" type="checkbox"> [% END %]
+        <label for="enableresize">
+            <br> 如果启用，超过一定大小的页面将在查看时调整大小以节省带宽。
+            <br> <i class="fas fa-exclamation-triangle" style="color:red"></i> 如果在较大图像上启用并使用此选项，则可能会消耗大量内存！ 请谨慎使用。
+        </label>
+    </td>
+</tr>
+
+<tr class="resizefields">
+    <td class="option-td">
+        <h2 class="ih"> 图像尺寸阈值 </h2>
+    </td>
+    <td>
+        <input id="sizethreshold" class="stdinput" type="number" style="width:100%" 
+               maxlength="255" size="20" value="[% sizethreshold %]" name="sizethreshold">
+        <br>(in KBs.) 调整大小之前，图像可以达到的最大尺寸。
+    </td>
+</tr>
+
+<tr class="resizefields">
+    <td class="option-td">
+        <h2 class="ih"> 调整质量 </h2>
+    </td>
+    <td>
+        <input id="readerquality" class="stdinput" type="number" min="0" max="100" style="width:100%" 
+               maxlength="255" size="20" value="[% readerquality %]" name="readerquality">
+        <br> 调整大小后的图像的质量。 低质量 = 小容量图片。 (0-100)
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 调试模式 </h2>
+    </td>
+    <td>
+        [% IF devmode %]
+        <input id="devmode" name="devmode" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="devmode" name="devmode" class="fa" type="checkbox"> [% END %]
+        <label for="devmode">
+            <br>启用调试模式将显示更多日志并禁用更新设置。 <br/>重新启动 LANraragi 后完全生效。
+        </label>
+    </td>
+</tr>
+
+
+<tr>
+    <td class="option-td">
+        <input class='stdbtn' type='button' onclick="cleanDatabase();" value='清理数据库' />
+    </td>
+    <td>
+        清理数据库将删除文件系统上没有的条目。 
+        <br>
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <input class='stdbtn' type='button' onclick="dropDatabase();" value='重置数据库' />
+    </td>
+    <td>
+        <span style="color:red"><i class="fas fa-exclamation-triangle"></i> 危险!</span>  <br>
+        单击此按钮将重置整个数据库并删除所有设置和元数据。 <br>
+        <br>
+    </td>
+</tr>

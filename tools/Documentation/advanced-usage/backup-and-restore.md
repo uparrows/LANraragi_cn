@@ -1,0 +1,21 @@
+---
+description: 'You do make backups, right?'
+---
+
+# Backup and Restore
+
+This page, available from the top menu once logged in, allows you to backup the entire database to a JSON file.  
+This includes **all your categories**, and for **every file in the database**:
+
+* The unique ID of the archive \(For the more technologically-enclined: LRR uses a SHA-1 hash of the first 500KBs of the file as the ID\)
+* The saved tags  
+* The saved title  
+
+This JSON can then be restored in another LRR instance, if it has archives with matching unique IDs.
+
+{% hint style="info" %}
+You can also make backup JSONs with the `npm run backup-db` command or through the Client API.
+{% endhint %}
+
+![Average backup.json](../.gitbook/assets/backup.png)
+

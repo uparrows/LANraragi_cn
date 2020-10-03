@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<head>
+	<title>[% title %] - 日志</title>
+
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link type="image/png" rel="icon" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version%]" />
+
+	<link rel="stylesheet" type="text/css" href="./css/vendor/fontawesome-all.min.css" />
+	[% csshead %]
+
+	<script src="./js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
+
+	<script src="./js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
+
+</head>
+
+<body onload="set_style_from_storage()">
+
+	<div class='ido' style='text-align:center'>
+		<h2 class='ih' style='text-align:center'>软件日志</h2>
+
+		<br>
+		您可以在此处检查LANraragi日志以进行调试。<br>
+		默认情况下，此视图仅显示每个日志文件的最后100行，最后一行显示最新行。 <br><br>
+		<ul>
+			<li>常规日志与主应用程序有关。 </li>
+			<li>Shinobu日志对应于后台监视进程。</li>
+			<li>插件日志仅针对元数据插件。 </li>
+			<li>除非您正在运行“调试模式”，否则Mojolicious日志不会告诉您太多信息。 </li>
+			<li>Redis日志仅适用于Docker / Windows / Homebrew用户。 </li>
+		</ul>
+		<br>汉化：昭君。访问<a href="http://yuanfangblog.xyz"> 我的博客 </a>和<a href="https://space.bilibili.com/6976331"> Bilibili空间 </a>获取更多信息<br>
+		<br><br>
+
+		<h1 class='ih' style='float:left; margin-left: 5%;'>当前视图: <span id="indicator">通常</span></h1>
+
+		<div style="margin-right: 5%;float: right;">
+
+			<a href="#" onclick="refreshLog()" title="Refresh">
+				<i style="padding-right: 10px;" class="fa fa-sync-alt fa-2x"></i>
+			</a>
+
+			显示行: <input type="number" min="0" value="100" id="loglines" onchange="refreshLog()" style="width: 60px;">
+
+		</div>
+
+		<table class="itg">
+			<tbody>
+
+				<tr class="gtr1">
+					<td>
+						<pre id="log-container" class="log-panel"></pre>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+		<br><br>
+		<span id='buttonstagging'>
+			<input type='button' value='查看 LANraragi 日志' class='stdbtn' onclick='showLog("general")'>
+
+			<input type='button' value='查看 Shinobu 日志' class='stdbtn' onclick='showLog("shinobu")'>
+
+			<input type='button' value='查看 插件 日志' class='stdbtn' onclick='showLog("plugins")'>
+
+			<input type='button' value='查看 Mojolicious 日志' class='stdbtn' onclick='showLog("mojo")'>
+
+			<input type='button' value='查看 Redis 日志' class='stdbtn' onclick='showLog("redis")'>
+
+			<br><br>
+			<input class='stdbtn' type='button' onclick="window.location.replace('/');" value='返回资料库' />
+
+		</span>
+
+	</div>
+
+	<script>
+
+		lastType = ""; 
+
+		function showLog(type) {
+
+			$.get("/logs/" + type + "?lines=" + $("#loglines").val(), function (data) {
+				$("#log-container").html(data);
+				$("#indicator").html(type);
+				$("#log-container").scrollTop($("#log-container").prop("scrollHeight"));
+			});
+
+			lastType = type;
+
+		}
+
+		function refreshLog() {
+			showLog(lastType);
+		}
+
+		showLog("general");
+
+	</script>
+
+	[% INCLUDE footer %]
+</body>
+
+</html>
