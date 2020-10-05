@@ -45,6 +45,33 @@ function genericAPICall(endpoint, method, successMessage, errorMessage, successC
 		.catch(error => showErrorToast(errorMessage, error));
 }
 
+// Check the status of a Minion job until it's completed.
+// Execute a callback on successful job completion.
+function checkJobStatus(jobId, callback, failureCallback) {
+	fetch(`api/minion/${jobId}`, { method: "GET" })
+		.then(response => response.ok ? response.json() : { success: 0, error: "响应不正确" })
+		.then((data) => {
+
+			if (data.error)
+				throw new Error(data.error);
+
+			if (data.state === "failed") {
+				throw new Error(data.result);
+			}
+
+			if (data.state !== "finished") {
+				// Wait and retry, job isn't done yet
+				setTimeout(function () {
+					checkJobStatus(jobId, callback);
+				}, 1000);
+			} else {
+				// Update UI with info
+				callback(data);
+			}
+		})
+		.catch(error => { showErrorToast("检查 Minion 工作状态时出错", error); failureCallback(error) });
+}
+
 //saveFormData()
 //POSTs the data of the specified form to the page.
 //This is used for Edit, Config and Plugins.
