@@ -39,11 +39,12 @@ sub serve_untagged_archivelist {
 }
 
 sub serve_metadata {
-    my $self  = shift;
-    my $id    = check_id_parameter( $self, "metadata" ) || return;
-    my $redis = $self->LRR_CONF->get_redis;
+    my $self    = shift;
+    my $id      = check_id_parameter( $self, "metadata" ) || return;
+    my $redis   = $self->LRR_CONF->get_redis;
+    my $dirname = $self->LRR_CONF->get_userdir;
 
-    my $arcdata = LANraragi::Utils::Database::build_archive_JSON( $redis, $id );
+    my $arcdata = LANraragi::Utils::Database::build_archive_JSON( $redis, $dirname, $id );
     $redis->quit;
     $self->render( json => $arcdata );
 }
@@ -113,39 +114,6 @@ sub clear_new {
             success   => 1
         }
     );
-}
-
-#Use all enabled plugins on an archive ID. Tags are automatically saved in the background.
-#Returns number of successes and failures.
-sub use_enabled_plugins {
-
-    my $self  = shift;
-    my $id    = check_id_parameter( $self, "autoplugin" ) || return;
-    my $redis = $self->LRR_CONF->get_redis();
-
-    if ( $redis->exists($id) && LANraragi::Model::Config->enable_autotag ) {
-
-        my ( $succ, $fail, $addedtags ) = LANraragi::Model::Plugins::exec_enabled_plugins_on_file($id);
-
-        $self->render(
-            json => {
-                operation => "autoplugin",
-                id        => $id,
-                success   => 1,
-                message   => "$succ Plugins used successfully, $fail Plugins failed, $addedtags tags added."
-            }
-        );
-    } else {
-        $self->render(
-            json => {
-                operation => "autoplugin",
-                id        => $id,
-                success   => 0,
-                error     => "ID not found in database or AutoPlugin disabled by admin."
-            }
-        );
-    }
-    $redis->quit();
 }
 
 sub update_metadata {
