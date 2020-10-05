@@ -99,7 +99,7 @@ If you have to use the variable for SSL or the like, I recommend leaving the por
 ## Changing the user ID in case of permission issues
 
 The container runs the software by default using the uid/gid provided by the LRR\_UID/LRR\_GID variables.  
-If you don't specify said variables, the container will run under uid/gid 0/0.
+If you don't specify said variables, the container will run under uid/gid 9001/9001.
 
 This is good enough for most scenarios, but in case you need to run it as the current user, you can do the following: ```docker run [wassup] -e LRR_UID=``id -u $USER`` -e LRR_GID=``id -g $USER`` difegue/lanraragi```
 
