@@ -40,7 +40,8 @@ sub plugin_info {
             { type => "bool", desc => "Search expunged galleries as well" },
 
         ],
-        oneshot_arg => "E-H Gallery URL (Will attach tags matching this exact gallery to your archive)"
+        oneshot_arg => "E-H Gallery URL (Will attach tags matching this exact gallery to your archive)",
+        cooldown    => 4
     );
 
 }
@@ -263,7 +264,8 @@ sub get_tags_from_EH {
             my $ehtimestamp = @$data[0]->{"posted"};
             $ehtags = $ehtags . ", uploader:" . $ehuploader . ", timestamp:" . $ehtimestamp;
         }
-
+        # Unescape title received from the API as it might contain some HTML characters
+        $ehtitle = uri_unescape($ehtitle);
         $logger->info("Sending the following tags to LRR: $ehtags");
         return ( $ehtags, $ehtitle );
     } else {
