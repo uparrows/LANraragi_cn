@@ -141,7 +141,7 @@
 		//If the json has the "default password" flag, flash a friendly notification inviting the user to change his password
 		$.toast({
 			heading: '你\'正在使用默认密码，\'这样太蠢了',
-			text: '<a href="login">点此登录</a> ，使用默认密码 "kamimamita" 之后 <a href="config">修改它，</a> 赶紧的。<br/>...也可以禁用它! <br/>为什么不在之后检查\'配置选项呢? ',
+			text: '<a href="login">点此登录</a> ，使用默认密码 "kamimamita" 之后 <a href="config">修改它，</a> 赶紧的。<br/>...也可以禁用它! <br/>为什么不在之后检查\ 配置选项呢? ',
 			hideAfter: false,
 			position: 'top-left',
 			icon: 'error'
