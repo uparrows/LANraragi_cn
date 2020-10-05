@@ -10,16 +10,18 @@
 	<link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version%]" />
 
 	<link rel="stylesheet" type="text/css" href="./css/vendor/jquery.fileupload.css" />
+	<link rel="stylesheet" type="text/css" href="./css/vendor/jquery.toast.min.css" />
 	<link rel="stylesheet" type="text/css" href="./css/vendor/fontawesome-all.min.css" />
 	[% csshead %]
 
 	<script src="./js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
+	<script src="./js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
 	<script src="./js/vendor/jquery.ui.widget.js" type="text/JAVASCRIPT"></script>
 	<script src="./js/vendor/jquery.fileupload.js" type="text/JAVASCRIPT"></script>
 
 	<script src="./js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
 	<script src="./js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
-
+	<script src="./js/upload.js?[% version%]" type="text/JAVASCRIPT"></script>
 </head>
 
 <body onload="initUpload()">
@@ -27,100 +29,77 @@
 	<div class='ido' style='text-align:center; font-size:8pt'>
 		<h1 class='ih' style='text-align:center'>上传文件到资料库</h1>
 
-		将文件拖放到此处，或单击上传按钮。
-		<br /><br /> 将上传的文件添加到分类:
-		<select id="category">
-			<option selected value=""> -- 无分类 -- </option>
-			[% FOREACH categories %]
-			<option value="[% id %]">[% name %]</option>
-			[% END %]
-		</select> </td>
+		从计算机或直接从Internet将文件添加到LANraragi。<br><br>
 
-		<table style='margin:auto; font-size:9pt; width: 80%; text-align:center;'>
-			<tbody id='files'>
-				<tr>
-					<td colspan=2>
+		<div style="margin-left:auto; margin-right:auto">
 
-						<span class='stdbtn fileinput-button' style="height:50px;">
-							<i class='fa fa-upload fa-2x' style='padding-top:6px; padding-bottom: 5px'></i><br>
-							<span>上传文件</span>
-							<input type='file' name='file' multiple id='fileupload'>
-						</span>
+			<div class="left-column">
 
-						<div id='progress' style='padding-top:6px; padding-bottom:6px'>
-							<div class='bar' style='width: 0%;'></div>
-						</div>
+				将上传的文件添加到分类:
+				<select id="category">
+					<option selected value=""> -- 无分类 -- </option>
+					[% FOREACH categories %]
+					<option value="[% id %]">[% name %]</option>
+					[% END %]
+				</select> <br><br>
 
+				<h1 class='ih'>本地计算机</h1>
+
+				您可以将文件拖放到此窗口中，或单击上载按钮。
+				<br><br>
+
+				<span class='stdbtn fileinput-button' style="height:50px;">
+					<i class='fas fa-download fa-2x' style='padding-top:6px; padding-bottom: 5px'></i><br>
+					<span>从您的计算机添加</span>
+					<input type='file' name='file' multiple id='fileupload'>
+				</span>
+
+				<br><br>
+				<h1 class='ih'>来自网络</h1>
+
+				您可以从此处将远程URL中的文件直接下载到LANraragi中。<br>
+				即使关闭此窗口，下载作业也将继续进行！<br><br>
+
+				输入您的URL（用换行符分隔），然后单击下载按钮。 <br>
+				如果一个 <a href="/config/plugins">下载插件</a> 适用于该链接, 将会被自动
+				使用。<br><br>
+
+				<label for="download_url">下载的链接:</label>
+				<textarea type="text" name="urls" id="urlForm"
+					style="width: 400px; height: 100px; white-space: pre;"></textarea>
+				<br><br>
+
+
+				<span class='stdbtn fileinput-button' style="height:50px;" onclick="downloadUrl()">
+					<i class='fas fa-cloud-download-alt fa-2x' style='padding-top:6px; padding-bottom: 5px'></i><br>
+					<span>从链接添加</span>
+				</span>
+
+			</div>
+
+			<div class="right-column">
+
+				<h2 class="ih" id="progressCount"></h2>
+				<h2 class="ih" id="progressTotal"></h2>
+
+				<table style='margin:auto; font-size:9pt; width: 80%; text-align:center;'>
+					<tbody id='files'>
+						<tr>
+							<td colspan=2>
+								<div id='progress' style='padding-top:6px; padding-bottom:6px'>
+									<div class='bar' style='width: 0%;'></div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+
+		<br><br>
+		<input class='stdbtn' type='button' onclick="window.location.replace('./');" value='返回资料库' />
 	</div>
-	</td>
-	</tr>
-
-	</tbody>
-	</table>
-	<input class='stdbtn' type='button' onclick="window.location.replace('./');" value='回到资料库' />
-
-	</div>
-
-
-	<script>
-		function initUpload() {
-
-			//Handler for file uploading.
-			$('#fileupload').fileupload({
-				dataType: 'json',
-				done: function (e, data) {
-
-					if (data.result.success == 0)
-						result = "<tr><td>" + data.result.name +
-							"</td><td> <i class='fa fa-warning' style='margin-left:20px; margin-right: 10px; color: red'></i>" + data.result.error + "</td></tr>";
-					else
-						result = "<tr><td> <a href='reader?id=" + data.result.id + "'>" + data.result.name + "</a>" +
-							"</td><td> <i class='fa fa-check-square' style='margin-left:20px; margin-right: 10px; color: green'></i> <a href='edit?id=" + data.result.id + "' id='" + data.result.id + "'> 单击此处编辑元数据。</a></td></tr>";
-
-					$('#progress .bar').css('width', '0%');
-					$('#files').append(result);
-
-					//if autoplugin is enabled, call the API to trigger all enabled plugins on the newly uploaded archive.
-					const autoplugEnabled = [% autoplugin %];
-					const categoryID = document.getElementById("category").value;
-
-					if (autoplugEnabled) {
-
-						$("#" + data.result.id).html("在此存档上运行自动插件...");
-						$("#" + data.result.id).val("href", "");
-
-						$.post(`/api/archives/${data.result.id}/autoplugin`, function (data) {
-							if (data.success) {
-								$("#" + data.id).html("单击此处编辑元数据。(" + data.message + ")");
-							} else {
-								$("#" + data.id).html("单击此处编辑元数据。(自动插件运行失败 -- " + data.message + ")");
-							}
-						}, "json");
-					}
-
-					if (categoryID !== "") {
-						console.log(`Adding ${data.result.id} to category ${categoryID}`)
-						addArchiveToCategory(data.result.id, categoryID);
-					}
-
-				},
-
-				fail: function (e, data) {
-					result = "<tr><td>" + data.result.name +
-						"</td><td> <i class='fa fa-warning' style='margin-left:20px; margin-right: 10px; color: red'></i>" + data.errorThrown + "</td></tr>";
-					$('#progress .bar').css('width', '0%');
-					$('#files').append(result);
-				},
-
-				progressall: function (e, data) {
-					var progress = parseInt(data.loaded / data.total * 100, 10);
-					$('#progress .bar').css('width', progress + '%');
-				}
-
-			});
-
-		}
-	</script>
 
 	[% INCLUDE footer %]
 </body>
