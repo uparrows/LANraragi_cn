@@ -216,7 +216,7 @@ function shinobuStatus() {
 		});
 }
 
-//Adds an archive to a category. Basic implementation to use in Upload/Index.
+//Adds an archive to a category. Basic implementation to use everywhere.
 function addArchiveToCategory(arcId, catId) {
 	genericAPICall(`/api/categories/${catId}/${arcId}`, 'PUT', `Added ${arcId} to Category ${catId}!`, "添加/移除档案到分类失败", null);
 }
