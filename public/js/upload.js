@@ -48,7 +48,7 @@ function handleCompletedUpload(jobID, d) {
 
 function handleFailedUpload(jobID, d) {
 
-    $(`#${jobID}-link`).html("处理文件时出错.(" + d + ")");
+    $(`#${jobID}-link`).html("处理文件时出错.<br>(" + d + ")");
     $(`#${jobID}-icon`).attr("class", "fa fa-exclamation-circle");
 
     failedArchives++;
