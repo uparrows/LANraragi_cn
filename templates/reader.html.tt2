@@ -30,6 +30,7 @@
 
 		<div id="i2">
 			[% INCLUDE pagesel %] [% INCLUDE arrows %]
+		<br />
 		</div>
 
 		<div id="i3">
@@ -40,8 +41,8 @@
 			</div>
 
 			<a id="display">
-				<img id="img" class="reader-image" onload="updateMetadata()" onerror="this.src='./img/noThumb.png'" src="[% imgpath %]"
-				 usemap="#Map" />
+				<img id="img" class="reader-image" onload="updateMetadata()" onerror="this.src='./img/noThumb.png'"
+					src="[% imgpath %]" usemap="#Map" />
 				<map name="Map" id="Map">
 					<area id="leftmap" style="cursor:pointer;" onclick="advancePage(-1)" shape="rect" />
 					<area id="rightmap" style="cursor:pointer;" onclick="advancePage(1)" shape="rect" />
@@ -53,7 +54,6 @@
 		<div id="i4">
 			<br />
 			[% INCLUDE pagesel %] [% INCLUDE arrows %]
-			<br />
 		</div>
 
 		<div id="i5">
@@ -80,6 +80,7 @@
 			<a id="imgLink" style="cursor:pointer;">查看原图</a>
 			<i class="fa fa-caret-right fa-lg"></i>
 			<a href="./random">切换到另一个随机档案</a>
+			<i class="fa fa-caret-right fa-lg"></i>
 			<a href="./">返回资料库</a>
 		</div>
 
@@ -150,7 +151,7 @@
 
 	<div id="overlay-shade" onclick="closeOverlay();"></div>
 	<div id="archivePagesOverlay" class="id1 base-overlay page-overlay" style="display:none" loaded="false">
-		<h2 class="ih" style="text-align:center">档案总览</h2>
+		<h2 class="ih" style="text-align:center">档案预览</h2>
 	</div>
 	<div id="settingsOverlay" class="id1 base-overlay small-overlay" style="display:none">
 		[% INCLUDE config %]
@@ -206,8 +207,26 @@
 
 <br />
 <br />
-<input value="保存及关闭" onclick="saveSettings()" class="stdbtn" id="goback" type="button">
-<br /> [% END %]
+<input value="保存和关闭" onclick="saveSettings()" class="stdbtn" id="goback" type="button">
+<br />
+<br />
+<br />
+[% IF userlogged %]
+<h2 class="ih" style="text-align:center">添加到分类</h2>
+<div style="margin:auto; font-size:8pt;">
+
+	<select id="category" style="width:200px; margin-right: 8px">
+		<option selected value=""> -- 无分类 -- </option>
+		[% FOREACH categories %]
+		<option value="[% id %]">[% name %]</option>
+		[% END %]
+	</select>
+
+	<input value="添加档案" onclick="addArchiveToCategory('[% id %]', $('#category').val())" class="stdbtn"
+		id="goback" type="button">
+</div>
+[% END %]
+[% END %]
 <!-- -->
 [% BLOCK arrows %]
 <div class="sn">
@@ -238,15 +257,15 @@
 [% BLOCK pagesel %]
 <div style="position: absolute; right: 20px; z-index:20" class="page_dropdown">
 
-	<a href="#" onclick="openOverlay();" title="Archive Overview">
+	<a href="#" onclick="openOverlay();" title="档案预览">
 		<i class="fa fa-th fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
-	<a href="#" onclick="openSettings();" title="Reader Settings">
+	<a href="#" onclick="openSettings();" title="阅读器设置">
 		<i class="fa fa-cog fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
-	<a href="#" onclick="toastHelpReader()" title="Help">
+	<a href="#" onclick="toastHelpReader()" title="帮助">
 		<i class="fa fa-info-circle fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
