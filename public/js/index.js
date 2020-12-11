@@ -73,24 +73,52 @@ function performSearch() {
 	loadCategories();
 }
 
-//Switch view on index and saves the value in the user's localStorage. The DataTables callbacks adapt automatically.
-//0 = List view
-//1 = Thumbnail view
-function switch_index_view() {
+function initSettings(version) {
 
-	if (localStorage.indexViewMode == 1) {
-		localStorage.indexViewMode = 0;
-		$("#viewbtn").val("缩略图视图");
-	}
-	else {
+	// Default to thumbnail mode
+	if (localStorage.getItem("indexViewMode") === null) {
 		localStorage.indexViewMode = 1;
-		$("#viewbtn").val("列表视图");
 	}
+
+	// Default to crop landscape
+	if (localStorage.getItem("cropthumbs") === null) {
+		localStorage.cropthumbs = true;
+	}
+
+	// Tell user about the context menu
+	if (localStorage.getItem("sawContextMenuToast") === null) {
+		localStorage.sawContextMenuToast = true;
+
+		$.toast({
+			heading: `欢迎使用 LANraragi ${version}!`,
+			text: "如果要对存档执行高级操作，请记住只需右键单击其名称。 祝您阅读愉快！",
+			hideAfter: false,
+			position: 'top-left',
+			icon: 'info'
+		});
+	}
+
+	//0 = List view
+	//1 = Thumbnail view
+	// List view is at 0 but became the non-default state later so here's some legacy weirdness 
+	if (localStorage.indexViewMode == 0)
+		$("#compactmode").prop("checked", true);
+
+	if (localStorage.cropthumbs === 'true')
+		$("#cropthumbs").prop("checked", true);
+
+}
+
+function saveSettings() {
+	localStorage.indexViewMode = $("#compactmode").prop("checked") ? 0 : 1;
+	localStorage.cropthumbs = $("#cropthumbs").prop("checked");
+
+	closeOverlay();
 
 	//Redraw the table yo
 	arcTable.draw();
-
 }
+
 
 function checkVersion(currentVersionConf) {
 	//Check the github API to see if an update was released. If so, flash another friendly notification inviting the user to check it out
@@ -122,8 +150,8 @@ function checkVersion(currentVersionConf) {
 		if (latestVersion > currentVersion) {
 
 			$.toast({
-				heading: 'A new version of LANraragi (' + data.tag_name + ') is available !',
-				text: '<a href="' + data.html_url + '">Click here to check it out.</a>',
+				heading: '新的 LANraragi (' + data.tag_name + ') 可用 !',
+				text: '<a href="' + data.html_url + '">点击此处查看.</a>',
 				hideAfter: false,
 				position: 'top-left',
 				icon: 'info'
@@ -146,7 +174,7 @@ function handleContextMenu(option, id) {
 			window.open("./edit?id=" + id);
 			break;
 		case "delete":
-			if (confirm('Are you sure you want to delete this archive?'))
+			if (confirm('你确定删除该档案吗?'))
 				deleteArchive(id);
 			break;
 		case "read":
@@ -197,7 +225,7 @@ function loadTagSuggestions() {
 				}
 			});
 
-		}).fail(data => showErrorToast("Couldn't load tag suggestions", data.error));
+		}).fail(data => showErrorToast("无法加载标签建议", data.error));
 }
 
 function loadCategories() {
@@ -223,7 +251,7 @@ function loadCategories() {
 				div = `<div style='display:inline-block'>
 						<input class='favtag-btn ${((category.id == selectedCategory) ? "toggled" : "")}' 
 							   type='button' id='${category.id}' value='${catName}' 
-							   onclick='toggleCategory(this)' title='Click here to display the archives contained in this category.'/>
+							   onclick='toggleCategory(this)' title='单击此处显示此类别中包含的档案.'/>
 					   </div>`;
 
 				html += div;
@@ -252,7 +280,7 @@ function loadCategories() {
 			// Add a listener on dropdown selection
 			$("#catdropdown").on("change", () => toggleCategory($("#catdropdown")[0].selectedOptions[0]));
 
-		}).fail(data => showErrorToast("Couldn't load categories", data.error));
+		}).fail(data => showErrorToast("无法加载分类", data.error));
 }
 
 function encode(r) {
@@ -262,4 +290,15 @@ function encode(r) {
 		return r[0].replace(/[\x26\x0A\<>'"]/g, function (r) { return "&#" + r.charCodeAt(0) + ";" });
 	else
 		return r.replace(/[\x26\x0A\<>'"]/g, function (r) { return "&#" + r.charCodeAt(0) + ";" })
+}
+
+function openSettings() {
+	$('#overlay-shade').fadeTo(150, 0.6, function () {
+		$('#settingsOverlay').css('display', 'block');
+	});
+}
+
+function closeOverlay() {
+	$('#overlay-shade').fadeOut(300);
+	$('.base-overlay').css('display', 'none');
 }
