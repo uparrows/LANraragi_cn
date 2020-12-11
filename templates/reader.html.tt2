@@ -7,8 +7,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	<link type="image/png" rel="icon" href="favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="./css/lrr.css" />
-	<link rel="stylesheet" type="text/css" href="/css/config.css" />
+	<link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version %]" />
+	<link rel="stylesheet" type="text/css" href="/css/config.css?[% version %]" />
 
 	<link rel="stylesheet" type="text/css" href="./css/vendor/fontawesome-all.min.css" />
 	<link rel="stylesheet" type="text/css" href="./css/vendor/jquery.toast.min.css" />
@@ -29,8 +29,8 @@
 		<h1>[% arcname %]</h1>
 
 		<div id="i2">
-			[% INCLUDE pagesel %] [% INCLUDE arrows %]
-		<br />
+			[% INCLUDE pagesel %] [% INCLUDE arrows %] 
+			<br />
 		</div>
 
 		<div id="i3">
@@ -151,7 +151,7 @@
 
 	<div id="overlay-shade" onclick="closeOverlay();"></div>
 	<div id="archivePagesOverlay" class="id1 base-overlay page-overlay" style="display:none" loaded="false">
-		<h2 class="ih" style="text-align:center">档案预览</h2>
+		<h2 class="ih" style="text-align:center">档案总览</h2>
 	</div>
 	<div id="settingsOverlay" class="id1 base-overlay small-overlay" style="display:none">
 		[% INCLUDE config %]
@@ -257,15 +257,15 @@
 [% BLOCK pagesel %]
 <div style="position: absolute; right: 20px; z-index:20" class="page_dropdown">
 
-	<a href="#" onclick="openOverlay();" title="档案预览">
+	<a href="#" onclick="openOverlay();" title="Archive Overview">
 		<i class="fa fa-th fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
-	<a href="#" onclick="openSettings();" title="阅读器设置">
+	<a href="#" onclick="openSettings();" title="Reader Settings">
 		<i class="fa fa-cog fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
-	<a href="#" onclick="toastHelpReader()" title="帮助">
+	<a href="#" onclick="toastHelpReader()" title="Help">
 		<i class="fa fa-info-circle fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
