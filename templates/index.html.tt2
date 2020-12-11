@@ -7,7 +7,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	<link type="image/png" rel="icon" href="favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version%]" />
+	<link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version %]" />
+	<link rel="stylesheet" type="text/css" href="/css/config.css?[% version %]" />
 
 	<link rel="stylesheet" type="text/css" href="/css/vendor/fontawesome-all.min.css" />
 	<link rel="stylesheet" type="text/css" href="/css/vendor/jquery.toast.min.css" />
@@ -32,7 +33,7 @@
 
 </head>
 
-<body>
+<body onload="init()">
 
 	[% IF userlogged %]
 	<p id="nb">
@@ -82,10 +83,9 @@
 			</div>
 
 			<p id='cssbutton' style='display:inline'>
-				<input class='stdbtn' type='button' onclick="openInNewTab('random')"
-					value='随机档案' />
-				<input id='viewbtn' class='stdbtn' type='button' onclick="switch_index_view()"
-					value='列表视图' />
+				<input class='stdbtn' type='button' onclick="openInNewTab('random')" value='随机档案' />
+
+				<input id='viewbtn' class='stdbtn' type='button' onclick="openSettings()" value='列表视图' />
 			</p>
 
 			<table class="itg datatables">
@@ -130,13 +130,15 @@
 
 	<script>
 
-		// Default to thumbnail mode
-		if (localStorage.getItem("indexViewMode") === null) {
-			localStorage.indexViewMode = 1;
-		}
+		function init() {
+			initSettings("[% version %]");
+			initIndex([% pagesize %]);
 
-		initIndex([% pagesize %]);
-
+			// Initialize tag suggestions
+			loadTagSuggestions();
+			// Initialize categories
+			selectedCategory = "";
+			loadCategories();
 		[% IF usingdefpass %]
 		//If the json has the "default password" flag, flash a friendly notification inviting the user to change his password
 		$.toast({
@@ -182,27 +184,39 @@
 			}
 		});
 
-		// Tell user about the context menu
-		if (localStorage.getItem("sawContextMenuToast") === null) {
-			localStorage.sawContextMenuToast = true;
 
-			$.toast({
-				heading: '欢迎来到 LANraragi [% version %]!',
-				text: "如果要对存档执行高级操作，请记住只需右键单击其名称。祝您阅读愉快！",
-				hideAfter: false,
-				position: 'top-left',
-				icon: 'info'
-			});
 		}
 
-		// Initialize tag suggestions
-		loadTagSuggestions();
 
-		// Initialize categories
-		selectedCategory = "";
-		loadCategories();
 
 	</script>
+
+	<div id="overlay-shade" onclick="closeOverlay();"> </div>
+	<div id="settingsOverlay" class="id1 base-overlay small-overlay" style="display:none">
+		<h2 class="ih" style="text-align:center">索引显示选项</h2>
+		<div style="margin:auto; font-size:8pt;">
+
+			<div class="config-panel">
+				<h1 class="ih" style="display:inline"> 紧凑模式</h1>
+				<input id="compactmode" name="compactmode" class="fa" type="checkbox" style="float:left">
+				<br /> 如果启用，则存档将显示为没有缩略图的列表模式。
+			</div>
+
+			<div class="config-panel">
+				<h1 class="ih" style="display:inline"> 缩略图裁切 </h1>
+				<input id="cropthumbs" name="cropthumbs" class="fa" type="checkbox" style="float:left">
+				<br /> 如果启用，不适合常规A4页面的缩略图将被裁剪为仅显示
+				左侧.
+			</div>
+		</div>
+		<br />
+		<br />
+		<input value="保存及关闭" onclick="saveSettings()" class="stdbtn" id="goback" type="button">
+		<br />
+		<br />
+		<br />
+	</div>
+
 
 </body>
 
