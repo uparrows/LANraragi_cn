@@ -4,7 +4,7 @@
 
 #Ensure LRR folder is writable
 chown root /root/lanraragi
-chmod 744 /root/lanraragi
+chmod u+rwx /root/lanraragi
 
 #Crash with an error if content folder doesn't exist
 if [ ! -d "/root/lanraragi/content" ]; then
@@ -18,16 +18,18 @@ chmod -R 777 /root/lanraragi/database
 
 #Ensure thumbnail folder is writable
 chmod -R 744 /root/lanraragi/content/thumb
+find /root/lanraragi/content/thumb -type f -exec chmod u+rw  {} \;
+find /root/lanraragi/content/thumb -type d -exec chmod u+rwx {} \;
 
 #Ensure log folder is writable
 mkdir /root/lanraragi/log
 chown -R root /root/lanraragi/log
-chmod 744 /root/lanraragi/log
+chmod u+rwx /root/lanraragi/log
 
 #Ensure temp folder is writable
 mkdir /root/lanraragi/public/temp
 chown -R root /root/lanraragi/public/temp
-chmod 744 /root/lanraragi/public/temp
+chmod u+rwx /root/lanraragi/public/temp
 
 #Remove hypnotoad, minion and shinobu pid files
 rm /root/lanraragi/script/hypnotoad.pid
