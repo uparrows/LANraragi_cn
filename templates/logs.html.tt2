@@ -33,7 +33,8 @@
 			<li>除非您正在运行“调试模式”，否则Mojolicious日志不会告诉您太多信息。 </li>
 			<li>Redis日志仅适用于Docker / Windows / Homebrew用户。 </li>
 		</ul>
-		<br>汉化：昭君。访问<a href="http://yuanfangblog.xyz"> 我的博客 </a>和<a href="https://space.bilibili.com/6976331"> Bilibili空间 </a>获取更多信息<br>
+		<br>汉化：昭君。访问<a href="http://yuanfangblog.xyz"> 我的博客 </a>和<a href="https://space.bilibili.com/6976331"> Bilibili空间 </a>获取更多信息和教程<br>
+		<br>点击 <a href="http://yuanfangblog.xyz/usr/uploads/2020/10/195169827.zip"> 此处下载 </a>汉化版安卓手机客户端<br>
 		<br><br>
 
 		<h1 class='ih' style='float:left; margin-left: 5%;'>当前视图: <span id="indicator">通常</span></h1>
