@@ -49,7 +49,7 @@
 
 		</div>
 
-		<table class="itg">
+		<table class="itg" style="width: 100%; margin-top: 32px;">
 			<tbody>
 
 				<tr class="gtr1">
@@ -82,7 +82,7 @@
 
 	<script>
 
-		lastType = ""; 
+		lastType = "";
 
 		function showLog(type) {
 
