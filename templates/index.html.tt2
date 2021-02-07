@@ -26,10 +26,12 @@
 	<script src="/js/vendor/jquery.contextMenu.min.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/awesomplete.min.js" type="text/JAVASCRIPT"></script>
 
-	<script src="/js/index.js?[% version%]" type="text/JAVASCRIPT"></script>
-	<script src="/js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
-	<script src="/js/index_datatables.js?[% version%]" type="text/JAVASCRIPT"></script>
-	<script src="/js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="https://cdn.datatables.net/plug-ins/1.10.22/pagination/select.js" type="text/JAVASCRIPT"></script>
+
+	<script src="/js/index.js?[% version %]" type="text/JAVASCRIPT"></script>
+	<script src="/js/ajax.js?[% version %]" type="text/JAVASCRIPT"></script>
+	<script src="/js/index_datatables.js?[% version %]" type="text/JAVASCRIPT"></script>
+	<script src="/js/theme.js?[% version %]" type="text/JAVASCRIPT"></script>
 
 </head>
 
@@ -94,10 +96,10 @@
 						<th id="titleheader">
 							<a>标题</a>
 						</th>
-						<th id="artistheader">
+						<th id="customheader1">
 							<a>艺术家</a>
 						</th>
-						<th id="seriesheader">
+						<th id="customheader2">
 							<a>系列</a>
 						</th>
 						<th id="tagsheader">
@@ -207,6 +209,15 @@
 				<input id="cropthumbs" name="cropthumbs" class="fa" type="checkbox" style="float:left">
 				<br /> 如果启用，不适合常规A4页面的缩略图将被裁剪为仅显示
 				左侧.
+			</div>
+				<div class="config-panel">
+				<h1 class="ih" style="display:inline"> 自定义列 </h1>
+				<br>您可以自定义标题和标签摘要之间的两列中使用的排序名称.
+				<br>输入不带冒号的完整排序名称,比如 "artist".<br>
+				<br>如果您有多个具有相同命名的标签，则该列仅显示最后一个.
+				<br><br>
+				<b>列 1: </b> <input id="customcol1" name="customcol2" value="artist"> <br>
+				<b>列 2: </b> <input id="customcol2" name="customcol2" value="series">
 			</div>
 		</div>
 		<br />
