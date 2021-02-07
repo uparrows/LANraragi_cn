@@ -30,7 +30,7 @@
 
 		<div id="i2">
 			[% INCLUDE pagesel %] [% INCLUDE arrows %] 
-			<br />
+		<br />
 		</div>
 
 		<div id="i3">
@@ -53,7 +53,7 @@
 
 		<div id="i4">
 			<br />
-			[% INCLUDE pagesel %] [% INCLUDE arrows %]
+		 [% INCLUDE pagesel %] [% INCLUDE arrows %]
 		</div>
 
 		<div id="i5">
@@ -182,16 +182,21 @@
 
 	<div class="config-panel">
 		<h1 class="ih" style="display:inline"> 双页阅读 </h1>
-		<input id="doublepage" name="readorder" class="fa" type="checkbox" style="float:left">
+		<input id="doublepage" name="doublepage" class="fa" type="checkbox" style="float:left">
 		<br /> 如果启用，将一次显示两页。（这不包括宽画幅）
 	</div>
 
 	<div class="config-panel">
-		<h1 class="ih" style="display:inline"> 缩放查看</h1>
-		<input id="scaletoview" name="readorder" class="fa" type="checkbox" style="float:left">
+		<h1 class="ih" style="display:inline"> 适应屏幕</h1>
+		<input id="scaletoview" name="scaletoview" class="fa" type="checkbox" style="float:left">
 		<br /> 如果启用，页面将按屏幕尺寸缩放。
 	</div>
-
+	<div class="config-panel">
+		<h1 class="ih" style="display:inline"> 强制宽度适应</h1>
+		<input id="forcefullwidth" name="forcefullwidth" class="fa" type="checkbox" style="float:left">
+		<br /> 如果启用，页面将被放大以适合浏览器的宽度（如果页面较小）.
+		<br /> 如果启用，此选项将覆盖“适应屏幕”.
+	</div>
 	<div class="config-panel">
 		<h1 class="ih" style="display:inline"> 隐藏顶层导航</h1>
 		<input id="hidetop" name="hidetop" class="fa" type="checkbox" style="float:left">
@@ -215,7 +220,7 @@
 <h2 class="ih" style="text-align:center">添加到分类</h2>
 <div style="margin:auto; font-size:8pt;">
 
-	<select id="category" style="width:200px; margin-right: 8px">
+	<select id="category" class="favtag-btn" style="width:200px; margin-right: 8px">
 		<option selected value=""> -- 无分类 -- </option>
 		[% FOREACH categories %]
 		<option value="[% id %]">[% name %]</option>
