@@ -235,13 +235,13 @@ function buildProgressDiv(id, isnew) {
 		totalPages = Number(localStorage.getItem(id + "-totalPages"));
 
 		if (currentPage === totalPages)
-			return "<div class='isnew'>�</div>";
+			return "<div class='isnew'>👑</div>";
 		else
 			return `<div class='isnew'><sup>${currentPage}/${totalPages}</sup></div>`;
 	}
 
 	if (isnew === "block" || isnew === "true") {
-		return '<div class="isnew">�</div>';
+		return '<div class="isnew">🆕</div>';
 	}
 
 	return "";
