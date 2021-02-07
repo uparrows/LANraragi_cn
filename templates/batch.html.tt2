@@ -47,7 +47,7 @@
 						<tr>
 							<td>使用插件 :</td>
 							<td>
-								<select id="plugin" onchange="showOverride()">
+								<select id="plugin" class="favtag-btn" onchange="showOverride()">
 									[% FOREACH plugins %]
 									<option value="[% namespace %]">[% name %]</option>
 									[% END %]
