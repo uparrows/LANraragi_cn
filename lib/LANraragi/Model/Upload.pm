@@ -18,18 +18,22 @@ use LANraragi::Utils::Generic qw(is_archive);
 
 use LANraragi::Model::Config;
 use LANraragi::Model::Plugins;
+use LANraragi::Model::Category;
 
 # Handle files uploaded by the user, or downloaded from remote endpoints.
 
-# Process a file. Argument is the filepath, preferably in a temp directory,
+# Process a file.
+# First argument is the filepath, preferably in a temp directory,
 # as we'll copy it to the content folder and delete the original at the end.
-# Also does autoplugin if enabled.
+#
+# The file will be added to a category, if its ID is specified.
+# You can also specify tags to add to the metadata for the processed file before autoplugin is ran. (if it's enabled)
 #
 # Returns a status value, the ID and title of the file, and a status message.
 sub handle_incoming_file {
 
-    my $tempfile = shift;
-    my ( $filename, $dirs, $suffix ) = fileparse( $tempfile, qr/\.[^.]*/ );
+    my ( $tempfile, $catid, $extratags ) = @_;
+    my ( $filename, $dirs,  $suffix )    = fileparse( $tempfile, qr/\.[^.]*/ );
     $filename = $filename . $suffix;
     my $logger = get_logger( "文件上传/下载", "lanraragi" );
 
@@ -69,10 +73,19 @@ sub handle_incoming_file {
     # Add the file to the database ourselves so Shinobu doesn't do it
     # This allows autoplugin to be ran ASAP.
     my ( $name, $title, $tags ) = LANraragi::Utils::Database::add_archive_to_redis( $id, $output_file, $redis );
-    $redis->quit();
 
-    # Invalidate search cache ourselves, Shinobu won't do it since the file is already in the database
-    invalidate_cache();
+    # If additional tags were given to the sub, add them now.
+    if ($extratags) {
+
+        if ( $tags ne "" ) {
+            $tags = $tags . ", ";
+        }
+
+        $tags = $tags . $extratags;
+        $redis->hset( $id, "tags", encode_utf8($tags) );
+    }
+
+    $redis->quit();
 
     # Move the file to the content folder.
     # Move to a .tmp first in case copy to the content folder takes a while...
@@ -85,13 +98,31 @@ sub handle_incoming_file {
         return ( 0, $id, $title, "该文件无法移动到您的内容文件夹！" );
     }
 
+    my $successmsg = "文件添加成功！";
+
     if ( LANraragi::Model::Config->enable_autotag ) {
         $logger->debug("在新上传的文件上自动运行插件 $id...");
         my ( $succ, $fail, $addedtags ) = LANraragi::Model::Plugins::exec_enabled_plugins_on_file($id);
-        return ( 1, $id, $title, "$succ 插件已成功使用, $fail 插件运行失败, $addedtags 标签已添加." );
+        $successmsg = "$succ 插件已成功使用, $fail 插件运行失败, $addedtags 标签已添加.";
     }
 
-    return ( 1, $id, $title, "文件添加成功！" );
+    if ($catid) {
+        $logger->debug("添加上传文件到分类 $catid");
+
+        my ( $catsucc, $caterr ) = LANraragi::Model::Category::add_to_category( $catid, $id );
+        if ($catsucc) {
+            my %category = LANraragi::Model::Category::get_category($catid);
+            my $catname  = $category{name};
+            $successmsg .= "添加到分类 '$catname'!";
+        } else {
+            $successmsg .= "无法添加到分类: $caterr";
+        }
+    }
+
+    # Invalidate search cache ourselves, Shinobu won't do it since the file is already in the database
+    invalidate_cache();
+
+    return ( 1, $id, $title, $successmsg );
 }
 
 # Download the given URL, using the given Mojo::UserAgent object.
