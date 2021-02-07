@@ -36,7 +36,7 @@
 			<div class="left-column">
 
 				将上传的文件添加到分类:
-				<select id="category">
+				<select id="category" class="favtag-btn">
 					<option selected value=""> -- 无分类 -- </option>
 					[% FOREACH categories %]
 					<option value="[% id %]">[% name %]</option>
