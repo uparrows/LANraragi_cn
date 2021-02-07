@@ -1,6 +1,6 @@
 # DOCKER-VERSION 0.3.4
 FROM        alpine:latest
-LABEL       git="https://github.com/Difegue/LANraragi"
+LABEL       git="https://github.com/uparrows/LANraragi_cn"
 
 ENV S6_OVERLAY_RELEASE v1.21.8.0
 ENV S6_KEEP_ENV 1
