@@ -42,11 +42,6 @@ function handleCompletedUpload(jobID, d) {
     processingArchives--;
     updateUploadCounters();
 
-    const categoryID = document.getElementById("category").value;
-    if (categoryID !== "") {
-        console.log(`添加 ${d.result.id} 到分类 ${categoryID}`)
-        addArchiveToCategory(d.result.id, categoryID);
-    }
 }
 
 function handleFailedUpload(jobID, d) {
@@ -62,6 +57,7 @@ function handleFailedUpload(jobID, d) {
 // Send URLs to the Download API and add a checkJobStatus to track its progress.
 function downloadUrl() {
 
+    const categoryID = document.getElementById("category").value;
     // One fetch job per non-empty line of the form
     $('#urlForm').val().split(/\r|\n/).forEach(url => {
 
@@ -69,7 +65,9 @@ function downloadUrl() {
 
         let formData = new FormData();
         formData.append('url', url);
-
+        if (categoryID !== "") {
+            formData.append('catid', categoryID);
+        }
         fetch("/api/download_url", {
             method: "POST",
             body: formData
@@ -109,9 +107,12 @@ function initUpload() {
 
     $('#fileupload').fileupload({
         dataType: 'json',
+        formData: function (form) {
+            let array = [{ name: 'catid', value: document.getElementById("category").value }];
+            return array;
+        },
         done: function (e, data) {
 
-            const categoryID = document.getElementById("category").value;
 
             if (data.result.success == 0)
                 result = `<tr><td>${data.result.name}</td>
