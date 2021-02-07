@@ -269,7 +269,7 @@ function loadCategories() {
 				category = data[i];
 				const pinned = category.pinned === "1";
 
-				catName = (pinned ? "�" : "") + category.name;
+				catName = (pinned ? "📌" : "") + category.name;
 				catName = encode(catName);
 
 				div = `<div style='display:inline-block'>
