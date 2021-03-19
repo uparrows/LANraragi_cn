@@ -28,7 +28,7 @@ Lanraragi是一个开源的压缩包漫画阅读器，运行在Mojolicious和Red
 
 |配置 | 插件配置 |
 |---|---|
-| [![cfg](./tools/_screenshots/cfg.png)](https://raw.githubusercontent.com/Difegue/LANraragi/dev/tools/_screenshots/cfg.png) | [![cfg_plugin](./tools/_screenshots/cfg_plugin.png)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/cfg.png) |
+| [![cfg](./tools/_screenshots/cfg.png)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/cfg.png) | [![cfg_plugin](./tools/_screenshots/cfg_plugin.png)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/cfg_plugin.png) |
 
 
 ## 功能
