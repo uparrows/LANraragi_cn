@@ -53,7 +53,7 @@ The content directory you have to specify in the command above will contain arch
 The database directory houses the LANraragi database\(As database.rdb\), allowing you to hotswap containers without losing any data.
 
 {% hint style="info" %}
-If you don't care too much about being able to backup your database file, you can mount the database directory to a dedicated Docker volume:
+You can also mount the database directory to a dedicated Docker volume:
 
 ```bash
 docker volume create lrr-database
