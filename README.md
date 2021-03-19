@@ -1,4 +1,5 @@
-LANraragi_cn
+## LANraragi_cn
+
 This repo is a fork of Difegue / LANraragi , those things i've done was to translate this repo into chinese ,and fix chrome browser js problem .also use user root instead of user koyomi to fix the access permissions of the content folder.
 
 also i've build a docker image , if you are a user of docker ,you need to mount your comic folder to "/root/lanraragi/content" directory, and the database folder to "/root/lanraragi/database" directory.
