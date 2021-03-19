@@ -18,6 +18,12 @@ Lanraragi是一个开源的压缩包漫画阅读器，运行在Mojolicious和Red
 
 [⏬ 下载源码](https://github.com/uparrows/LANraragi_cn/releases/latest) |[📄 教程](http://yuanfangblog.xyz/technology/251.html) |
 
+## 扫码直接查看教程
+
+[<img src="https://user-images.githubusercontent.com/38988286/111801925-65776800-8908-11eb-8b13-283a4d21e41c.jpg">](http://yuanfangblog.xyz/technology/251.html)
+
+
+
 ## 截图  
  
 |主页, 预览图 | 主页, 列表模式 |
