@@ -52,7 +52,8 @@
 			<ul class="collapsible extensible with-right-caret">
 				<li class="option-flyout">
 					<div class="collapsible-title caret-right">
-						<i class="fa fa-cubes" aria-hidden="true"></i> 全局设置</div>
+						<i class="fa fa-cubes" aria-hidden="true"></i> 全局设置
+					</div>
 					<div class="collapsible-body">
 						<table style="margin:auto; font-size:9pt;">
 							<tbody>
@@ -63,7 +64,8 @@
 				</li>
 				<li class="option-flyout">
 					<div class="collapsible-title caret-right">
-						<i class="fa fa-shield-alt" aria-hidden="true"></i> 安全</div>
+						<i class="fa fa-shield-alt" aria-hidden="true"></i> 安全
+					</div>
 					<div class="collapsible-body">
 						<table style="margin:auto; font-size:9pt;">
 							<tbody>
@@ -74,7 +76,8 @@
 				</li>
 				<li class="option-flyout">
 					<div class="collapsible-title caret-right">
-						<i class="fa fa-file-archive" aria-hidden="true"></i> 档案文件</div>
+						<i class="fa fa-file-archive" aria-hidden="true"></i> 档案文件
+					</div>
 					<div class="collapsible-body">
 						<table style="margin:auto; font-size:9pt;">
 							<tbody>
@@ -85,7 +88,8 @@
 				</li>
 				<li class="option-flyout">
 					<div class="collapsible-title caret-right">
-						<i class="fa fa-tags" aria-hidden="true"></i> 标签和插件</div>
+						<i class="fa fa-tags" aria-hidden="true"></i> 标签和缩略图
+					</div>
 					<div class="collapsible-body">
 						<table style="margin:auto; font-size:9pt;">
 							<tbody>
@@ -96,7 +100,8 @@
 				</li>
 				<li class="option-flyout">
 					<div class="collapsible-title caret-right">
-						<i class="fa fa-satellite" aria-hidden="true"></i> 后台工作</div>
+						<i class="fa fa-satellite" aria-hidden="true"></i> 后台进程
+					</div>
 					<div class="collapsible-body">
 						<table style="margin:auto; font-size:9pt;">
 							<tbody>
