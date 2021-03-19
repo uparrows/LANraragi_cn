@@ -17,9 +17,9 @@
 	<script src="./js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
 	<script src="./js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
 
-	<script src="./js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
-	<script src="./js/reader.js?[% version%]" type="text/JAVASCRIPT"></script>
-	<script src="./js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="./js/theme.js?[% version %]" type="text/JAVASCRIPT"></script>
+	<script src="./js/reader.js?[% version %]" type="text/JAVASCRIPT"></script>
+	<script src="./js/ajax.js?[% version %]" type="text/JAVASCRIPT"></script>
 
 </head>
 
@@ -95,36 +95,36 @@
 		if ((filename.endsWith(".rar") || filename.endsWith(".cbr")) && !localStorage.rarWarningShown) {
 			localStorage.rarWarningShown = true;
 			$.toast({
-					showHideTransition: 'slide',
-					position: 'top-left', 
-					loader: false, 
-				    heading: "该文件似乎是RAR格式!",
-				    text: 'RAR存档在LANraragi中可能无法正常运行，具体取决于其压缩方式。 如果阅读时遇到错误，请考虑将存档转换为zip。',
-				    hideAfter: false,
-				    icon: 'warning'
-				});
+				showHideTransition: 'slide',
+				position: 'top-left',
+				loader: false,
+				heading: "该文件似乎是RAR格式!",
+				text: 'RAR存档在LANraragi中可能无法正常运行，具体取决于其压缩方式。 如果阅读时遇到错误，请考虑将存档转换为zip。',
+				hideAfter: false,
+				icon: 'warning'
+			});
 		}
-			
+
 		if (filename.endsWith(".epub") && !localStorage.epubWarningShown) {
 			localStorage.epubWarningShown = true;
 			$.toast({
-					showHideTransition: 'slide',
-					position: 'top-left', 
-					loader: false, 
-				    heading: "LANraragi中对EPUB的支持最基础",
-				    text: 'EPUB书籍只会在网络阅读器中显示图像。 如果需要文本支持，请考虑将LANraragi与 <a href= "https://sugoi.gitbook.io/lanraragi/advanced-usage/external-readers#generic-opds-readers">OPDS 配合.</a> ',
-				    hideAfter: false,
-				    icon: 'warning'
-				});
+				showHideTransition: 'slide',
+				position: 'top-left',
+				loader: false,
+				heading: "LANraragi中对EPUB的支持最基础",
+				text: 'EPUB书籍只会在网络阅读器中显示图像。 如果需要文本支持，请考虑将LANraragi与 <a href= "https://sugoi.gitbook.io/lanraragi/advanced-usage/external-readers#generic-opds-readers">OPDS 配合.</a> ',
+				hideAfter: false,
+				icon: 'warning'
+			});
 		}
 
-		//Go straight to page number in localStorage if it exists
+		// Go straight to page number if there's an existing progress value
 		if (localStorage.nobookmark === 'true')
 			currentPage = 0;
-		else	
-			currentPage = parseInt(localStorage[id + "-reader"] || 0);
-		
-		pageNumber = pages.pages.length;
+		else
+			currentPage = parseInt([% progress %] - 1 || 0);
+
+		pageNumber = [% pagecount %];
 
 		//canvas variables
 		previousPage = -1;
@@ -134,9 +134,9 @@
 		showingSinglePage = false;
 
 		//if we made it to the last page in a previous read, reset the page number
-		if (currentPage === pageNumber-1)
+		if (currentPage === pageNumber - 1)
 			currentPage = 0;
-			
+
 		goToPage(currentPage);
 
 		// Remove new flag with an API call
@@ -191,12 +191,14 @@
 		<input id="scaletoview" name="scaletoview" class="fa" type="checkbox" style="float:left">
 		<br /> 如果启用，页面将按屏幕尺寸缩放。
 	</div>
+
 	<div class="config-panel">
 		<h1 class="ih" style="display:inline"> 强制宽度适应</h1>
 		<input id="forcefullwidth" name="forcefullwidth" class="fa" type="checkbox" style="float:left">
 		<br /> 如果启用，页面将被放大以适合浏览器的宽度（如果页面较小）.
 		<br /> 如果启用，此选项将覆盖“适应屏幕”.
 	</div>
+
 	<div class="config-panel">
 		<h1 class="ih" style="display:inline"> 隐藏顶层导航</h1>
 		<input id="hidetop" name="hidetop" class="fa" type="checkbox" style="float:left">
@@ -205,7 +207,7 @@
 
 	<div class="config-panel">
 			<h1 class="ih" style="display:inline"> 禁用自动书签</h1>
-			<input id="nobookmark" name="nobookmark" class="fa" type="checkbox" style="float:left">
+		<input id="nobookmark" name="nobookmark" class="fa" type="checkbox" style="float:left">
 			<br /> 每次打开阅读器时，勾选此项将从第一页开始阅读。
 	</div>
 </div>
