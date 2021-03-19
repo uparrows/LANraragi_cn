@@ -1,17 +1,18 @@
 # DOCKER-VERSION 0.3.4
-FROM        alpine:latest
+FROM        alpine:3.12
 LABEL       git="https://github.com/uparrows/LANraragi_cn"
 
-ENV S6_OVERLAY_RELEASE v1.21.8.0
+ENV S6_OVERLAY_RELEASE v2.0.0.1
 ENV S6_KEEP_ENV 1
 
-# terminate if we can't run stage2 (fix-attrs/cont-init)
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS 2
+# warn if we can't run stage2 (fix-attrs/cont-init)
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS 1
 
 # wait 10s before KILLing
 ENV S6_KILL_GRACETIME 10000
 
-ENTRYPOINT ["/init"] # s6
+# s6
+ENTRYPOINT ["/init"] 
 
 # Check application health
 HEALTHCHECK --interval=1m --timeout=10s --retries=3 \
@@ -34,6 +35,7 @@ ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 \
 
 # we use s6-overlay-nobin to just pull in the s6-overlay arch agnostic (shell)
 # components, since we apk install the binaries of s6 later which are arch specific
+# /!\ While the s6 version here is fixed by an envvar, the apk install is not pinned and takes whatever's in alpine:latest! This certainly needs a fix.
 ADD https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_RELEASE}/s6-overlay-nobin.tar.gz /tmp/s6-overlay-nobin.tar.gz
 RUN tar -C / -xzf /tmp/s6-overlay-nobin.tar.gz && rm -f /tmp/s6-overlay-nobin.tar.gz
 
@@ -67,8 +69,6 @@ COPY --chown=root:root /jquery.contextMenu.min.js.map /root/lanraragi/public/js/
 COPY --chown=root:root /jquery.qtip.min.map /root/lanraragi/public/js/vendor/jquery.qtip.min.map
 COPY --chown=root:root /jquery.contextMenu.min.css.map /root/lanraragi/public/css/vendor/jquery.contextMenu.min.css.map
 COPY --chown=root:root /awesomplete.css.map /root/lanraragi/public/css/vendor/awesomplete.css.map
-COPY --chown=root:root /fa-solid-900.woff2 /root/lanraragi/public/css/webfonts/fa-solid-900.woff2
-# keep this out for now and do it in cont-init.d instead
 #COPY /tools/build/docker/s6/fix-attrs.d/ /etc/fix-attrs.d/
 
 # Persistent volumes
