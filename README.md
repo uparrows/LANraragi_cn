@@ -1,6 +1,6 @@
 ## LANraragi_cn
 
-This repo is a fork of Difegue / LANraragi , those things i've done was to translate this repo into chinese ,and fix chrome browser js problem .also use user root instead of user koyomi to fix the access permissions of the content folder.
+This repo is a fork of [Difegue / LANraragi](https://github.com/Difegue/LANraragi) , those things i've done was to translate this repo into chinese ,and fix chrome browser js problem .also use user root instead of user koyomi to fix the access permissions of the content folder on synology nas.
 
 also i've build a docker image , if you are a user of docker ,you need to mount your comic folder to "/root/lanraragi/content" directory, and the database folder to "/root/lanraragi/database" directory.
 
@@ -14,7 +14,7 @@ Lanraragi是一个开源的压缩包漫画阅读器，运行在Mojolicious和Red
 [<img src="https://img.shields.io/docker/pulls/dezhao/lanraragi_cn.svg">](https://hub.docker.com/r/dezhao/lanraragi_cn/)
 
 
-[⏬ 下载源码](https://github.com/uparrows/LANraragi_cn/releases/latest) |
+[⏬ 下载源码](https://github.com/uparrows/LANraragi_cn/releases/latest) |[📄 教程](http://yuanfangblog.xyz/technology/251.html) |
 
 ## 截图  
  
