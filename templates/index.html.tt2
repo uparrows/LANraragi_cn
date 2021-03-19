@@ -26,8 +26,6 @@
 	<script src="/js/vendor/jquery.contextMenu.min.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/awesomplete.min.js" type="text/JAVASCRIPT"></script>
 
-	<script src="https://cdn.datatables.net/plug-ins/1.10.22/pagination/select.js" type="text/JAVASCRIPT"></script>
-
 	<script src="/js/index.js?[% version %]" type="text/JAVASCRIPT"></script>
 	<script src="/js/ajax.js?[% version %]" type="text/JAVASCRIPT"></script>
 	<script src="/js/index_datatables.js?[% version %]" type="text/JAVASCRIPT"></script>
@@ -126,7 +124,7 @@
 	[% INCLUDE footer %]
 
 	[% IF debugmode %]
-	<i class="fas fa-bug"></i> 您正在调试模式下运行！
+	<i class="fas fa-bug"></i> 您正运行在 <a href="./debug">调试模式</a>!
 	<i class="fas fa-bug"></i>
 	[% END %]
 
@@ -138,58 +136,67 @@
 
 			// Initialize tag suggestions
 			loadTagSuggestions();
+
 			// Initialize categories
 			selectedCategory = "";
 			loadCategories();
-		[% IF usingdefpass %]
-		//If the json has the "default password" flag, flash a friendly notification inviting the user to change his password
-		$.toast({
+
+			// Migrate local progression if there's any
+			migrateProgress();
+
+			[% IF usingdefpass %]
+			//If the json has the "default password" flag, flash a friendly notification inviting the user to change his password
+			$.toast({
 			heading: '你\'正在使用默认密码，\'这样太蠢了',
 			text: '<a href="login">点此登录</a> ，使用默认密码 "kamimamita" 之后 <a href="config">修改它，</a> 赶紧的。<br/>...也可以禁用它! <br/>为什么不在之后检查\ 配置选项呢? ',
-			hideAfter: false,
-			position: 'top-left',
-			icon: 'error'
-		});
-		[% END %]
+				hideAfter: false,
+				position: 'top-left',
+				icon: 'error'
+			});
+			[% END %]
 
-		[% IF debugmode %][% ELSE %]
-		checkVersion("[% version %]");
-		[% END %]
+			[% IF debugmode %][% ELSE %]
+			checkVersion("[% version %]");
+			[% END %]
 
-		// Initialize context menu
-		$.contextMenu({
-			selector: '.id1,.image-tooltip',
-			callback: function (key, options) {
-				handleContextMenu(key, $(this).attr("id"));
-			},
-			items: {
-				[% IF userlogged %]
-				"edit": { name: "编辑元数据", icon: "fas fa-pencil-alt" },
-				"delete": { name: "删除", icon: "fas fa-trash-alt" },
-				"category": {
-					"name": "添加到分类", 
-					"icon": "fas fa-folder-open",
-					"items": {
-						[% IF categories.size > 0 %]
-							[% FOREACH categories %]
-							"category-[% id %]": {"name": "[% name %]"},
+			// Initialize context menu
+			$.contextMenu({
+				selector: '.context-menu',
+				build: ($trigger, e) => {
+					return {
+						callback: function (key, options) {
+							handleContextMenu(key, $(this).attr("id"));
+						},
+						items: {
+							[% IF userlogged %]
+							"edit": { name: "编辑元数据", icon: "fas fa-pencil-alt" },
+							"delete": { name: "删除", icon: "fas fa-trash-alt" },
+							"category": {
+								"name": "添加到分类", 
+								"icon": "fas fa-search-plus",
+								"items": {
+									[% IF categories.size > 0 %][% FOREACH categories %]
+									"category-[% id %]": { "name": "[% name %]", "icon": "fas fa-stream" },
+									[% END %][% ELSE %]
+								"noop": { "name": "暂无分类...", "icon": "fas fa-ghost" }
+									[% END %]
+								}
+							},
+							"categoryremove": {
+								"name": "从分类中移除",
+								"icon": "fas fa-search-minus",
+								"items": loadContextMenuCategories($trigger.attr("id"))
+							},
+							"sep1": "---------",
 							[% END %]
-						[% ELSE %]
-						"noop": {"name": "暂无分类..."}
-						[% END %]
-					}
-				},
-				"sep1": "---------",
-				[% END %]
-				"read": { name: "阅读", icon: "fas fa-book" },
-			"download": { name: "下载", icon: "fas fa-save" }
+						"read": { name: "阅读", icon: "fas fa-book" },
+					"download": { name: "下载", icon: "fas fa-save" }
+				}
 			}
-		});
-
+				}
+			});
 
 		}
-
-
 
 	</script>
 
@@ -210,7 +217,8 @@
 				<br /> 如果启用，不适合常规A4页面的缩略图将被裁剪为仅显示
 				左侧.
 			</div>
-				<div class="config-panel">
+
+			<div class="config-panel">
 				<h1 class="ih" style="display:inline"> 自定义列 </h1>
 				<br>您可以自定义标题和标签摘要之间的两列中使用的排序名称.
 				<br>输入不带冒号的完整排序名称,比如 "artist".<br>
