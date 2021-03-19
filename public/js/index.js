@@ -112,15 +112,23 @@ function initSettings(version) {
 
 	if (localStorage.cropthumbs === 'true')
 		$("#cropthumbs").prop("checked", true);
+
 	updateTableHeaders();
+}
+
+function isNullOrWhitespace(input) {
+	return !input || !input.trim();
 }
 
 function saveSettings() {
 	localStorage.indexViewMode = $("#compactmode").prop("checked") ? 0 : 1;
 	localStorage.cropthumbs = $("#cropthumbs").prop("checked");
 
-	localStorage.customColumn1 = $("#customcol1").val();
-	localStorage.customColumn2 = $("#customcol2").val();
+	if (!isNullOrWhitespace($("#customcol1").val()))
+		localStorage.customColumn1 = $("#customcol1").val().trim();
+
+	if (!isNullOrWhitespace($("#customcol2").val()))
+		localStorage.customColumn2 = $("#customcol2").val().trim();
 
 	// Absolutely disgusting
 	arcTable.settings()[0].aoColumns[1].sName = localStorage.customColumn1;
@@ -185,11 +193,36 @@ function checkVersion(currentVersionConf) {
 	});
 }
 
+function loadContextMenuCategories(id) {
+	return genericAPICall(`/api/archives/${id}/categories`, 'GET', null, `查找以下类别出现错误：${id}!`,
+		function (data) {
+
+			items = {};
+
+			for (let i = 0; i < data.categories.length; i++) {
+				cat = data.categories[i];
+				items[`delcat-${cat.id}`] = { "name": cat.name, "icon": "fas fa-stream" };
+			}
+
+			if (Object.keys(items).length === 0) {
+				items["noop"] = { "name": "该档案不存在于任何分类。", "icon": "far fa-sad-cry" };
+			}
+
+			return items;
+		});
+}
+
 function handleContextMenu(option, id) {
 
 	if (option.startsWith("category-")) {
 		var catId = option.replace("category-", "");
 		addArchiveToCategory(id, catId);
+		return;
+	}
+
+	if (option.startsWith("delcat-")) {
+		var catId = option.replace("delcat-", "");
+		removeArchiveFromCategory(id, catId);
 		return;
 	}
 
@@ -325,4 +358,47 @@ function openSettings() {
 function closeOverlay() {
 	$('#overlay-shade').fadeOut(300);
 	$('.base-overlay').css('display', 'none');
+}
+
+function migrateProgress() {
+	localProgressKeys = Object.keys(localStorage).filter(x => x.endsWith("-reader")).map(x => x.slice(0, -7));
+
+	if (localProgressKeys.length > 0) {
+		$.toast({
+			heading: '现在，您的阅读进度已在客户端之间同步!',
+			text: '您似乎已经从较早的LRR版本中保存了一些本地进度-请耐心等待我们为您迁移到服务器. ☕',
+			hideAfter: false,
+			position: 'top-left',
+			icon: 'info'
+		});
+
+		var promises = [];
+		localProgressKeys.forEach(id => {
+
+			var progress = localStorage.getItem(id + "-reader");
+
+			promises.push(fetch(`api/archives/${id}/metadata`, { method: 'GET' })
+				.then(response => response.json())
+				.then((data) => {
+					// Don't migrate if the server progress is already further
+					if (progress !== null && data !== undefined && data !== null && progress > data.progress) {
+						genericAPICall(`api/archives/${id}/progress/${progress}?force=1`, "PUT", null, "更新阅读进度时出错!", null);
+					}
+
+					// Clear out localStorage'd progress
+					localStorage.removeItem(id + "-reader");
+					localStorage.removeItem(id + "-totalPages");
+				}));
+		});
+
+		Promise.all(promises).then(() => $.toast({
+			heading: '阅读进度已完全迁移! 🎉',
+			text: '您\'将必须在阅读器中重新打开档案以查看已迁移的进度值.',
+			hideAfter: false,
+			position: 'top-left',
+			icon: 'success'
+		}));
+	} else {
+		console.log("没有本地阅读进度可迁移");
+	}
 }
