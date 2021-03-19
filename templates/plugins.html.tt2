@@ -32,44 +32,54 @@
 	<div class="ido" style="text-align:center;">
 		<h1 class="ih" style="text-align:center">插件配置</h1>
 		<br /> 切换该选项，在元数据插件上启用/禁用 Auto-Plugin。
-		<br /> 如果在此处切换了插件，并且在“设置”中启用了“Auto-Plugin”功能，则这些插件将自动用于新的
-		存档。
+		<br /> 如果在这里切换插件，它们将自动用于新档案。
 		<br /> 如果它们具有配置变量，则也可以在此处进行设置。
 		<br /> 您也可以在此处触发脚本。 触发脚本将事先保存您的插件设置。
 		<br />
 
 		<form name="editPluginForm" id="editPluginForm" enctype="multipart/form-data" method="post">
 
-			<ul class="collapsible extensible with-right-caret">
-				<li class="option-flyout">
-					<div class="collapsible-title caret-right">
-						<i class="fa fa-digital-tachograph" aria-hidden="true"></i> 元数据插件</div>
-					<div class="collapsible-body">
-						[% INCLUDE pluginlist plugins = metadata %]
-					</div>
-				</li>
-				<li class="option-flyout">
-					<div class="collapsible-title caret-right">
-						<i class="fa fa-plug" aria-hidden="true"></i> 登录插件</div>
-					<div class="collapsible-body">
-						[% INCLUDE pluginlist plugins = logins %]
-					</div>
-				</li>
-				<li class="option-flyout">
-					<div class="collapsible-title caret-right">
-						<i class="fas fa-cloud-download-alt" aria-hidden="true"></i> 下载</div>
-					<div class="collapsible-body">
-						[% INCLUDE pluginlist plugins = downloaders %]
-					</div>
-				</li>
-				<li class="option-flyout">
-					<div class="collapsible-title caret-right">
-						<i class="fa fa-scroll" aria-hidden="true"></i> 脚本</div>
-					<div class="collapsible-body">
-						[% INCLUDE pluginlist plugins = scripts %]
-					</div>
-				</li>
-			</ul>
+			<div class="left-column" style="width:49%">
+				<ul class="collapsible extensible with-right-caret">
+					<li class="option-flyout">
+						<div class="collapsible-title caret-right">
+							<i class="fa fa-plug" aria-hidden="true"></i> 登录插件
+						</div>
+						<div class="collapsible-body">
+							[% INCLUDE pluginlist plugins = logins %]
+						</div>
+					</li>
+					<li class="option-flyout">
+						<div class="collapsible-title caret-right">
+							<i class="fas fa-cloud-download-alt" aria-hidden="true"></i> 下载器
+						</div>
+						<div class="collapsible-body">
+							[% INCLUDE pluginlist plugins = downloaders %]
+						</div>
+					</li>
+					<li class="option-flyout">
+						<div class="collapsible-title caret-right">
+							<i class="fa fa-scroll" aria-hidden="true"></i> 脚本
+						</div>
+						<div class="collapsible-body">
+							[% INCLUDE pluginlist plugins = scripts %]
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<div class="right-column" style="width:50%">
+				<ul class="collapsible extensible with-right-caret">
+					<li class="option-flyout">
+						<div class="collapsible-title caret-right">
+							<i class="fa fa-digital-tachograph" aria-hidden="true"></i> 元数据插件
+						</div>
+						<div class="collapsible-body">
+							[% INCLUDE pluginlist plugins = metadata %]
+						</div>
+					</li>
+				</ul>
+			</div>
 
 			<br />
 			<h1 style="text-align:center">
@@ -137,17 +147,23 @@
 	<h2 class="ih" style="display:inline"> [% plugin.name %] v.[% plugin.version %]</h2>
 	<h1 class="ih" style="display:inline"> by [% plugin.author %] </h1>
 
-	[% IF plugin.login_from %] <i style="float:right">
+	<div style="float:right; text-align: right;">
+
+		[% IF plugin.type == "metadata" %]
+		<h1 class="ih" style="display:inline"> Run Automatically: </h1>
+		<input id="[% plugin.namespace %]" name="[% plugin.namespace %]" class="fa" type="checkbox" [% IF plugin.enabled
+			%] checked [% END %]>
+		<br />
+		[% END %]
+
+		[% IF plugin.login_from %]
 		<i class="fa fa-plug" aria-hidden="true"></i> 该插件依赖登录插件 "[% plugin.login_from %]".
-	</i>
-	[% END %]
+		[% END %]
+
+	</div>
+
 	<br />
-	[% IF plugin.type == "metadata" %]
-	<h1 class="ih" style="display:inline"> Auto-Plugin: </h1>
-	<input id="[% plugin.namespace %]" name="[% plugin.namespace %]" class="fa" type="checkbox" [% IF plugin.enabled %]
-		checked [% END %]>
-	<br />
-	[% END %]
+
 	[% IF plugin.type == "download" %]
 	<pre title="此插件将在与该正则表达式匹配的URL上触发！">	[% plugin.url_regex %]</pre>
 	[% END %]
@@ -179,8 +195,12 @@
 	[% END %]
 
 	[% IF plugin.parameters && plugin.parameters.size %]
-	<div class="collapsible-title " style="padding: 5px 0 0 5px">
-		<i class="fa fa-cog fa-2x" aria-hidden="true"></i><b> 设置</b></div>
+	<div class="collapsible-title" style="padding: 5px 0 0 5px">
+		<a>
+			<i class="fas fa-sliders-h fa-2x" style="margin-right: 4px" aria-hidden="true"></i>
+			<b style="vertical-align: super;">插件设置</b>
+		</a>
+	</div>
 	<div class="collapsible-body" style="padding:5px 0 0 0">
 		<table>
 			<tbody>
