@@ -1,9 +1,8 @@
 <!-- LRR Standard Footer -->
 
 <p class="ip">
-    我想那一定是爱，而不是活塞运动的副作用！
+    [% descstr %]
     <br>
-
     <a href="https://github.com/Difegue/LANraragi"> LANraragi</a>
     -
     <a onclick="openThemeOverlay()" style="cursor:pointer">修改主题</a>
@@ -16,7 +15,8 @@
     style="display:none; max-height:300px; min-height:300px !important">
 
     <h1>
-        <i class="fa fa-paint-brush"></i> 可选主题 </h1>
+        <i class="fa fa-paint-brush"></i> 可选主题
+    </h1>
     <br /> [% cssdrop %]
 
     <br /> 单击名称立即尝试主题！ 您的配置将自动保存。
