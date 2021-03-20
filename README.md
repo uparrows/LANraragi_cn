@@ -28,16 +28,16 @@ Lanraragi是一个开源的压缩包漫画阅读器，运行在Mojolicious和Red
  
 |主页, 预览图 | 主页, 列表模式 |
 |---|---|
-| [![archive_thumb](./tools/_screenshots/archive_thumb.png)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/archive_thumb.png) | [![archive_list](./tools/_screenshots/archive_list.png)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/archive_list.png) |
+| [![archive_thumb](https://user-images.githubusercontent.com/38988286/111873262-6f619f80-89ca-11eb-8891-7437f1d08cb4.png)](https://user-images.githubusercontent.com/38988286/111873262-6f619f80-89ca-11eb-8891-7437f1d08cb4.png) | [![archive_list](https://user-images.githubusercontent.com/38988286/111873240-5822b200-89ca-11eb-8c0c-17b3bd374a9b.png)](https://user-images.githubusercontent.com/38988286/111873240-5822b200-89ca-11eb-8c0c-17b3bd374a9b.png) |
 
 |阅读器 | 预览 |
 |---|---|
-| [![reader](./tools/_screenshots/reader.jpg)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/reader.jpg) | [![reader_overlay](./tools/_screenshots/reader_overlay.jpg)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/reader_overlay.jpg) |
+| [![reader](https://user-images.githubusercontent.com/38988286/111873285-899b7d80-89ca-11eb-8868-5431e7a117f9.jpg)](https://user-images.githubusercontent.com/38988286/111873285-899b7d80-89ca-11eb-8868-5431e7a117f9.jpg) | [![reader_overlay](https://user-images.githubusercontent.com/38988286/111873298-915b2200-89ca-11eb-8d61-cc67dca038f0.jpg)](https://user-images.githubusercontent.com/38988286/111873298-915b2200-89ca-11eb-8d61-cc67dca038f0.jpg) |
 
 
 |配置 | 插件配置 |
 |---|---|
-| [![cfg](./tools/_screenshots/cfg.png)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/cfg.png) | [![cfg_plugin](./tools/_screenshots/cfg_plugin.png)](https://raw.githubusercontent.com/uparrows/LANraragi_cn/main/tools/_screenshots/cfg_plugin.png) |
+| [![cfg](https://user-images.githubusercontent.com/38988286/111873270-78527100-89ca-11eb-9526-35f1f78b578f.png)](https://user-images.githubusercontent.com/38988286/111873270-78527100-89ca-11eb-9526-35f1f78b578f.png) | [![cfg_plugin](https://user-images.githubusercontent.com/38988286/111873273-7f797f00-89ca-11eb-89b4-b3c21228c949.png)](https://user-images.githubusercontent.com/38988286/111873273-7f797f00-89ca-11eb-89b4-b3c21228c949.png) |
 
 
 ## 功能
