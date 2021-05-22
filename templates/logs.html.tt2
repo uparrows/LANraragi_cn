@@ -15,7 +15,7 @@
 	<script src="./js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
 
 	<script src="./js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
-
+	<script src="./js/common.js?[% version%]" type="text/JAVASCRIPT"></script>
 </head>
 
 <body onload="set_style_from_storage()">
@@ -31,10 +31,10 @@
 			<li>Shinobu日志对应于后台监视进程。</li>
 			<li>插件日志仅针对元数据插件。 </li>
 			<li>除非您正在运行“调试模式”，否则Mojolicious日志不会告诉您太多信息。 </li>
-			<li>Redis日志仅适用于Docker / Windows / Homebrew用户。 </li>
+			<li>如果您从源代码运行，则Redis日志将无法在此处使用！。 </li>
 		</ul>
 		<br>汉化：昭君。访问<a href="http://yuanfangblog.xyz"> 我的博客 </a>和<a href="https://space.bilibili.com/6976331"> Bilibili空间 </a>获取更多信息和教程<br>
-		<br>点击 <a href="http://yuanfangblog.xyz/usr/uploads/2021/03/3187370182.zip"> 此处下载 </a>汉化版安卓手机客户端Ichaival-1.0.0版<br>
+		<br>点击 <a href="http://yuanfangblog.xyz/usr/uploads/2021/05/536086564.zip"> 此处下载 </a>汉化版安卓手机客户端Ichaival-1.0.2版<br>
 		<br><br>
 
 		<h1 class='ih' style='float:left; margin-left: 5%;'>当前视图: <span id="indicator">通常</span></h1>
@@ -87,7 +87,7 @@
 		function showLog(type) {
 
 			$.get("/logs/" + type + "?lines=" + $("#loglines").val(), function (data) {
-				$("#log-container").html(data);
+				$("#log-container").html(encode(data));
 				$("#indicator").html(type);
 				$("#log-container").scrollTop($("#log-container").prop("scrollHeight"));
 			});

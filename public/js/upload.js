@@ -15,7 +15,8 @@ function updateUploadCounters() {
             "fa fa-spinner fa-spin";
 
     $("#progressTotal").html(`<i class="${icon}"></i> Total:${completedArchives + failedArchives}/${totalUploads}`);
-// At the end of the upload job, dump the search cache!
+
+    // At the end of the upload job, dump the search cache!
     if (processingArchives === 0)
         invalidateCache();
 }
@@ -28,7 +29,8 @@ function handleCompletedUpload(jobID, d) {
     if (d.result.id) {
         $(`#${jobID}-name`).attr("href", `reader?id=${d.result.id}`);
         $(`#${jobID}-link`).attr("href", `edit?id=${d.result.id}`);
-		}
+    }
+
     if (d.result.success) {
         $(`#${jobID}-link`).html("点击此处编辑元数据。(" + d.result.message + ")")
         $(`#${jobID}-icon`).attr("class", "fa fa-check-circle");
@@ -41,7 +43,6 @@ function handleCompletedUpload(jobID, d) {
 
     processingArchives--;
     updateUploadCounters();
-
 }
 
 function handleFailedUpload(jobID, d) {
@@ -58,6 +59,7 @@ function handleFailedUpload(jobID, d) {
 function downloadUrl() {
 
     const categoryID = document.getElementById("category").value;
+
     // One fetch job per non-empty line of the form
     $('#urlForm').val().split(/\r|\n/).forEach(url => {
 
@@ -65,9 +67,11 @@ function downloadUrl() {
 
         let formData = new FormData();
         formData.append('url', url);
+
         if (categoryID !== "") {
             formData.append('catid', categoryID);
         }
+
         fetch("/api/download_url", {
             method: "POST",
             body: formData
@@ -112,7 +116,6 @@ function initUpload() {
             return array;
         },
         done: function (e, data) {
-
 
             if (data.result.success == 0)
                 result = `<tr><td>${data.result.name}</td>

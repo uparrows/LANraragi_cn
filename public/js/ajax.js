@@ -48,7 +48,7 @@ function genericAPICall(endpoint, method, successMessage, errorMessage, successC
 // Check the status of a Minion job until it's completed.
 // Execute a callback on successful job completion.
 function checkJobStatus(jobId, callback, failureCallback) {
-	fetch(`api/minion/${jobId}`, { method: "GET" })
+	fetch(`/api/minion/${jobId}`, { method: "GET" })
 		.then(response => response.ok ? response.json() : { success: 0, error: "响应不正确" })
 		.then((data) => {
 
@@ -62,7 +62,7 @@ function checkJobStatus(jobId, callback, failureCallback) {
 			if (data.state !== "finished") {
 				// Wait and retry, job isn't done yet
 				setTimeout(function () {
-					checkJobStatus(jobId, callback);
+					checkJobStatus(jobId, callback, failureCallback);
 				}, 1000);
 			} else {
 				// Update UI with info
@@ -114,52 +114,59 @@ function triggerScript(namespace) {
 
 	// Save data before triggering script
 	saveFormData('#editPluginForm')
-		.then(genericAPICall(`../api/plugins/use?plugin=${namespace}&arg=${scriptArg}`, "POST", null, "执行脚本时出错 :",
-			function (r) {
-				$.toast({
-					showHideTransition: 'slide',
-					position: 'top-left',
-					loader: false,
-					heading: "Script result",
-					text: "<pre>" + JSON.stringify(r.data, null, 4) + "</pre>",
-					hideAfter: false,
-					icon: 'info'
-				});
-			}))
-		.then(() => {
-			isScriptRunning = false;
-			$(".script-running").hide();
-			$(".stdbtn").show();
-		})
-		.catch(() => {
-			isScriptRunning = false;
-			$(".script-running").hide();
-			$(".stdbtn").show();
-		});
+		.then(genericAPICall(`/api/plugins/queue?plugin=${namespace}&arg=${scriptArg}`, "POST", null, "执行脚本时出错 :",
+			function (data) {
+
+				// Check minion job state periodically while we're on this page
+				checkJobStatus(data.job,
+					(d) => {
+						isScriptRunning = false;
+						$(".script-running").hide();
+						$(".stdbtn").show();
+
+						if (d.result.success === 1)
+							$.toast({
+								showHideTransition: 'slide',
+								position: 'top-left',
+								loader: false,
+								heading: "Script result",
+								text: "<pre>" + JSON.stringify(d.result.data, null, 4) + "</pre>",
+								hideAfter: false,
+								icon: 'info'
+							});
+						else
+							showErrorToast("Script failed: " + d.result.error);
+					},
+					(error) => {
+						isScriptRunning = false;
+						$(".script-running").hide();
+						$(".stdbtn").show();
+					});
+			}));
 }
 
 function cleanTempFldr() {
-	genericAPICall("api/tempfolder", "DELETE", "临时文件夹已清理!", "清理临时文件夹时出错 :",
+	genericAPICall("/api/tempfolder", "DELETE", "临时文件夹已清理!", "清理临时文件夹时出错 :",
 		function (data) {
 			$("#tempsize").html(data.newsize);
 		});
 }
 
 function invalidateCache() {
-	genericAPICall("api/search/cache", "DELETE", "丢弃搜索缓存!", "删除缓存时出错！ 请检查日志。", null);
+	genericAPICall("/api/search/cache", "DELETE", "丢弃搜索缓存!", "删除缓存时出错！ 请检查日志。", null);
 }
 
 function clearNew(id) {
-	genericAPICall(`api/archives/${id}/isnew`, "DELETE", null, "清除新标签时出错！请检查日志。", null);
+	genericAPICall(`/api/archives/${id}/isnew`, "DELETE", null, "清除新标签时出错！请检查日志。", null);
 }
 
 function clearAllNew() {
-	genericAPICall("api/database/isnew", "DELETE", "所有档案不再是新的!", "清除标签时出错！ 请检查日志。", null);
+	genericAPICall("/api/database/isnew", "DELETE", "所有档案不再是新的!", "清除标签时出错！ 请检查日志。", null);
 }
 
 function dropDatabase() {
 	if (confirm('危险！ 你确定要这么做吗?')) {
-		genericAPICall("api/database/drop", "POST", "Sayonara! 重定向...", "重置数据库时出错？ 请检查日志。",
+		genericAPICall("/api/database/drop", "POST", "Sayonara! 重定向...", "重置数据库时出错？ 请检查日志。",
 			function (data) {
 				setTimeout("location.href = './';", 1500);
 			});
@@ -167,7 +174,7 @@ function dropDatabase() {
 }
 
 function cleanDatabase() {
-	genericAPICall("api/database/clean", "POST", null, "清理数据库时出错！ 请检查日志。",
+	genericAPICall("/api/database/clean", "POST", null, "清理数据库时出错！ 请检查日志。",
 		function (data) {
 			$.toast({
 				showHideTransition: 'slide',
@@ -193,7 +200,7 @@ function cleanDatabase() {
 function regenThumbnails(force) {
 
 	forceparam = force ? 1 : 0;
-	genericAPICall(`api/regen_thumbs?force=${forceparam}`, "POST",
+	genericAPICall(`/api/regen_thumbs?force=${forceparam}`, "POST",
 		"Queued up a job to regenerate thumbnails! Stay tuned for updates or check the Minion console.", "Error while sending job to Minion:",
 		function (data) {
 			// Disable the buttons to avoid accidental double-clicks. 
@@ -225,7 +232,7 @@ function regenThumbnails(force) {
 
 function rebootShinobu() {
 	$("#restart-button").prop("disabled", true);
-	genericAPICall("api/shinobu/restart", "POST", "后台服务重启!", "重启后台服务失败:",
+	genericAPICall("/api/shinobu/restart", "POST", "后台服务重启!", "重启后台服务失败:",
 		function (data) {
 			$("#restart-button").prop("disabled", false);
 			shinobuStatus();
@@ -235,7 +242,7 @@ function rebootShinobu() {
 //Update the status of the background worker.
 function shinobuStatus() {
 
-	genericAPICall("api/shinobu", "GET", null, "获取Shinobu状态失败:",
+	genericAPICall("/api/shinobu", "GET", null, "获取Shinobu状态失败:",
 		function (data) {
 			if (data.is_alive) {
 				$("#shinobu-ok").show();
@@ -263,7 +270,7 @@ function removeArchiveFromCategory(arcId, catId) {
 //Sends a DELETE request for that archive ID, deleting the Redis key and attempting to delete the archive file.
 function deleteArchive(arcId) {
 
-	fetch("edit?id=" + arcId, { method: "DELETE" })
+	fetch(`/api/archives/${arcId}`, { method: "DELETE" })
 		.then(response => response.ok ? response.json() : { success: 0, error: "响应不正确" })
 		.then((data) => {
 
@@ -286,7 +293,7 @@ function deleteArchive(arcId) {
 					position: 'top-left',
 					loader: false,
 					heading: '存档已成功删除。重定向 ...',
-					text: 'File name : ' + data.success,
+					text: 'File name : ' + data.filename,
 					icon: 'success'
 				});
 				setTimeout("location.href = './';", 1500);

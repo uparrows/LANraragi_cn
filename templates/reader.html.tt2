@@ -18,19 +18,20 @@
 	<script src="./js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
 
 	<script src="./js/theme.js?[% version %]" type="text/JAVASCRIPT"></script>
+	<script src="./js/common.js?[% version %]" type="text/JAVASCRIPT"></script>
 	<script src="./js/reader.js?[% version %]" type="text/JAVASCRIPT"></script>
 	<script src="./js/ajax.js?[% version %]" type="text/JAVASCRIPT"></script>
 
 </head>
 
-<body onload="set_style_from_storage(); initSettingsOverlay();">
+<body onload="set_style_from_storage(); applySettings();">
 
 	<div id="i1" class="sni">
 		<h1>[% arcname %]</h1>
 
 		<div id="i2">
-			[% INCLUDE pagesel %] [% INCLUDE arrows %] 
-		<br />
+			[% INCLUDE pagesel %] [% INCLUDE arrows %]
+			<br />
 		</div>
 
 		<div id="i3">
@@ -52,8 +53,8 @@
 		</div>
 
 		<div id="i4">
-			<br />
-		 [% INCLUDE pagesel %] [% INCLUDE arrows %]
+		<br />
+		[% INCLUDE pagesel %] [% INCLUDE arrows %]
 		</div>
 
 		<div id="i5">
@@ -63,17 +64,6 @@
 				</a>
 			</div>
 		</div>
-
-		[% IF userlogged %]
-		<div id="i6" class="if">
-			<i class="fa fa-caret-right fa-lg"></i>
-			<a style="cursor:pointer" onclick="confirmThumbnailReset('[% id %]')">重新生成存档缩略图 </a>
-			<i class="fa fa-caret-right fa-lg"></i>
-			<a href="./reader?id=[% id %]&force_reload=1">清理存档缓存</a>
-			<i class="fa fa-caret-right fa-lg"></i>
-			<a target="_blank" href="./edit?id=[% id %]">编辑此存档的元数据</a>
-		</div>
-		[% END %]
 
 		<div id="i7" class="if">
 			<i class="fa fa-caret-right fa-lg"></i>
@@ -88,10 +78,12 @@
 
 	<script>
 
-		pages = [% imgpaths %];
-		id = "[%id%]";
+		let isComingFromPopstate = false;
+		const pages = [% imgpaths %];
+		const id = "[%id%]";
+		let filename = "[% filename %]";
+		const tags = "[% tags %]";
 
-		filename = "[% filename %]";
 		if ((filename.endsWith(".rar") || filename.endsWith(".cbr")) && !localStorage.rarWarningShown) {
 			localStorage.rarWarningShown = true;
 			$.toast({
@@ -137,7 +129,12 @@
 		if (currentPage === pageNumber - 1)
 			currentPage = 0;
 
-		goToPage(currentPage);
+		var params = new URLSearchParams(window.location.search);
+
+		if (params.has("p"))
+			goToPage(params.get("p") - 1);
+		else
+			goToPage(currentPage);
 
 		// Remove new flag with an API call
 		clearNew(id);
@@ -147,11 +144,64 @@
 			updateImageMap();
 		});
 
+		// Add a listen event to window.popstate to update the page accordingly if the user goes back using browser history
+		window.onpopstate = () => {
+			var params = new URLSearchParams(window.location.search);
+			if (params.has("p")) {
+				isComingFromPopstate = true;
+				goToPage(params.get("p") - 1);
+			}
+		}
+
 	</script>
 
 	<div id="overlay-shade" onclick="closeOverlay();"></div>
 	<div id="archivePagesOverlay" class="id1 base-overlay page-overlay" style="display:none" loaded="false">
 		<h2 class="ih" style="text-align:center">档案总览</h2>
+		<div id="tagContainer" class="caption caption-tags caption-reader">
+			<br>
+			<div style="margin-bottom:16px;">
+				<div class="id3 nocrop reader-thumbnail">
+					<img src="./api/archives/[% id %]/thumbnail" />
+				</div>
+
+				[% IF userlogged %]
+				<div style="display:inline-block; vertical-align: middle;">
+
+					<h2>管理员设置</h2>
+
+					<input class="stdbtn" type='button' onclick="confirmThumbnailReset('[% id %]')"
+						value="重新生成存档缩略图" />
+					<br>
+					<input class='stdbtn' type='button'
+						onclick="window.location.href = './reader?id=[% id %]&force_reload=1'"
+						value='清理档案缓存' />
+					<br>
+					<input class='stdbtn' type='button' onclick="openInNewTab('./edit?id=[% id %]')"
+						value='编辑档案元数据' />
+
+					<h2>添加该档案到分类</h2>
+
+					<select id="category" class="favtag-btn" style="width:200px; margin-right: 8px">
+						<option selected value=""> -- 无分类 -- </option>
+						[% FOREACH categories %]
+						<option value="[% id %]">[% name %]</option>
+						[% END %]
+					</select>
+					<br>
+					<input value="添加档案" onclick="addArchiveToCategory('[% id %]', $('#category').val())"
+						class="stdbtn" id="goback" type="button">
+				</div>
+				[% END %]
+			</div>
+
+		</div>
+
+		<br><br>
+
+		<h2 class="ih" style="text-align:center">档案总览</h2>
+	</div>
+	</div>
 	</div>
 	<div id="settingsOverlay" class="id1 base-overlay small-overlay" style="display:none">
 		[% INCLUDE config %]
@@ -172,67 +222,53 @@
 [% BLOCK config %]
 
 <h2 class="ih" style="text-align:center">阅读器选项</h2>
+
+<h1 class="ih config-panel">这些选项会自动保存-单击启用!</h1>
+
 <div style="margin:auto; font-size:8pt;">
-
-	<div class="config-panel">
-		<h1 class="ih" style="display:inline"> 日式阅读顺序 </h1>
-		<input id="readorder" name="readorder" class="fa" type="checkbox" style="float:left">
-		<br /> 如果启用，页面将从右到左显示。
-	</div>
-
-	<div class="config-panel">
-		<h1 class="ih" style="display:inline"> 双页阅读 </h1>
-		<input id="doublepage" name="doublepage" class="fa" type="checkbox" style="float:left">
-		<br /> 如果启用，将一次显示两页。（这不包括宽画幅）
-	</div>
-
-	<div class="config-panel">
-		<h1 class="ih" style="display:inline"> 适应屏幕</h1>
-		<input id="scaletoview" name="scaletoview" class="fa" type="checkbox" style="float:left">
-		<br /> 如果启用，页面将按屏幕尺寸缩放。
-	</div>
-
-	<div class="config-panel">
-		<h1 class="ih" style="display:inline"> 强制宽度适应</h1>
-		<input id="forcefullwidth" name="forcefullwidth" class="fa" type="checkbox" style="float:left">
-		<br /> 如果启用，页面将被放大以适合浏览器的宽度（如果页面较小）.
-		<br /> 如果启用，此选项将覆盖“适应屏幕”.
-	</div>
-
-	<div class="config-panel">
-		<h1 class="ih" style="display:inline"> 隐藏顶层导航</h1>
-		<input id="hidetop" name="hidetop" class="fa" type="checkbox" style="float:left">
-		<br /> 如果启用，则顶部图像之前的每个元素都将被隐藏。
-	</div>
-
-	<div class="config-panel">
-			<h1 class="ih" style="display:inline"> 禁用自动书签</h1>
-		<input id="nobookmark" name="nobookmark" class="fa" type="checkbox" style="float:left">
-			<br /> 每次打开阅读器时，勾选此项将从第一页开始阅读。
-	</div>
+	<h2 class="config-panel"> 缩放显示到 </h2>
+	<input id="fitcontainer" class="favtag-btn config-btn" type="button" value="自适应"
+		onclick="setDisplayMode(false,false)">
+	<input id="fitwidth" class="favtag-btn config-btn" type="button" value="适应宽度" onclick="setDisplayMode(true,false)">
+	<input id="fitheight" class="favtag-btn config-btn" type="button" value="适应高度"
+		onclick="setDisplayMode(false,true)">
 </div>
 
-<br />
-<br />
-<input value="保存和关闭" onclick="saveSettings()" class="stdbtn" id="goback" type="button">
-<br />
-<br />
-<br />
-[% IF userlogged %]
-<h2 class="ih" style="text-align:center">添加到分类</h2>
-<div style="margin:auto; font-size:8pt;">
-
-	<select id="category" class="favtag-btn" style="width:200px; margin-right: 8px">
-		<option selected value=""> -- 无分类 -- </option>
-		[% FOREACH categories %]
-		<option value="[% id %]">[% name %]</option>
-		[% END %]
-	</select>
-
-	<input value="添加档案" onclick="addArchiveToCategory('[% id %]', $('#category').val())" class="stdbtn"
-		id="goback" type="button">
+<div style="margin:auto; font-size:8pt;" id="containersetting">
+	<h2 class="config-panel"> 显示宽度 (像素)</h2>
+	<input id="containerwidth" class="stdinput" style="display:inline" onsubmit="applyContainerWidth()"
+		placeholder="默认值为1200像素，或在双页模式下缩放为90％大小.">
+	<input class="favtag-btn config-btn" type="button" style="display:inline" value="应用"
+		onclick="applyContainerWidth()">
 </div>
-[% END %]
+
+<div style="margin:auto; font-size:8pt;">
+	<h2 class="config-panel"> 页面渲染 </h2>
+	<input id="singlepage" class="favtag-btn config-btn" type="button" value="单页" onclick="setDoublePage(false)">
+	<input id="doublepage" class="favtag-btn config-btn" type="button" value="双页" onclick="setDoublePage(true)">
+</div>
+
+<div style="margin:auto; font-size:8pt;">
+	<h2 class="config-panel"> 阅读方向 </h2>
+	<span class="config-panel"></span>
+	<input id="normalread" class="favtag-btn config-btn" type="button" value="从左到右" onclick="setRTL(false)">
+	<input id="mangaread" class="favtag-btn config-btn" type="button" value="从右到左" onclick="setRTL(true)">
+</div>
+
+<div style="margin:auto; font-size:8pt;">
+	<h2 class="config-panel"> 标题栏 </h2>
+	<input id="showtop" class="favtag-btn config-btn" type="button" value="显示" onclick="setHideHeader(false)">
+	<input id="hidetop" class="favtag-btn config-btn" type="button" value="隐藏" onclick="setHideHeader(true)">
+</div>
+
+<div style="margin:auto; font-size:8pt;">
+	<h2 class="config-panel"> 进度追踪 </h2>
+	<span class="config-panel">每次您重新打开阅读器时，禁用跟踪都会从第一页重新开始阅读.
+	</span>
+	<input id="dobookmark" class="favtag-btn config-btn" type="button" value="启用" onclick="setTracking(false)">
+	<input id="nobookmark" class="favtag-btn config-btn" type="button" value="关闭" onclick="setTracking(true)">
+</div>
+
 [% END %]
 <!-- -->
 [% BLOCK arrows %]
@@ -264,15 +300,15 @@
 [% BLOCK pagesel %]
 <div style="position: absolute; right: 20px; z-index:20" class="page_dropdown">
 
-	<a href="#" onclick="openOverlay();" title="Archive Overview">
+	<a href="#" onclick="openOverlay();" title="档案总览">
 		<i class="fa fa-th fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
-	<a href="#" onclick="openSettings();" title="Reader Settings">
+	<a href="#" onclick="openSettings();" title="阅读设置">
 		<i class="fa fa-cog fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
-	<a href="#" onclick="toastHelpReader()" title="Help">
+	<a href="#" onclick="toastHelpReader()" title="帮助">
 		<i class="fa fa-info-circle fa-2x" style="padding-right: 10px;"></i>
 	</a>
 
