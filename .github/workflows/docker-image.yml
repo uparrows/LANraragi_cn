@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
      - name: Login docker hub
       env:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
