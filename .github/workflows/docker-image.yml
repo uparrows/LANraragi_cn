@@ -14,7 +14,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Dump GitHub context
      - name: Login docker hub
       env:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
