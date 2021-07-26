@@ -1,0 +1,38 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "Hello ${{ github.event.commits[0].id }}"
+     - name: Login docker hub
+      env:
+        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+run: |
+        echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin
+- name: Set up Docker Buildx
+    uses: crazy-max/ghaction-docker-buildx@v1
+      with:
+        buildx-version: latest
+- name: Build the Docker image
+    run: |
+    fullCommit="${{ github.event.commits[0].id }}" && \
+    docker buildx build \
+        --platform=linux/amd64,linux/arm/v7,linux/arm64 \
+        --output "type=image,push=true" \
+        --file ./Dockerfile . \
+        --tag dezhao/lanraragi_test:"${fullCommit: 0: 7}"
