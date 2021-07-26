@@ -2,7 +2,7 @@
     <td class="option-td">
         <h2 class="ih"> 启用密码 </h2>
     </td>
-    <td>
+    <td class="config-td">
         [% IF enablepass %]
         <input id="enablepass" name="enablepass" class="fa" type="checkbox" checked> [% ELSE %]
         <input id="enablepass" name="enablepass" class="fa" type="checkbox"> [% END %]
@@ -16,7 +16,7 @@
     <td class="option-td">
         <h2 class="ih"> 新密码 </h2>
     </td>
-    <td>
+    <td class="config-td">
         <input class="stdinput" style="width:100%" maxlength="255" size="20" name="newpassword" type="password">
     </td>
 </tr>
@@ -25,7 +25,7 @@
     <td class="option-td">
         <h2 class="ih"> 确认密码 </h2>
     </td>
-    <td>
+    <td class="config-td">
         <input class="stdinput" style="width:100%" maxlength="255" size="20" name="newpassword2" type="password">
         <br> 如果要更改密码，请仅编辑这些字段。 <br />
         否则将使用已经存储的密码。
@@ -36,7 +36,7 @@
     <td class="option-td">
         <h2 class="ih"> 自闭模式 </h2>
     </td>
-    <td>
+    <td class="config-td">
         [% IF nofunmode %]
         <input id="nofunmode" name="nofunmode" class="fa" type="checkbox" checked> [% ELSE %]
         <input id="nofunmode" name="nofunmode" class="fa" type="checkbox"> [% END %]
@@ -51,7 +51,7 @@
     <td class="option-td">
         <h2 class="ih"> API 密钥 </h2>
     </td>
-    <td>
+    <td class="config-td">
         <input id="apikey" class="stdinput" style="width:100%" maxlength="255" size="20" value="[% apikey %]"
             name="apikey" type="text">
         <br>如果您希望启用客户端API并输入密码，则必须在此处设置密钥。<br />
@@ -64,7 +64,7 @@
     <td class="option-td">
         <h2 class="ih"> 对客户端API启用CORS </h2>
     </td>
-    <td>
+    <td class="config-td">
         [% IF enablecors %]
         <input id="enablecors" name="enablecors" class="fa" type="checkbox" checked> [% ELSE %]
         <input id="enablecors" name="enablecors" class="fa" type="checkbox"> [% END %]

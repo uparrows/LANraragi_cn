@@ -197,17 +197,17 @@ function handleContextMenu(option, id) {
 
 	switch (option) {
 		case "edit":
-			window.open("./edit?id=" + id);
+			openInNewTab("./edit?id=" + id);
 			break;
 		case "delete":
 			if (confirm('你确定删除该档案吗?'))
 				deleteArchive(id);
 			break;
 		case "read":
-			window.open(`./reader?id=${id}`);
+			openInNewTab(`./reader?id=${id}`);
 			break;
 		case "download":
-			window.open(`./api/archives/${id}/download`);
+			openInNewTab(`./api/archives/${id}/download`);
 			break;
 		default:
 			break;
@@ -314,8 +314,8 @@ function migrateProgress() {
 
 	if (localProgressKeys.length > 0) {
 		$.toast({
-			heading: '现在，您的阅读进度已在客户端之间同步!',
-			text: '您似乎已经从较早的LRR版本中保存了一些本地进度-请耐心等待我们为您迁移到服务器. ☕',
+			heading: '您的阅读进度现已保存在服务器上!',
+			text: '您似乎有一些本地进度未上传 -- 我们正在为您将其迁移到服务器，请耐心等待。 ☕',
 			hideAfter: false,
 			position: 'top-left',
 			icon: 'info'

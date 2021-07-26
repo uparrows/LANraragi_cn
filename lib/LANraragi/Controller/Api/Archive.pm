@@ -192,6 +192,11 @@ sub update_progress {
     my $redis     = $self->LRR_CONF->get_redis();
     my $pagecount = $redis->hget( $id, "pagecount" );
 
+    if ( LANraragi::Model::Config->enable_localprogress ) {
+        render_api_response( $self, "update_progress", "在此实例上禁用服务器端进度跟踪。" );
+        return;
+    }
+
     # This relies on pagecount, so you can't update progress for archives that don't have a valid pagecount recorded yet.
     unless ( $pagecount || $force ) {
         render_api_response( $self, "update_progress", "档案还没有记录的总页数。" );

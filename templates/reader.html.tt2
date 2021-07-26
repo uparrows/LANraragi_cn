@@ -1,215 +1,140 @@
 <!DOCTYPE html>
 
 <head>
-	<title>[% arcname %]</title>
+    <title>[% arcname %]</title>
 
-	<meta name="viewport" content="width=device-width" />
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	<link type="image/png" rel="icon" href="favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version %]" />
-	<link rel="stylesheet" type="text/css" href="/css/config.css?[% version %]" />
+    <link type="image/png" rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/css/lrr.css?[% version %]" />
+    <link rel="stylesheet" type="text/css" href="/css/config.css?[% version %]" />
 
-	<link rel="stylesheet" type="text/css" href="./css/vendor/fontawesome-all.min.css" />
-	<link rel="stylesheet" type="text/css" href="./css/vendor/jquery.toast.min.css" />
-	[% csshead %]
+    <link rel="stylesheet" type="text/css" href="./css/vendor/fontawesome-all.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/vendor/jquery.toast.min.css" />
+    [% csshead %]
 
-	<script src="./js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
-	<script src="./js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
+    <script src="./js/vendor/jquery.min.js" type="text/javascript"></script>
+    <script src="./js/vendor/jquery.toast.min.js" type="text/javascript"></script>
 
-	<script src="./js/theme.js?[% version %]" type="text/JAVASCRIPT"></script>
-	<script src="./js/common.js?[% version %]" type="text/JAVASCRIPT"></script>
-	<script src="./js/reader.js?[% version %]" type="text/JAVASCRIPT"></script>
-	<script src="./js/ajax.js?[% version %]" type="text/JAVASCRIPT"></script>
+    <script src="./js/theme.js?[% version %]" type="text/javascript"></script>
+    <script src="./js/common.js?[% version %]" type="text/javascript"></script>
+    <script src="./js/reader.js?[% version %]" type="text/javascript"></script>
+    <script src="./js/ajax.js?[% version %]" type="text/javascript"></script>
 
 </head>
 
-<body onload="set_style_from_storage(); applySettings();">
+<body>
 
-	<div id="i1" class="sni">
-		<h1>[% arcname %]</h1>
+    <div id="i1" class="sni">
+        <div id="i2">
+            <h1 id="archive-title">[% arcname %]</h1>
 
-		<div id="i2">
-			[% INCLUDE pagesel %] [% INCLUDE arrows %]
-			<br />
-		</div>
+            [% INCLUDE pagesel %] [% INCLUDE arrows %] [% INCLUDE fileinfo %]
+        </div>
 
-		<div id="i3">
-			<div class="loading-overlay">
-				<p class="loading-spinner">
-					<i id="spinner" class="fa fa-cog fa-spin"></i>
-				</p>
-			</div>
+        <div id="i3">
+            <div class="loading-overlay">
+                <p class="loading-spinner">
+                    <i id="spinner" class="fa fa-cog fa-spin"></i>
+                </p>
+            </div>
 
-			<a id="display">
-				<img id="img" class="reader-image" onload="updateMetadata()" onerror="this.src='./img/noThumb.png'"
-					src="[% imgpath %]" usemap="#Map" />
-				<map name="Map" id="Map">
-					<area id="leftmap" style="cursor:pointer;" onclick="advancePage(-1)" shape="rect" />
-					<area id="rightmap" style="cursor:pointer;" onclick="advancePage(1)" shape="rect" />
-				</map>
-			</a>
+            <a id="display">
+                <img id="img" class="reader-image" onload="Reader.updateMetadata()"
+                    onerror="this.src='./img/noThumb.png'" src="[% imgpath %]" usemap="#Map" />
+                <map name="Map" id="Map">
+                    <area id="leftmap" style="cursor:pointer;" shape="rect" value="left" />
+                    <area id="rightmap" style="cursor:pointer;" shape="rect" value="right" />
+                </map>
+            </a>
 
-		</div>
+        </div>
 
 		<div id="i4">
 		<br />
 		[% INCLUDE pagesel %] [% INCLUDE arrows %]
 		</div>
 
-		<div id="i5">
-			<div class="sb">
-				<a href="./" title="看完了吗？ 返回档案索引">
-					<i class="fa fa-angle-down fa-3x"></i>
-				</a>
-			</div>
-		</div>
+        <div id="i5">
+            <div class="sb">
+                <a href="./" title="看完了吗？ 返回档案索引">
+                    <i class="fa fa-angle-down fa-3x"></i>
+                </a>
+            </div>
+        </div>
 
-		<div id="i7" class="if">
-			<i class="fa fa-caret-right fa-lg"></i>
-			<a id="imgLink" style="cursor:pointer;">查看原图</a>
-			<i class="fa fa-caret-right fa-lg"></i>
-			<a href="./random">切换到另一个随机档案</a>
+        <div id="i7" class="if">
+            <i class="fa fa-caret-right fa-lg"></i>
+            <a id="imgLink" style="cursor:pointer;">查看原图</a>
+            <i class="fa fa-caret-right fa-lg"></i>
+            <a href="./random">切换到另一个随机档案</a>
 			<i class="fa fa-caret-right fa-lg"></i>
 			<a href="./">返回资料库</a>
-		</div>
+        </div>
 
-	</div>
+    </div>
 
-	<script>
+    <script>
+        Reader.pages = [% imgpaths %].pages;
+        Reader.id = "[%id%]";
+        Reader.filename = "[% filename %]";
+        Reader.tags = "[% tags %]";
+        Reader.trackProgressLocally = "[% use_local %]" === "1";
+        Reader.progress = [% progress %] - 1;
+    </script>
 
-		let isComingFromPopstate = false;
-		const pages = [% imgpaths %];
-		const id = "[%id%]";
-		let filename = "[% filename %]";
-		const tags = "[% tags %]";
+    <div id="overlay-shade"></div>
+    <div id="archivePagesOverlay" class="id1 base-overlay page-overlay" style="display:none" loaded="false">
+        <h2 class="ih" style="text-align:center">档案总览</h2>
+        <div id="tagContainer" class="caption caption-tags caption-reader">
+            <br>
+            <div style="margin-bottom:16px;">
+                <div class="id3 nocrop reader-thumbnail">
+                    <img src="./api/archives/[% id %]/thumbnail" />
+                </div>
 
-		if ((filename.endsWith(".rar") || filename.endsWith(".cbr")) && !localStorage.rarWarningShown) {
-			localStorage.rarWarningShown = true;
-			$.toast({
-				showHideTransition: 'slide',
-				position: 'top-left',
-				loader: false,
-				heading: "该文件似乎是RAR格式!",
-				text: 'RAR存档在LANraragi中可能无法正常运行，具体取决于其压缩方式。 如果阅读时遇到错误，请考虑将存档转换为zip。',
-				hideAfter: false,
-				icon: 'warning'
-			});
-		}
+                [% IF userlogged %]
+                <div style="display:inline-block; vertical-align: middle;">
 
-		if (filename.endsWith(".epub") && !localStorage.epubWarningShown) {
-			localStorage.epubWarningShown = true;
-			$.toast({
-				showHideTransition: 'slide',
-				position: 'top-left',
-				loader: false,
-				heading: "LANraragi中对EPUB的支持最基础",
-				text: 'EPUB书籍只会在网络阅读器中显示图像。 如果需要文本支持，请考虑将LANraragi与 <a href= "https://sugoi.gitbook.io/lanraragi/advanced-usage/external-readers#generic-opds-readers">OPDS 配合.</a> ',
-				hideAfter: false,
-				icon: 'warning'
-			});
-		}
+                    <h2>管理员设置</h2>
 
-		// Go straight to page number if there's an existing progress value
-		if (localStorage.nobookmark === 'true')
-			currentPage = 0;
-		else
-			currentPage = parseInt([% progress %] - 1 || 0);
+                    <input class="stdbtn" type='button' id="regenerate-thumbnail"
+                        value="重新生成存档缩略图" />
+                    <br>
+                    <input id="regenerate-cache" class='stdbtn' type='button' value='清理档案缓存' />
+                    <br>
+                    <input id="edit-archive" class='stdbtn' type='button' value='编辑档案元数据' />
 
-		pageNumber = [% pagecount %];
+                    <h2>添加该档案到分类</h2>
 
-		//canvas variables
-		previousPage = -1;
-		imagesLoaded = 0;
-		img1 = "";
-		img2 = "";
-		showingSinglePage = false;
+                    <select id="category" class="favtag-btn" style="width:200px; margin-right: 8px">
+                        <option selected value=""> -- 无分类 -- </option>
+                        [% FOREACH categories %]
+                        <option value="[% id %]">[% name %]</option>
+                        [% END %]
+                    </select>
+                    <br>
+                    <input value="添加档案" class="stdbtn" id="add-category" type="button">
+                </div>
+                [% END %]
+            </div>
 
-		//if we made it to the last page in a previous read, reset the page number
-		if (currentPage === pageNumber - 1)
-			currentPage = 0;
+        </div>
 
-		var params = new URLSearchParams(window.location.search);
+        <br><br>
 
-		if (params.has("p"))
-			goToPage(params.get("p") - 1);
-		else
-			goToPage(currentPage);
+        <h2 class="ih" style="text-align:center">档案总览</h2>
+    </div>
+    </div>
+    </div>
+    <div id="settingsOverlay" class="id1 base-overlay small-overlay" style="display:none">
+        [% INCLUDE config %]
+    </div>
 
-		// Remove new flag with an API call
-		clearNew(id);
+    <canvas id="dpcanvas" style="display:none" width="100" height="100"></canvas>
 
-		//image map update on window resize
-		$(window).resize(function () {
-			updateImageMap();
-		});
-
-		// Add a listen event to window.popstate to update the page accordingly if the user goes back using browser history
-		window.onpopstate = () => {
-			var params = new URLSearchParams(window.location.search);
-			if (params.has("p")) {
-				isComingFromPopstate = true;
-				goToPage(params.get("p") - 1);
-			}
-		}
-
-	</script>
-
-	<div id="overlay-shade" onclick="closeOverlay();"></div>
-	<div id="archivePagesOverlay" class="id1 base-overlay page-overlay" style="display:none" loaded="false">
-		<h2 class="ih" style="text-align:center">档案总览</h2>
-		<div id="tagContainer" class="caption caption-tags caption-reader">
-			<br>
-			<div style="margin-bottom:16px;">
-				<div class="id3 nocrop reader-thumbnail">
-					<img src="./api/archives/[% id %]/thumbnail" />
-				</div>
-
-				[% IF userlogged %]
-				<div style="display:inline-block; vertical-align: middle;">
-
-					<h2>管理员设置</h2>
-
-					<input class="stdbtn" type='button' onclick="confirmThumbnailReset('[% id %]')"
-						value="重新生成存档缩略图" />
-					<br>
-					<input class='stdbtn' type='button'
-						onclick="window.location.href = './reader?id=[% id %]&force_reload=1'"
-						value='清理档案缓存' />
-					<br>
-					<input class='stdbtn' type='button' onclick="openInNewTab('./edit?id=[% id %]')"
-						value='编辑档案元数据' />
-
-					<h2>添加该档案到分类</h2>
-
-					<select id="category" class="favtag-btn" style="width:200px; margin-right: 8px">
-						<option selected value=""> -- 无分类 -- </option>
-						[% FOREACH categories %]
-						<option value="[% id %]">[% name %]</option>
-						[% END %]
-					</select>
-					<br>
-					<input value="添加档案" onclick="addArchiveToCategory('[% id %]', $('#category').val())"
-						class="stdbtn" id="goback" type="button">
-				</div>
-				[% END %]
-			</div>
-
-		</div>
-
-		<br><br>
-
-		<h2 class="ih" style="text-align:center">档案总览</h2>
-	</div>
-	</div>
-	</div>
-	<div id="settingsOverlay" class="id1 base-overlay small-overlay" style="display:none">
-		[% INCLUDE config %]
-	</div>
-
-	<canvas id="dpcanvas" style="display:none" width="100" height="100"></canvas>
-
-	[% INCLUDE footer %]
+    [% INCLUDE footer %]
 </body>
 
 </html>
@@ -225,93 +150,84 @@
 
 <h1 class="ih config-panel">这些选项会自动保存-单击启用!</h1>
 
-<div style="margin:auto; font-size:8pt;">
-	<h2 class="config-panel"> 缩放显示到 </h2>
-	<input id="fitcontainer" class="favtag-btn config-btn" type="button" value="自适应"
-		onclick="setDisplayMode(false,false)">
-	<input id="fitwidth" class="favtag-btn config-btn" type="button" value="适应宽度" onclick="setDisplayMode(true,false)">
-	<input id="fitheight" class="favtag-btn config-btn" type="button" value="适应高度"
-		onclick="setDisplayMode(false,true)">
+<div id="fit-mode">
+    <h2 class="config-panel"> 缩放显示到 </h2>
+    <input id="fit-container" class="favtag-btn config-btn" type="button" value="自适应">
+    <input id="fit-width" class="favtag-btn config-btn" type="button" value="适应宽度">
+    <input id="fit-height" class="favtag-btn config-btn" type="button" value="适应高度">
 </div>
 
-<div style="margin:auto; font-size:8pt;" id="containersetting">
-	<h2 class="config-panel"> 显示宽度 (像素)</h2>
-	<input id="containerwidth" class="stdinput" style="display:inline" onsubmit="applyContainerWidth()"
-		placeholder="默认值为1200像素，或在双页模式下缩放为90％大小.">
-	<input class="favtag-btn config-btn" type="button" style="display:inline" value="应用"
-		onclick="applyContainerWidth()">
+<div id="container-width">
+    <h2 class="config-panel"> 显示宽度 (像素或百分比)</h2>
+    <input id="container-width-input" class="stdinput" style="display:inline"
+        placeholder="默认值为1200像素，或在双页模式下缩放为90％大小.">
+    <input id="container-width-apply" class="favtag-btn config-btn" type="button" style="display:inline;" value="应用">
 </div>
 
-<div style="margin:auto; font-size:8pt;">
-	<h2 class="config-panel"> 页面渲染 </h2>
-	<input id="singlepage" class="favtag-btn config-btn" type="button" value="单页" onclick="setDoublePage(false)">
-	<input id="doublepage" class="favtag-btn config-btn" type="button" value="双页" onclick="setDoublePage(true)">
+<div id="toggle-double-mode">
+    <h2 class="config-panel"> 页面渲染 </h2>
+    <input id="single-page" class="favtag-btn config-btn" type="button" value="单页">
+    <input id="double-page" class="favtag-btn config-btn" type="button" value="双页">
 </div>
 
-<div style="margin:auto; font-size:8pt;">
-	<h2 class="config-panel"> 阅读方向 </h2>
-	<span class="config-panel"></span>
-	<input id="normalread" class="favtag-btn config-btn" type="button" value="从左到右" onclick="setRTL(false)">
-	<input id="mangaread" class="favtag-btn config-btn" type="button" value="从右到左" onclick="setRTL(true)">
+<div id="toggle-manga-mode">
+    <h2 class="config-panel"> 阅读方向 </h2>
+    <span class="config-panel"></span>
+    <input id="normal-mode" class="favtag-btn config-btn" type="button" value="从左到右">
+    <input id="manga-mode" class="favtag-btn config-btn" type="button" value="从右到左">
 </div>
 
-<div style="margin:auto; font-size:8pt;">
-	<h2 class="config-panel"> 标题栏 </h2>
-	<input id="showtop" class="favtag-btn config-btn" type="button" value="显示" onclick="setHideHeader(false)">
-	<input id="hidetop" class="favtag-btn config-btn" type="button" value="隐藏" onclick="setHideHeader(true)">
+<div id="preload-images">
+    <h2 class="config-panel"> 预加载图片张数</h2>
+    <input id="preload-input" class="stdinput" style="display:inline" placeholder="默认为两张图片.">
+    <input id="preload-apply" class="favtag-btn config-btn" type="button" style="display:inline;" value="应用">
 </div>
 
-<div style="margin:auto; font-size:8pt;">
-	<h2 class="config-panel"> 进度追踪 </h2>
-	<span class="config-panel">每次您重新打开阅读器时，禁用跟踪都会从第一页重新开始阅读.
-	</span>
-	<input id="dobookmark" class="favtag-btn config-btn" type="button" value="启用" onclick="setTracking(false)">
-	<input id="nobookmark" class="favtag-btn config-btn" type="button" value="关闭" onclick="setTracking(true)">
+<div id="toggle-header">
+    <h2 class="config-panel"> 标题栏 </h2>
+    <input id="show-header" class="favtag-btn config-btn" type="button" value="显示">
+    <input id="hide-header" class="favtag-btn config-btn" type="button" value="隐藏">
+</div>
+
+<div id="toggle-progress">
+    <h2 class="config-panel"> 进度追踪 </h2>
+    <span class="config-panel">每次您重新打开阅读器时，禁用跟踪都会从第一页重新开始阅读.
+    </span>
+    <input id="track-progress" class="favtag-btn config-btn" type="button" value="启用">
+    <input id="untrack-progress" class="favtag-btn config-btn" type="button" value="禁用">
+</div>
+
+<div id="toggle-infinite-scroll">
+    <h2 class="config-panel"> 无限滚动 </h2>
+    <span class="config-panel">在同一页面中以垂直视图显示所有图像。
+    </span>
+    <input id="infinite-scroll-on" class="favtag-btn config-btn" type="button" value="启用">
+    <input id="infinite-scroll-off" class="favtag-btn config-btn" type="button" value="禁用">
 </div>
 
 [% END %]
 <!-- -->
 [% BLOCK arrows %]
-<div class="sn">
+<div class="sn paginator">
+    <a class="fa fa-angle-double-left page-link" style="font-size: 1.5em;" value="outer-left"></a>
+    <a class="fa fa-angle-left page-link" style="font-size: 1.5em;" value="left"></a>
 
-	<a onclick="goFirst()" style="cursor:pointer;">
-		<i class="fa fa-angle-double-left" style="font-size: 1.5em;"></i>
-	</a>
+    <div class="pagecount">
+        <span class="current-page"></span> /
+        <span class="max-page">[% pagecount %]</span>
+    </div>
 
-	<a id="left" onclick="advancePage(-1)" style="cursor:pointer;">
-		<i class="fa fa-angle-left" style="font-size: 1.5em;"></i>
-	</a>
-
-	<div class="pagecount">
-		<span class="current-page"></span> /
-		<span class="max-page"></span>
-	</div>
-
-	<a id="right" onclick="advancePage(1)" style="cursor:pointer;">
-		<i class="fa fa-angle-right" style="font-size: 1.5em;"></i>
-	</a>
-
-	<a onclick="goLast()" style="cursor:pointer;">
-		<i class="fa fa-angle-double-right" style="font-size: 1.5em;"></i>
-	</a>
+    <a class="fa fa-angle-right page-link" style="font-size: 1.5em;" value="right"></a>
+    <a class="fa fa-angle-double-right page-link" style="font-size: 1.5em;" value="outer-right"></a>
 </div>
 [% END %]
 <!-- -->
 [% BLOCK pagesel %]
-<div style="position: absolute; right: 20px; z-index:20" class="page_dropdown">
-
-	<a href="#" onclick="openOverlay();" title="档案总览">
-		<i class="fa fa-th fa-2x" style="padding-right: 10px;"></i>
-	</a>
-
-	<a href="#" onclick="openSettings();" title="阅读设置">
-		<i class="fa fa-cog fa-2x" style="padding-right: 10px;"></i>
-	</a>
-
-	<a href="#" onclick="toastHelpReader()" title="帮助">
-		<i class="fa fa-info-circle fa-2x" style="padding-right: 10px;"></i>
-	</a>
-
+<div class="page_dropdown">
+    <a class="fa fa-arrow-right fa-2x reading-direction" href="#" title="阅读方向"></a>
+    <a class="fa fa-th fa-2x" id="toggle-archive-overlay" href="#" title="档案总览"></a>
+    <a class="fa fa-cog fa-2x" id="toggle-settings-overlay" href="#" title="阅读设置"></a>
+    <a class="fa fa-info-circle fa-2x" id="toggle-help" href="#" title="帮助"></a>
 </div>
 [% END %]
 <!-- -->

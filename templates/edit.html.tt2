@@ -79,7 +79,7 @@
 							<input type='button' name='tag_import' value='帮助' onclick="toastHelpEdit();" 
 							class='stdbtn' style='min-width:90px;'></input>
 						</td>
-						<td id="plugin_table">
+						<td id="plugin_table" style="text-align: left">
 
 							<select id="plugin" class="favtag-btn" onchange="updateOneShotArg()">
 								[% FOREACH plugin IN plugins %]
@@ -111,7 +111,8 @@
 								value='删除档案' />
 							<input id='goback' class='stdbtn' type='button' onclick="window.location.replace('./');"
 								value='返回资料库' />
-							<br /></td>
+							<br />
+						</td>
 					</tr>
 				</tbody>
 			</table>

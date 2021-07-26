@@ -2,7 +2,7 @@
     <td class="option-td">
         <h2 class="ih"> 缩略图文件夹 </h2>
     </td>
-    <td>
+    <td class="config-td">
         <input class="stdinput" style="width:100%" maxlength="255" size="20" value="[% thumbdir %]" name="thumbdir"
             type="text" [% IF forcedthumbdir %] disabled title="此选项由环境变量强制执行." [%
             END %]>
@@ -16,7 +16,7 @@
         <input id="genthumb-button" class='stdbtn' type='button' onclick="regenThumbnails(false);"
             value='生成缺少的缩略图' />
     </td>
-    <td><br>
+    <td class="config-td">
         为所有尚未创建缩略图的档案生成缩略图.
     </td>
 </tr>
@@ -26,7 +26,7 @@
         <input id="forcethumb-button" class='stdbtn' type='button' onclick="regenThumbnails(true);"
             value='重新生成所有缩略图' />
     </td>
-    <td><br>
+    <td class="config-td">
         重建缩略图中，这可能需要一段时间!
     </td>
 </tr>
@@ -37,7 +37,7 @@
     <td class="option-td">
         <h2 class="ih"> 黑名单标签 </h2>
     </td>
-    <td>
+    <td class="config-td">
         [% IF blackliston %]
         <input id="blackliston" name="blackliston" class="fa" type="checkbox" checked> [% ELSE %]
         <input id="blackliston" name="blackliston" class="fa" type="checkbox"> [% END %]
