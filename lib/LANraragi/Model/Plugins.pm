@@ -152,7 +152,7 @@ sub exec_download_plugin {
         my %result = $plugin->provide_url( \%infohash, @settings );
 
         if ( exists $result{error} ) {
-            $logger->info("该链接不被下载器插件支持，已退出。 出现错误: ". $result{error});
+            $logger->info("Downloader plugin failed to provide an URL, aborting now. Error: ". $result{error});
             return \%result;
         }
 
