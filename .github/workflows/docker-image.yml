@@ -15,9 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "Hello ${{ github.event.commits[0].id }}"
      - name: Login docker hub
       env:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
@@ -30,9 +27,8 @@ run: |
         buildx-version: latest
 - name: Build the Docker image
     run: |
-    fullCommit="${{ github.event.commits[0].id }}" && \
     docker buildx build \
         --platform=linux/amd64,linux/arm/v7,linux/arm64 \
         --output "type=image,push=true" \
         --file ./Dockerfile . \
-        --tag dezhao/lanraragi_test:"${fullCommit: 0: 7}"
+        --tag dezhao/lanraragi_test:0.7.9
