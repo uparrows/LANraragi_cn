@@ -76,6 +76,7 @@
     </div>
 
     <script>
+        // This would be better in the reader.js file, but we still need to source this data from the server template for now.
         Reader.pages = [% imgpaths %].pages;
         Reader.id = "[%id%]";
         Reader.filename = "[% filename %]";
@@ -86,7 +87,7 @@
 
     <div id="overlay-shade"></div>
     <div id="archivePagesOverlay" class="id1 base-overlay page-overlay" style="display:none" loaded="false">
-        <h2 class="ih" style="text-align:center">档案总览</h2>
+        <h2 class="ih" style="text-align:center">档案预览</h2>
         <div id="tagContainer" class="caption caption-tags caption-reader">
             <br>
             <div style="margin-bottom:16px;">
@@ -223,11 +224,14 @@
 [% END %]
 <!-- -->
 [% BLOCK pagesel %]
-<div class="page_dropdown">
-    <a class="fa fa-arrow-right fa-2x reading-direction" href="#" title="阅读方向"></a>
-    <a class="fa fa-th fa-2x" id="toggle-archive-overlay" href="#" title="档案总览"></a>
+<div class="reader_options drop_left">
     <a class="fa fa-cog fa-2x" id="toggle-settings-overlay" href="#" title="阅读设置"></a>
     <a class="fa fa-info-circle fa-2x" id="toggle-help" href="#" title="帮助"></a>
+</div>
+
+<div class="reader_options drop_right">
+    <a class="fa fa-arrow-right fa-2x reading-direction" href="#" title="阅读方向"></a>
+    <a class="fa fa-th fa-2x" id="toggle-archive-overlay" href="#" title="档案预览"></a>
 </div>
 [% END %]
 <!-- -->

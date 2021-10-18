@@ -35,16 +35,20 @@
 
 <tr>
     <td class="option-td">
-        <h2 class="ih"> 黑名单标签 </h2>
+        <h2 class="ih"> 标签规则 </h2>
     </td>
     <td class="config-td">
-        [% IF blackliston %]
-        <input id="blackliston" name="blackliston" class="fa" type="checkbox" checked> [% ELSE %]
-        <input id="blackliston" name="blackliston" class="fa" type="checkbox"> [% END %]
+        <input id="tagruleson" name="tagruleson" class="fa" type="checkbox" [% IF tagruleson %]checked[% END %]>
         <br>
-        <textarea class="stdinput" size="20" style='width:100%; height:75px' name="blacklist"
-            maxlength='5000'>[% blacklist %]</textarea>
-        <br> 当使用插件标记档案时，这些标记将被自动省略。
-        <br>用逗号分隔标签。
+        <textarea class="stdinput" size="20" style='width:100%; height:196px' name="tagrules"
+            maxlength='5000'>[% tagrules %]</textarea>
+        <br>使用插件标记档案时，此处指定的规则将在保存之前应用于标记档案
+        到数据库.
+        <br>使用换行符拆分规则.
+        <br><b>-tag | tag</b> : 删除标签（如黑名单）
+        <br><b>-namespace:*</b> : 删除此命名空间内的所有标签
+        <br><b>~namespace</b> : 从标签中去除命名空间
+        <br><b>tag -> new-tag</b> : 替换一个标签
+        <br><b>namespace:* -> new-namespace:*</b> : 用新命名空间替换旧的命名空间
     </td>
 </tr>
