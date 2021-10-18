@@ -16,7 +16,7 @@
     <td class="config-td">
         <input id="motd" class="stdinput" style="width:100%" maxlength="255" size="20" value="[% motd %]" name="motd"
             type="text">
-        <br>每日的座右铭，出现在主资料库的顶部（注：中文会乱码）。
+        <br>每日的座右铭，出现在主资料库的顶部。
     </td>
 </tr>
 
