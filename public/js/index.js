@@ -85,7 +85,7 @@ Index.initializeAll = function () {
         localStorage.sawContextMenuToast = true;
 
         $.toast({
-            heading: `欢迎使用 LANraragi ${version} !`,
+            heading: `欢迎使用 LANraragi ${Index.serverVersion}!`,
             text: "如果要对存档执行高级操作，请记住只需右键单击其名称。 祝您阅读愉快！",
             hideAfter: false,
             position: "top-left",
@@ -269,7 +269,7 @@ Index.updateCarousel = function (e) {
         break;
     default:
         $("#carousel-icon")[0].classList = "fas fa-pastafarianism";
-        $("#carousel-title").text("什么???");
+        $("#carousel-title").text("未定义");
         endpoint = `/api/search?filter=${IndexTable.currentSearch}&category=${Index.selectedCategory}`;
         break;
     }

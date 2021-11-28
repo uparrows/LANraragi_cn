@@ -63,11 +63,6 @@ COPY /tools/build/docker/wsl.conf /etc/wsl.conf
 COPY /tools/build/docker/s6/cont-init.d/ /etc/cont-init.d/
 COPY /tools/build/docker/s6/services.d/ /etc/services.d/
 COPY --chown=root:root /jquery.dataTables.min.js /root/lanraragi/public/js/vendor/jquery.dataTables.min.js
-COPY --chown=root:root /jquery-migrate.min.map /root/lanraragi/public/js/vendor/jquery-migrate.min.map
-COPY --chown=root:root /awesomplete.min.js.map /root/lanraragi/public/js/vendor/awesomplete.min.js.map
-COPY --chown=root:root /jquery.qtip.min.map /root/lanraragi/public/js/vendor/jquery.qtip.min.map
-COPY --chown=root:root /jquery.contextMenu.min.css.map /root/lanraragi/public/css/vendor/jquery.contextMenu.min.css.map
-COPY --chown=root:root /awesomplete.css.map /root/lanraragi/public/css/vendor/awesomplete.css.map
 #COPY /tools/build/docker/s6/fix-attrs.d/ /etc/fix-attrs.d/
 
 # Persistent volumes

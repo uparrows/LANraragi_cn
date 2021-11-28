@@ -32,11 +32,11 @@ function handleCompletedUpload(jobID, d) {
     }
 
     if (d.result.success) {
-        $(`#${jobID}-link`).html("点击此处编辑元数据。(" + d.result.message + ")")
+        $(`#${jobID}-link`).html("点击此处编辑元数据.<br>(" + d.result.message + ")")
         $(`#${jobID}-icon`).attr("class", "fa fa-check-circle");
         completedArchives++;
     } else {
-        $(`#${jobID}-link`).html("处理档案时发生错误.(" + d.result.message + ")");
+        $(`#${jobID}-link`).html("处理档案时发生错误.<br>(" + d.result.message + ")");
         $(`#${jobID}-icon`).attr("class", "fa fa-exclamation-circle");
         failedArchives++;
     }

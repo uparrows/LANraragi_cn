@@ -545,7 +545,7 @@ Reader.initializeArchiveOverlay = function () {
         const thumbCss = (localStorage.cropthumbs === "true") ? "id3" : "id3 nocrop";
         const thumbnail = `
             <div class='${thumbCss} quick-thumbnail' page='${index}' style='display: inline-block; cursor: pointer'>
-                <span class='page-number'>Page ${(index + 1)}</span>
+                <span class='page-number'>页面 ${(index + 1)}</span>
                 <img src='${Reader.pages[index]}'/>
             </div>`;
 

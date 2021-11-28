@@ -40,7 +40,7 @@
 					<tbody>
 						<tr>
 							<td>
-								<h2>Task :</h2>
+								<h2>任务 :</h2>
 							</td>
 							<td>
 								<select id="batch-operation" class="favtag-btn" style="font-size:20px; height:30px">
@@ -59,7 +59,7 @@
 					<table>
 						<tbody>
 							<tr class="operation plugin-operation">
-								<td>Use plugin :</td>
+								<td>使用插件 :</td>
 								<td>
 									<select id="plugin" class="favtag-btn">
 										[% FOREACH plugins %]
@@ -165,8 +165,8 @@
 
 				<div class="job-status" style="display:none; text-align:center">
 
-					<input id="cancel-job" type='button' value='Cancel' class='stdbtn'>
-					<input id="restart-job" type='button' value='Start another job' class='stdbtn'>
+					<input id="cancel-job" type='button' value='取消' class='stdbtn'>
+					<input id="restart-job" type='button' value='开始其他任务' class='stdbtn'>
 
 					<div id="progress" style="padding-top:6px; padding-bottom:6px">
 						<div class="bar"></div>
