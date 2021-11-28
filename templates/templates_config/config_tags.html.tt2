@@ -13,7 +13,7 @@
 
 <tr>
     <td class="option-td">
-        <input id="genthumb-button" class='stdbtn' type='button' onclick="regenThumbnails(false);"
+        <input id="genthumb-button" class='stdbtn' type='button' onclick="Server.regenerateThumbnails(false);"
             value='生成缺少的缩略图' />
     </td>
     <td class="config-td">
@@ -23,7 +23,7 @@
 
 <tr>
     <td class="option-td">
-        <input id="forcethumb-button" class='stdbtn' type='button' onclick="regenThumbnails(true);"
+        <input id="forcethumb-button" class='stdbtn' type='button' onclick="Server.regenerateThumbnails(true);"
             value='重新生成所有缩略图' />
     </td>
     <td class="config-td">

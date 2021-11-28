@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<head>
+	<title>LANraragi 服务器错误</title>
+
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link type="image/png" rel="icon" href="favicon.ico" />
+</head>
+
+<body style='background: none repeat scroll 0% 0% brown; color: white; font-family: sans-serif; text-align: center'>
+
+	<img src='/img/flubbed.gif' />
+	<br />
+	<h2>我在渲染你的页面时搞砸了!</h2>
+	此时服务器可能存在错误.<br />
+	<p>
+		<%= $exception->message %>
+	</p>
+
+	<h3>下面可能提供了一些有用的信息:</h3>
+	<pre><%= dumper $snapshot %></pre>
+
+</body>
+
+</html>

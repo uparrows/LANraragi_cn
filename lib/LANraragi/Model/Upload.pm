@@ -88,9 +88,9 @@ sub handle_incoming_file {
             # If the tag is a source: tag, add it to the URL index
             if ( $t =~ /source:(.*)/i ) {
                 my $url = $1;
-                $logger->debug("Adding $url as an URL for $id");
+                $logger->debug("添加 $url 作为 $id 的链接");
                 trim_url($url);
-                $logger->debug("Trimmed: $url");
+                $logger->debug("处理: $url");
                 $redis->hset( "LRR_URLMAP", $url, $id );    # No need to encode the value, as URLs are already encoded by design
             }
         }

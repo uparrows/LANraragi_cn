@@ -14,11 +14,11 @@ function updateUploadCounters() {
         failedArchives > 0 ? "fas fa-exclamation-circle" :
             "fa fa-spinner fa-spin";
 
-    $("#progressTotal").html(`<i class="${icon}"></i> Total:${completedArchives + failedArchives}/${totalUploads}`);
+    $("#progressTotal").html(`<i class="${icon}"></i> 共计:${completedArchives + failedArchives}/${totalUploads}`);
 
     // At the end of the upload job, dump the search cache!
     if (processingArchives === 0)
-        invalidateCache();
+        Server.invalidateCache();
 }
 
 // Handle a completed job from minion. Update the line in upload results with the title, ID, message.
@@ -55,7 +55,7 @@ function handleFailedUpload(jobID, d) {
     updateUploadCounters();
 }
 
-// Send URLs to the Download API and add a checkJobStatus to track its progress.
+// Send URLs to the Download API and add a Server.checkJobStatus to track its progress.
 function downloadUrl() {
 
     const categoryID = document.getElementById("category").value;
@@ -94,14 +94,14 @@ function downloadUrl() {
                     updateUploadCounters();
 
                     // Check minion job state periodically to update the result 
-                    checkJobStatus(data.job,
+                    Server.checkJobStatus(data.job,
                         (d) => handleCompletedUpload(data.job, d),
                         (error) => handleFailedUpload(data.job, error));
                 } else {
                     throw new Error(data.message);
                 }
             })
-            .catch(error => showErrorToast("Error while adding download job", error));
+            .catch(error => LRR.showErrorToast("添加下载作业时出错", error));
 
     });
 }
@@ -138,7 +138,7 @@ function initUpload() {
             updateUploadCounters();
 
             // Check minion job state periodically to update the result 
-            checkJobStatus(data.result.job,
+            Server.checkJobStatus(data.result.job,
                 (d) => handleCompletedUpload(data.result.job, d),
                 (error) => handleFailedUpload(data.result.job, error));
         },

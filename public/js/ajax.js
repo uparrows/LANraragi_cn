@@ -76,7 +76,7 @@ function saveFormData(formSelector) {
     const postData = new FormData($(formSelector)[0]);
 
     return fetch(window.location.href, { method: "POST", body: postData })
-        .then((response) => (response.ok ? response.json() : { success: 0, error: "Response was not OK" }))
+        .then((response) => (response.ok ? response.json() : { success: 0, error: "响应不正确" }))
         .then((data) => {
             if (data.success) {
                 $.toast({
@@ -247,12 +247,12 @@ function shinobuStatus() {
 
 // Adds an archive to a category. Basic implementation to use everywhere.
 function addArchiveToCategory(arcId, catId) {
-    genericAPICall(`/api/categories/${catId}/${arcId}`, "PUT", `Added ${arcId} to Category ${catId}!`, "添加/移除档案到分类失败", null);
+    genericAPICall(`/api/categories/${catId}/${arcId}`, "PUT", `添加 ${arcId} 到分类 ${catId}!`, "添加/移除档案到分类失败", null);
 }
 
 // Ditto, but for removing.
 function removeArchiveFromCategory(arcId, catId) {
-    genericAPICall(`/api/categories/${catId}/${arcId}`, "DELETE", `Removed ${arcId} from Category ${catId}!`, "将存档从类别添加/删除时出错", null);
+    genericAPICall(`/api/categories/${catId}/${arcId}`, "DELETE", `移除 ${arcId} 自分类 ${catId}!`, "将存档从类别添加/删除时出错", null);
 }
 
 // deleteArchive(id)
@@ -279,7 +279,7 @@ function deleteArchive(arcId) {
                     position: "top-left",
                     loader: false,
                     heading: "存档已成功删除。重定向 ...",
-                    text: `File name : ${data.filename}`,
+                    text: `...`,
                     icon: "success",
                 });
                 setTimeout("location.href = './';", 1500);

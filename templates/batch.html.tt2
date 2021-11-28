@@ -3,7 +3,7 @@
 <html>
 
 <head>
-	<title>[% title %] - 批量-添加标签</title>
+	<title>[% title %] - 批量操作</title>
 
 	<meta name="viewport" content="width=device-width" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -17,105 +17,162 @@
 	<script src="/js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/jquery.toast.min.js" type="text/JAVASCRIPT"></script>
 
-	<script src="/js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
-	<script src="/js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="/js/common.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="/js/server.js?[% version%]" type="text/JAVASCRIPT"></script>
 	<script src="/js/batch.js?[% version%]" type="text/JAVASCRIPT"></script>
 
 </head>
 
-<body onload="set_style_from_storage(); checkUntagged(); showOverride()">
+<body>
 
 	<div class='ido' style='text-align:center'>
-		<h2 class='ih' style='text-align:center'>批量添加标签</h2>
-		<br><br>
+		<h2 class='ih' style='text-align:center'>批量操作</h2>
+
+		您可以在此处通过一项操作在多个档案中使用插件.<br><br>
+		选择您的插件，检查要使用的存档，然后滚动! <br>
+		没有标签的档案已被预先检查.<br><br>
+
 		<div style='margin-left:auto; margin-right:auto;'>
 			<div style='text-align:left; width:400px !important' class='left-column'>
 
-				<br>
-				您可以在此处通过一项操作在多个档案中使用插件。<br><br>
-				选择您的插件，检查要使用的存档，然后滚动！ <br>
-				没有标签的档案已被预先检查。<br><br>
-				<i class="fas fa-exclamation-triangle"></i> 如果您多次调用插件，某些外部服务
-				可能会暂时
-				禁止您的计算机超负荷运行！ <br /></br>
-				请确保使用下面的选择器在档案之间设置合适的 <b>超时时间</b> 如果涉及的插件
-				您需要
-				使用。 <br /><br />
-
-				<table class="tag-options">
+				<!-- Task Selector -->
+				<table class="tag-options" style="margin-left: auto;margin-right: auto;">
 					<tbody>
 						<tr>
-							<td>使用插件 :</td>
 							<td>
-								<select id="plugin" class="favtag-btn" onchange="showOverride()">
-									[% FOREACH plugins %]
-									<option value="[% namespace %]">[% name %]</option>
-									[% END %]
+								<h2>Task :</h2>
+							</td>
+							<td>
+								<select id="batch-operation" class="favtag-btn" style="font-size:20px; height:30px">
+									<option value="plugin">🧩 调用插件</option>
+									<option value="clearnew">🆕 移除NEW标签</option>
+									<option value="tagrules">📏 应用标签规则</option>
+									<option value="delete">🗑️ 删除档案</option>
 								</select>
 							</td>
 						</tr>
-						<tr>
-							<td>超时 (max 20s):</td>
-							<td>
-								<input type="number" id="timeout" min="0" max="20" value="0"> seconds
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								This plugin recommends a cooldown of <span id="cooldown">-1</span> seconds.
-							</td>
-						</tr>
-
-						<tr>
-							<td></td>
-							<td>
-								<input type="checkbox" id="override" onclick="showOverride()">
-								<label for="override">覆盖插件全局参数</label>
-							</td>
-						</tr>
 					</tbody>
 				</table>
 
-				<table class="tag-options">
-					<tbody>
-						[% FOREACH plugin IN plugins %][% IF plugin.parameters && plugin.parameters.size %]
+				<!-- Task Options -->
+				<div class="id1 tag-options" style="padding:4px; height:unset; width:97%;">
+					<table>
+						<tbody>
+							<tr class="operation plugin-operation">
+								<td>Use plugin :</td>
+								<td>
+									<select id="plugin" class="favtag-btn">
+										[% FOREACH plugins %]
+										<option value="[% namespace %]">[% name %]</option>
+										[% END %]
+									</select>
+								</td>
+							</tr>
+							<tr class="operation plugin-operation">
+								<td>超时 (最大 20s):</td>
+								<td>
+									<input type="number" id="timeout" min="0" max="20" value="0"> seconds
+								</td>
+							</tr>
+							<tr class="operation plugin-operation">
+								<td colspan="2">
+									<h3>此插件建议冷却时间为 <span id="cooldown">-1</span> 秒.
+									</h3>
+									<i class="fas fa-exclamation-triangle"></i> 某些外部服务可能会暂时
+									Ban
+									掉你的设备， 如果您频繁调用插件! <br>
+									确保在使用此插件的档案间隔设置合适的 <b>超时时间</b> 如果
+									您要使用的插件存在相关问题. <br><br>
 
-						<span id="[% plugin.namespace %]-timeout" style="display:none">[% IF plugin.cooldown %][%
-							plugin.cooldown %][% ELSE %]0[% END %]</span>
+								</td>
+							</tr>
 
-						[% FOREACH arg IN plugin.parameters %]
-						<tr class="arg-override [% plugin.namespace %]-arg" style="display:none">
-							<td style="max-width:250px">[% arg.desc %] :</td>
-							<td>
-								<input class="stdinput [% plugin.namespace %]-argvalue" type=[% SWITCH arg.type %] [%
-									CASE 'string' %] "text" [% CASE 'bool' %] "checkbox" value="1" [% CASE 'int'
-									%] "number" [% CASE %] "color" [% END %]>
-							</td>
-						</tr>
-						[% END %][% END %][% END %]
+							<tr class="operation plugin-operation">
+								<td colspan="2">
+									<input type="checkbox" id="override">
+									<label for="override">覆盖插件全局参数</label>
+								</td>
+							</tr>
 
-					</tbody>
-				</table>
+							<tr class="operation tagrules-operation">
+								<td style="vertical-align: top;">这会将以下标签规则应用于选定的
+									档案.<br><br>
+									您可以在服务器配置中编辑您的标签规则.<br><br>
 
+									<input class='stdbtn' type='button' onclick="LRR.openInNewTab('./config');"
+										value='服务器配置' />
+								</td>
+								<td>
+									<textarea class="stdinput" size="20" style='height:196px'
+										disabled>[% tagrules %]</textarea>
+								</td>
+							</tr>
 
+							<tr class="operation clearnew-operation">
+								<td colspan="2" style="text-align: center;">
+
+									这将从所选档案中删除“NEW”标志.
+									<br>
+								</td>
+							</tr>
+
+							<tr class="operation delete-operation">
+								<td></td>
+								<td style="font-size:36px; text-align: center;">
+									💣👀💦💦
+								</td>
+							</tr>
+							<tr class="operation delete-operation">
+								<td colspan="2" style="text-align: center;">
+
+									<h3>这将从您的系统中删除元数据和匹配文件！
+										请谨慎使用.
+									</h3>
+									<br>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table class="operation plugin-operation">
+						<tbody>
+							[% FOREACH plugin IN plugins %][% IF plugin.parameters && plugin.parameters.size %]
+
+							<span id="[% plugin.namespace %]-timeout" style="display:none">[% IF plugin.cooldown %][%
+								plugin.cooldown %][% ELSE %]0[% END %]</span>
+
+							[% FOREACH arg IN plugin.parameters %]
+							<tr class="arg-override [% plugin.namespace %]-arg" style="display:none">
+								<td style="max-width:250px">[% arg.desc %] :</td>
+								<td>
+									<input class="stdinput [% plugin.namespace %]-argvalue" type=[% SWITCH arg.type %]
+										[% CASE 'string' %] "text" [% CASE 'bool' %] "checkbox" value="1" [% CASE 'int'
+										%] "number" [% CASE %] "color" [% END %]>
+								</td>
+							</tr>
+							[% END %][% END %][% END %]
+
+						</tbody>
+					</table>
+				</div>
 
 				<div class="tag-options" style="text-align:center">
 					<br /><br />
-					<input type='button' value='选中/取消全部' class='stdbtn' checked='false'
-						onclick='checkAll(this)'>
-					<input type='button' value='开始标记' class='stdbtn' onclick='startBatch()'>
+					<input type='button' id="check-uncheck" value='选中/取消全部' class='stdbtn' checked='false'>
+					<input type='button' id="start-batch" value='开始标记' class='stdbtn'>
 
 				</div>
 
 				<div class="job-status" style="display:none; text-align:center">
+
 					<input id="cancel-job" type='button' value='Cancel' class='stdbtn'>
-					<input id="restart-job" type='button' value='Start another job' class='stdbtn'
-						onclick='restartBatchUI()'>
+					<input id="restart-job" type='button' value='Start another job' class='stdbtn'>
+
 					<div id="progress" style="padding-top:6px; padding-bottom:6px">
 						<div class="bar"></div>
 						当前运行 <span id="arcs"></span> 共 <span id="totalarcs"></span>
 					</div>
-					<div class="id1" style="width:400px; height:auto">
+					<div class="id1" style="padding:4px; height:auto; width:97%;">
 						<pre id="log-container" class="log-panel" />
 					</div>
 				</div>
@@ -124,14 +181,19 @@
 
 			<div class="id1 right-column"
 				style='text-align:center; min-width:400px; width: 60% !important; height:500px;'>
-				<ul class='checklist'>
-					[% arclist %]
+				<ul class='checklist' id="arclist">
 				</ul>
+
+				<div id="loading-placeholder"
+					style="align-content: center;top: 150px; position: relative; margin-left: auto; margin-right: auto; width: 90%;">
+					<i class="fas fa-8x fa-spin fa-compact-disc"></i><br><br>
+					<h2>准备数据.</h2>
+				</div>
 			</div>
 			<br><br>
 		</div>
 
-		<input class='stdbtn' type='button' onclick="window.location.href = './config/plugins';"
+		<input class='stdbtn' type='button' onclick="LRR.openInNewTab('./config/plugins');"
 			value='插件配置' />
 		<input class='stdbtn' type='button' onclick="window.location.href = './';" value='回到资料库' />
 

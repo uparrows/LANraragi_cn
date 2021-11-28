@@ -28,7 +28,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="openInNewTab('/minion')" value='打开控制台' />
+        <input class='stdbtn' type='button' onclick="LRR.openInNewTab('/minion')" value='打开Minion控制台' />
     </td>
     <td class="config-td">
         Minion Worker 处理的备用任务太长，无法在Web的请求/响应生命周期内

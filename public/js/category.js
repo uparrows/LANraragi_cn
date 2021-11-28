@@ -11,7 +11,7 @@ function addNewCategory(isDynamic) {
     const searchtag = isDynamic ? "language:english" : "";
 
     // Make an API request to create the category, if search is empty -> static, otherwise dynamic
-    genericAPICall(`/api/categories?name=${catName}&search=${searchtag}`, "PUT", `Category "${catName}" created!`, "创建分类出错:",
+    Server.callAPI(`/api/categories?name=${catName}&search=${searchtag}`, "PUT", `分类 "${catName}" 已创建!`, "创建分类出错:",
         function (data) {
             // Reload categories and select the newly created ID
             loadCategories(data.category_id);
@@ -41,7 +41,7 @@ function loadCategories(selectedID) {
             // Update form with selected category details
             updateCategoryDetails();
         })
-        .catch(error => showErrorToast("从服务器获取分类出错", error));
+        .catch(error => LRR.showErrorToast("从服务器获取分类出错", error));
 
 }
 
@@ -106,7 +106,7 @@ function saveCurrentCategoryDetails() {
     indicateSaving();
 
     // PUT update with name and search (search is empty if this is a static category)
-    genericAPICall(`/api/categories/${categoryID}?name=${catName}&search=${searchtag}&pinned=${pinned}`,
+    Server.callAPI(`/api/categories/${categoryID}?name=${catName}&search=${searchtag}&pinned=${pinned}`,
         "PUT", null, "Error updating category:",
         function (data) {
             // Reload categories and select the newly created ID
@@ -120,7 +120,7 @@ function updateArchiveInCategory(id, checked) {
     const categoryID = document.getElementById('category').value;
     indicateSaving();
     // PUT/DELETE api/categories/catID/archiveID
-    genericAPICall(`/api/categories/${categoryID}/${id}`, checked ? 'PUT' : 'DELETE', null, "添加/移除文件到分类出错",
+    Server.callAPI(`/api/categories/${categoryID}/${id}`, checked ? 'PUT' : 'DELETE', null, "添加/移除文件到分类出错",
         function (data) {
             // Reload categories and select the archive list properly
             indicateSaved();
@@ -132,7 +132,7 @@ function deleteSelectedCategory() {
     const categoryID = document.getElementById('category').value;
     if (confirm("你确定吗？ 该类别将被永久删除！")) {
 
-        genericAPICall(`/api/categories/${categoryID}`, "DELETE", "分类已删除", "删除分类出错",
+        Server.callAPI(`/api/categories/${categoryID}`, "DELETE", "分类已删除!", "删除分类出错",
             function (data) {
                 // Reload categories to show the archive list properly
                 loadCategories();

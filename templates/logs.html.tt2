@@ -14,11 +14,10 @@
 
 	<script src="./js/vendor/jquery.min.js" type="text/JAVASCRIPT"></script>
 
-	<script src="./js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
 	<script src="./js/common.js?[% version%]" type="text/JAVASCRIPT"></script>
 </head>
 
-<body onload="set_style_from_storage()">
+<body>
 
 	<div class='ido' style='text-align:center'>
 		<h2 class='ih' style='text-align:center'>软件日志</h2>
@@ -34,7 +33,7 @@
 			<li>如果您从源代码运行，则Redis日志将无法在此处使用！。 </li>
 		</ul>
 		<br>汉化：昭君。访问<a href="http://yuanfangblog.xyz"> 我的博客 </a>和<a href="https://space.bilibili.com/6976331"> Bilibili空间 </a>获取更多信息和教程<br>
-		<br>点击 <a href="https://github.com/uparrows/Ichaival/releases/download/v1.1.1/Ichaiva-1.1.1_cn.apk"> 此处下载 </a>汉化版安卓手机客户端Ichaival-1.1.1版<br>
+		<br>点击下载 <a href="https://github.com/uparrows/Ichaival/releases/download/v1.1.1/Ichaiva-1.1.1_cn.apk"> 安卓客户端汉化版 </a>、<a href="https://testflight.apple.com/join/4qjD65JX"> IOS客户端 </a>、<a href="https://www.microsoft.com/store/productId/9MZ6BWWVSWJH"> Windows客户端 .</a><br>
 		<br><br>
 
 		<h1 class='ih' style='float:left; margin-left: 5%;'>当前视图: <span id="indicator">通常</span></h1>
@@ -87,7 +86,7 @@
 		function showLog(type) {
 
 			$.get("/logs/" + type + "?lines=" + $("#loglines").val(), function (data) {
-				$("#log-container").html(encode(data));
+				$("#log-container").html(LRR.encodeHTML(data));
 				$("#indicator").html(type);
 				$("#log-container").scrollTop($("#log-container").prop("scrollHeight"));
 			});

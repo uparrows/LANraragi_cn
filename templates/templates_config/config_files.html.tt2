@@ -25,7 +25,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="cleanTempFldr();" value='清理临时文件夹' />
+        <input class='stdbtn' type='button' onclick="Server.cleanTemporaryFolder();" value='清理临时文件夹' />
     </td>
     <td class="config-td">
         当前大小:
@@ -38,7 +38,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="invalidateCache();" value='重置搜索缓存' />
+        <input class='stdbtn' type='button' onclick="Server.invalidateCache();" value='重置搜索缓存' />
     </td>
     <td class="config-td">
         存档索引中最后一次执行的搜索将被缓存以加快加载速度。 <br>
@@ -51,7 +51,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="clearAllNew();" value='清理“NEW”标签' />
+        <input class='stdbtn' type='button' onclick="Server.clearAllNewFlags()" value='清理“NEW”标签' />
     </td>
     <td class="config-td">
         在您打开新归档文件之前，它们会在索引中标记为“NEW”。<br>

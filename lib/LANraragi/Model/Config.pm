@@ -26,9 +26,6 @@ sub get_redisdb { return $config->{redis_database} }
 # Database that'll be used by Minion. Redis databases are numbered, default is 1.
 sub get_miniondb { return $config->{redis_database_minion} }
 
-# Default CSS file to load.
-sub get_style { return $config->{default_theme} }
-
 # Create a Minion object connected to the Minion database.
 sub get_minion {
     my $miniondb = get_redisad . "/" . get_miniondb;
@@ -135,7 +132,7 @@ sub get_tagrules {
 }
 
 sub get_htmltitle        { return &get_redis_conf( "htmltitle",     "LANraragi" ) }
-sub get_motd             { return &get_redis_conf( "motd",          "欢迎来到LANraragi资料库!" ) }
+sub get_motd             { return &get_redis_conf( "motd",          "^_^" ) }
 sub get_tempmaxsize      { return &get_redis_conf( "tempmaxsize",   "500" ) }
 sub get_pagesize         { return &get_redis_conf( "pagesize",      "100" ) }
 sub enable_pass          { return &get_redis_conf( "enablepass",    "1" ) }
@@ -147,5 +144,6 @@ sub enable_tagrules      { return &get_redis_conf( "tagruleson",    "1" ) }
 sub enable_resize        { return &get_redis_conf( "enableresize",  "0" ) }
 sub get_threshold        { return &get_redis_conf( "sizethreshold", "1000" ) }
 sub get_readquality      { return &get_redis_conf( "readerquality", "50" ) }
+sub get_style            { return &get_redis_conf( "theme", "modern.css" ) }
 
 1;

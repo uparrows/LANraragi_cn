@@ -22,8 +22,8 @@
 	<script src="/js/vendor/jquery.fileupload.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/allcollapsible.min.js" type="text/JAVASCRIPT"></script>
 
-	<script src="/js/theme.js?[% version%]" type="text/JAVASCRIPT"></script>
-	<script src="/js/ajax.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="/js/common.js?[% version%]" type="text/JAVASCRIPT"></script>
+	<script src="/js/server.js?[% version%]" type="text/JAVASCRIPT"></script>
 
 </head>
 
@@ -84,10 +84,10 @@
 			<br />
 			<h1 style="text-align:center">
 				<span class="script-running" style="display:none">
-					<i aria-hidden="true" class="fa fa-3x fa-cog fa-spin"></i> <br>
+					<i aria-hidden="true" class="fa fa-3x fa-atom fa-spin"></i> <br>
 					一个脚本正在运行...
 				</span>
-				<input class='stdbtn' type='button' onclick="saveFormData('#editPluginForm');"
+				<input class='stdbtn' type='button' onclick="Server.saveFormData('#editPluginForm');"
 					value='保存插件配置' />
 				<span id="plugin-upload" class='stdbtn fileinput-button'
 					style="margin-bottom: -10px; font-weight:normal">
@@ -150,7 +150,7 @@
 	<div style="float:right; text-align: right;">
 
 		[% IF plugin.type == "metadata" %]
-		<h1 class="ih" style="display:inline"> Run Automatically: </h1>
+		<h1 class="ih" style="display:inline"> 自动运行: </h1>
 		<input id="[% plugin.namespace %]" name="[% plugin.namespace %]" class="fa" type="checkbox" [% IF plugin.enabled
 			%] checked [% END %]>
 		<br />
@@ -186,7 +186,7 @@
 			[% END %]
 			<tr>
 				<td colspan="2">
-					<input class='stdbtn' type='button' onclick="triggerScript('[% plugin.namespace %]');"
+					<input class='stdbtn' type='button' onclick="Server.triggerScript('[% plugin.namespace %]');"
 						value='触发脚本' />
 				</td>
 			</tr>

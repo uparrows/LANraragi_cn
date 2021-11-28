@@ -1,21 +1,46 @@
-// JS functions meant for use in the Edit page.
-// Mostly dealing with plugins.
-
+/**
+ * JS functions meant for use in the Edit page.
+ * Mostly dealing with plugins.
+ */
 const Edit = {};
+
 Edit.tagInput = {};
 Edit.suggestions = [];
 
+Edit.hideTags = function () {
+    $("#tag-spinner").css("display", "block");
+    $("#tagText").css("opacity", "0.5");
+    $("#tagText").prop("disabled", true);
+    $("#plugin-table").hide();
+};
+
+Edit.showTags = function () {
+    $("#tag-spinner").css("display", "none");
+    $("#tagText").prop("disabled", false);
+    $("#tagText").css("opacity", "1");
+    $("#plugin-table").show();
+};
+
+Edit.focusTagInput = function () {
+    // Focus child of tagger-new
+    $(".tagger-new").children()[0].focus();
+};
+
 Edit.initializeAll = function () {
     // bind events to DOM
-    $(document).on("load.style", "body", set_style_from_storage);
     $(document).on("click.show-help", "#show-help", Edit.showHelp);
     $(document).on("click.run-plugin", "#run-plugin", Edit.runPlugin);
     $(document).on("click.save-metadata", "#save-metadata", Edit.saveMetadata);
+    $(document).on("click.delete-archive", "#delete-archive", Edit.deleteArchive);
     $(document).on("change.plugin", "#plugin", Edit.updateOneShotArg);
+    $(document).on("click.tagger", ".tagger", Edit.focusTagInput);
 
     Edit.updateOneShotArg();
 
-    genericAPICall("/api/database/stats?minweight=2", "GET", null, "无法加载标签统计信息",
+    // Hide tag input while statistics load
+    Edit.hideTags();
+
+    Server.callAPI("/api/database/stats?minweight=2", "GET", null, "无法加载标签统计信息",
         (data) => {
             Edit.suggestions = data.reduce((res, tag) => {
                 let label = tag.text;
@@ -26,6 +51,8 @@ Edit.initializeAll = function () {
         })
         .finally(() => {
             const input = $("#tagText")[0];
+
+            Edit.showTags();
             Edit.tagInput = tagger(input, {
                 allow_duplicates: false,
                 allow_spaces: true,
@@ -65,11 +92,7 @@ Edit.updateOneShotArg = function () {
 };
 
 Edit.saveMetadata = function () {
-    $("#tag-spinner").css("display", "block");
-    $("#tagText").css("opacity", "0.5");
-    $("#tagText").prop("disabled", true);
-    $("#plugin-table").hide();
-
+    Edit.hideTags();
     const id = $("#archiveID").val();
 
     const formData = new FormData();
@@ -91,27 +114,27 @@ Edit.saveMetadata = function () {
                 throw new Error(data.message);
             }
         })
-        .catch((error) => showErrorToast("保存存档数据时出错 :", error))
+        .catch((error) => LRR.showErrorToast("保存存档数据时出错 :", error))
         .finally(() => {
-            $("#tag-spinner").css("display", "none");
-            $("#tagText").prop("disabled", false);
-            $("#tagText").css("opacity", "1");
-            $("#plugin-table").show();
+            Edit.showTags();
         });
 };
 
+Edit.deleteArchive = function () {
+    if (confirm("你确定要删除该档案吗?")) {
+        Server.deleteArchive($("#archiveID").val(), () => { document.location.href = "./"; });
+    }
+};
+
 Edit.getTags = function () {
-    $("#tag-spinner").css("display", "block");
-    $("#tagText").css("opacity", "0.5");
-    $("#tagText").prop("disabled", true);
-    $("#plugin-table").hide();
+    Edit.hideTags();
 
     const pluginID = $("select#plugin option:checked").val();
     const archivID = $("#archiveID").val();
     const pluginArg = $("#arg").val();
-    genericAPICall(`../api/plugins/use?plugin=${pluginID}&id=${archivID}&arg=${pluginArg}`, "POST", null,
+    Server.callAPI(`../api/plugins/use?plugin=${pluginID}&id=${archivID}&arg=${pluginArg}`, "POST", null,
         "Error while fetching tags :", (result) => {
-            if (result.data.title && result.data.title != "") {
+            if (result.data.title && result.data.title !== "") {
                 $("#title").val(result.data.title);
                 $.toast({
                     showHideTransition: "slide",
@@ -147,10 +170,7 @@ Edit.getTags = function () {
                 });
             }
         }).finally(() => {
-        $("#tag-spinner").css("display", "none");
-        $("#tagText").prop("disabled", false);
-        $("#tagText").css("opacity", "1");
-        $("#plugin-table").show();
+        Edit.showTags();
     });
 };
 
