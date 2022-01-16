@@ -212,7 +212,7 @@
 </div>
 
 <div id="toggle-overlay">
-    <h2 class="config-panel"> 默认显示存档封面 </h2>
+    <h2 class="config-panel"> 默认显示预览 </h2>
     <span class="config-panel">这将在您每次打开新的阅读器页面时显示带有缩略图的叠加层.
     </span>
     <input id="show-overlay" class="favtag-btn config-btn" type="button" value="启用">
