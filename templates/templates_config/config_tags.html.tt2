@@ -35,6 +35,37 @@
 
 <tr>
     <td class="option-td">
+        <h2 class="ih"> 添加时间戳 </h2>
+    </td>
+    <td class="config-td">
+        [% IF usedateadded %]
+        <input id="usedateadded" name="usedateadded" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="usedateadded" name="usedateadded" class="fa" type="checkbox"> [% END %]
+        <label for="usedateadded">
+            <br>如果启用，LANraragi 会将当前时间的 UNIX 时间戳作为标签添加到
+            新添加的档案的"date_added"命名空间.
+        </label>
+    </td>
+</tr>
+
+<tr class="datemodified">
+    <td class="option-td">
+        <h2 class="ih"> 使用"上次修改时间" </h2>
+    </td>
+    <td class="config-td">
+        [% IF usedatemodified %]
+        <input id="usedatemodified" name="usedatemodified" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="usedatemodified" name="usedatemodified" class="fa" type="checkbox"> [% END %]
+        <label for="usedatemodified">
+            <br>启用此功能将使用文件修改时间配置"date_added"时间戳时而不是当前时间.
+        </label>
+    </td>
+</tr>
+
+
+
+<tr>
+    <td class="option-td">
         <h2 class="ih"> 标签规则 </h2>
     </td>
     <td class="config-td">

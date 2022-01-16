@@ -56,7 +56,7 @@
 
         <div id="i5">
             <div class="sb">
-                <a href="./" title="看完了吗？ 返回档案索引">
+                <a href="./?[% ref_query %]" id="return-to-index" title="看完了吗？ 返回档案索引">
                     <i class="fa fa-angle-down fa-3x"></i>
                 </a>
             </div>
@@ -93,8 +93,8 @@
 
                     <h2>管理员设置</h2>
 
-                    <input class="stdbtn" type='button' id="regenerate-thumbnail" value="重建缩略图"
-                        disabled title="即将回来!" />
+                    <input class="stdbtn" type='button' id="set-thumbnail" value="将此页面设置为缩略图"
+                        title="将当前打开的页面设置为此档案的缩略图." />
                     <br>
                     <input id="regenerate-cache" class='stdbtn' type='button' value='清理档案缓存' />
                     <br>
@@ -119,6 +119,13 @@
         <br><br>
 
         <h2 class="ih" style="text-align:center">档案总览</h2>
+
+        <div id="extract-spinner" style="width: 80%; margin-left: auto; margin-right: auto">
+            <p class="loading-spinner">
+                <i id="spinner" class="fa fa-dharmachakra fa-4x fa-spin"></i>
+            </p>
+            工作中...
+        </div>
     </div>
     </div>
     </div>
@@ -174,7 +181,7 @@
 
 <div id="container-width">
     <h2 class="config-panel"> 显示宽度 (像素或百分比)</h2>
-    <input id="container-width-input" class="stdinput" style="display:inline"
+    <input id="container-width-input" class="stdinput" style="display:inline; width: 70%;"
         placeholder="默认值为1200像素，或在双页模式下缩放为90％大小.">
     <input id="container-width-apply" class="favtag-btn config-btn" type="button" style="display:inline;" value="应用">
 </div>
@@ -203,6 +210,15 @@
     <input id="show-header" class="favtag-btn config-btn" type="button" value="显示">
     <input id="hide-header" class="favtag-btn config-btn" type="button" value="隐藏">
 </div>
+
+<div id="toggle-overlay">
+    <h2 class="config-panel"> 默认显示存档封面 </h2>
+    <span class="config-panel">这将在您每次打开新的阅读器页面时显示带有缩略图的叠加层.
+    </span>
+    <input id="show-overlay" class="favtag-btn config-btn" type="button" value="启用">
+    <input id="hide-overlay" class="favtag-btn config-btn" type="button" value="停用">
+</div>
+
 
 <div id="toggle-progress">
     <h2 class="config-panel"> 进度追踪 </h2>

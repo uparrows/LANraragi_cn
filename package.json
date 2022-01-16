@@ -1,7 +1,7 @@
 {
     "name": "lanraragi",
-    "version": "0.8.3",
-    "version_name": "夜间航班（收录于情绪波动回归基础专辑）",
+    "version": "0.8.4",
+    "version_name": "真正的酷世界",
     "description": "我一世英名恐怕要毁在日本文化的影响下了！",
     "scripts": {
         "test": "prove -r -l -v tests/",
