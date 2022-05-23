@@ -19,7 +19,9 @@ Lanraragi是一个开源的压缩包漫画阅读器，运行在Mojolicious和Red
 [⏬ 下载源码](https://github.com/uparrows/LANraragi_cn/releases/latest) |[📄 教程](http://yuanfangblog.xyz/technology/251.html) |
 
 安卓客户端：https://github.com/uparrows/Ichaival/releases/download/1.3.0/Ichaival-1.3.0_cn.apk
+
 IOS客户端： https://testflight.apple.com/join/4qjD65JX
+
 Windows客户端： https://www.microsoft.com/zh-cn/p/lrreader/9mz6bwwvswjh
 
 ## 扫码直接查看教程

@@ -61,7 +61,7 @@ Server.checkJobStatus = function (jobId, useDetail, callback, failureCallback) {
             if (data.state !== "finished") {
                 // Wait and retry, job isn't done yet
                 setTimeout(() => {
-                    Server.checkJobStatus(jobId, callback, failureCallback);
+                    Server.checkJobStatus(jobId, useDetail, callback, failureCallback);
                 }, 1000);
             } else {
                 // Update UI with info
