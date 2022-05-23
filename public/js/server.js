@@ -43,11 +43,13 @@ Server.callAPI = function (endpoint, method, successMessage, errorMessage, succe
 /**
  * Check the status of a Minion job until it's completed.
  * @param {*} jobId Job ID to check
+ * @param {*} useDetail Whether to get full details or the job or not.
+ *            This requires the user to be logged in.
  * @param {*} callback Execute a callback on successful job completion.
  * @param {*} failureCallback Execute a callback on unsuccessful job completion.
  */
-Server.checkJobStatus = function (jobId, callback, failureCallback) {
-    fetch(`/api/minion/${jobId}`, { method: "GET" })
+Server.checkJobStatus = function (jobId, useDetail, callback, failureCallback) {
+    fetch(useDetail ? `/api/minion/${jobId}/detail` : `/api/minion/${jobId}`, { method: "GET" })
         .then((response) => (response.ok ? response.json() : { success: 0, error: "响应不正确" }))
         .then((data) => {
             if (data.error) throw new Error(data.error);
@@ -113,7 +115,7 @@ Server.triggerScript = function (namespace) {
         .then(Server.callAPI(`/api/plugins/queue?plugin=${namespace}&arg=${scriptArg}`, "POST", null, "执行脚本时出错 :",
             (data) => {
                 // Check minion job state periodically while we're on this page
-                Server.checkJobStatus(data.job,
+                Server.checkJobStatus(data.job, true,
                     (d) => {
                         Server.isScriptRunning = false;
                         $(".script-running").hide();
@@ -197,7 +199,7 @@ Server.regenerateThumbnails = function (force) {
             $("#forcethumb-button").prop("disabled", true);
 
             // Check minion job state periodically while we're on this page
-            Server.checkJobStatus(data.job,
+            Server.checkJobStatus(data.job, true,
                 (d) => {
                     $("#genthumb-button").prop("disabled", false);
                     $("#forcethumb-button").prop("disabled", false);

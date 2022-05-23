@@ -40,11 +40,7 @@
             </div>
 
             <a id="display">
-                <img id="img" class="reader-image" usemap="#Map" />
-                <map name="Map" id="Map">
-                    <area id="leftmap" style="cursor:pointer;" shape="rect" value="left" />
-                    <area id="rightmap" style="cursor:pointer;" shape="rect" value="right" />
-                </map>
+                <img id="img" class="reader-image" src=""><img id="img_doublepage" class="reader-image" src="">
             </a>
 
         </div>
@@ -151,6 +147,7 @@
                 <li>P: 切换双页模式</li>
                 <li>Q: 调出缩略图索引和存档选项.</li>
                 <li>R: 打开随机存档.</li>
+                <li>F: 切换全屏模式</li>
             </ul>
             <br>要返回存档索引，请触摸向下的箭头或使用 Backspace.
         </div>
@@ -256,12 +253,13 @@
 [% BLOCK pagesel %]
 <div class="absolute-options absolute-left">
     <a class="fa fa-cog fa-2x" id="toggle-settings-overlay" href="#" title="阅读设置"></a>
-    <a class="fa fa-info-circle fa-2x" id="toggle-help" href="#" title="帮助"></a>
+    <a class="fa fa-question-circle fa-2x" id="toggle-help" href="#" title="帮助"></a>
 </div>
 
 <div class="absolute-options absolute-right">
     <a class="fa fa-arrow-right fa-2x reading-direction" href="#" title="阅读方向"></a>
     <a class="fa fa-th fa-2x" id="toggle-archive-overlay" href="#" title="档案预览"></a>
+    <a class="fa fa-compress fa-2x" id="toggle-full-screen" href="#" title="全屏模式"></a>
 </div>
 [% END %]
 <!-- -->

@@ -14,9 +14,13 @@ Thanks to Difegue for developing this software ！
 Lanraragi是一个开源的压缩包漫画阅读器，运行在Mojolicious和Redis基础上。
 
 [<img src="https://img.shields.io/docker/pulls/dezhao/lanraragi_cn.svg">](https://hub.docker.com/r/dezhao/lanraragi_cn/)
-
+[![IC](https://github.com/uparrows/LANraragi_cn/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/uparrows/LANraragi_cn/actions/workflows/docker-image.yml)
 
 [⏬ 下载源码](https://github.com/uparrows/LANraragi_cn/releases/latest) |[📄 教程](http://yuanfangblog.xyz/technology/251.html) |
+
+安卓客户端：https://github.com/uparrows/Ichaival/releases/download/1.3.0/Ichaival-1.3.0_cn.apk
+IOS客户端： https://testflight.apple.com/join/4qjD65JX
+Windows客户端： https://www.microsoft.com/zh-cn/p/lrreader/9mz6bwwvswjh
 
 ## 扫码直接查看教程
 

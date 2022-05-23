@@ -6,8 +6,22 @@
         <input class="stdinput" style="width:100%" maxlength="255" size="20" value="[% dirname %]" name="dirname"
             type="text" [% IF forceddirname %] disabled title="此选项由环境变量强制执行。" [%
             END %]>
-        <br> 该处为存档存储的目录。 如果不存在，会被自动创建。
-        <br>确保运行LANraragi的用户对该目录具有读取权限. <br>
+        <br> 档案将被放置的目录，如果不存在，将被自动创建。
+        <br>确保运行 LANraragi 的系统的用户对该目录具有读取权限. <br>
+    </td>
+</tr>
+
+<tr></tr>
+
+<tr>
+    <td class="option-td">
+        <input id="rescan-button" class='stdbtn' type='button' onclick="rescanContentFolder()"
+            value='重新扫描存档目录' />
+    </td>
+    <td class="config-td">
+        单击此按钮以触发存档目录的重新扫描，以防丢失文件， <br>
+        或一些数据，例如总页数. <br>
+        <br>
     </td>
 </tr>
 
