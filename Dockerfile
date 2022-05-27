@@ -2,6 +2,7 @@
 FROM        alpine:3.14
 LABEL       git="https://github.com/uparrows/LANraragi_cn"
 
+ENV S6_OVERLAY_RELEASE v3.1.0.1
 ENV S6_KEEP_ENV 1
 
 # warn if we can't run stage2 (fix-attrs/cont-init)
@@ -10,9 +11,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS 1
 # wait 10s before KILLing
 ENV S6_KILL_GRACETIME 10000
 
-# s6: The init is provided by alpine's s6-overlay package, hence the double slash. 
-# See https://pkgs.alpinelinux.org/contents?branch=v3.14&name=s6-overlay&arch=x86&repo=community
-ENTRYPOINT ["//init"] 
+# s6
+ENTRYPOINT ["/init"] 
 
 # Check application health
 HEALTHCHECK --interval=1m --timeout=10s --retries=3 \
@@ -24,7 +24,7 @@ EXPOSE 3000
 
 #Enable UTF-8 (might not do anything extra on alpine tho)
 ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 \
-    #root user id
+    #rootless user id
     LRR_UID=0 LRR_GID=0 \
     #Environment variables overridable by the user on container deployment
     LRR_NETWORK=http://*:3000 \
@@ -33,6 +33,11 @@ ENV LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 \
 
 
 
+# we use s6-overlay-nobin to just pull in the s6-overlay arch agnostic (shell)
+# components, since we apk install the binaries of s6 later which are arch specific
+# /!\ While the s6 version here is fixed by an envvar, the apk install is not pinned and takes whatever's in alpine:latest! This certainly needs a fix.
+ADD https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_RELEASE}/s6-overlay-nobin.tar.gz /tmp/s6-overlay-nobin.tar.gz
+RUN tar -C / -xzf /tmp/s6-overlay-nobin.tar.gz && rm -f /tmp/s6-overlay-nobin.tar.gz
 
 
 WORKDIR /root/lanraragi
@@ -46,6 +51,7 @@ COPY --chown=root:root /package.json package.json
 RUN sh ./tools/install-everything.sh
 RUN rm -f /root/lanraragi/public/js/vendor/jquery.dataTables.min.js
 #Copy remaining LRR files from context
+# consider chowning in s6 setup scripts instead
 COPY --chown=root:root /lib lib
 COPY --chown=root:root /public public
 COPY --chown=root:root /script script
