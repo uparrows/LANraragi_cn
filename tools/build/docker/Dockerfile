@@ -2,7 +2,7 @@
 FROM        alpine:3.14
 LABEL       git="https://github.com/uparrows/LANraragi_cn"
 
-ENV S6_OVERLAY_RELEASE v3.1.0.1
+ENV S6_OVERLAY_RELEASE v2.0.0.1
 ENV S6_KEEP_ENV 1
 
 # warn if we can't run stage2 (fix-attrs/cont-init)
