@@ -103,7 +103,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="Server.cleanDatabase();" value='清理数据库' />
+        <input id='clean-db' class='stdbtn' type='button' value='清理数据库' />
     </td>
     <td class="config-td">
         清理数据库将删除文件系统上没有的条目。
@@ -112,7 +112,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="Server.dropDatabase();" value='重置数据库' />
+        <input id='drop-db' class='stdbtn' type='button' value='重置数据库' />
     </td>
     <td class="config-td">
         <span style="color:red"><i class="fas fa-exclamation-triangle"></i> 危险!</span> <br>

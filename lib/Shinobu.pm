@@ -11,7 +11,6 @@ package Shinobu;
 use strict;
 use warnings;
 use utf8;
-use Encode;
 use feature qw(say);
 
 use FindBin;
@@ -218,12 +217,22 @@ sub add_to_filemap {
         # If the id already exists on the server, throw a warning about duplicates
         if ( $redis->hexists( "LRR_FILEMAP", $file ) ) {
 
-            my $id = $redis->hget( "LRR_FILEMAP", $file );
+            my $filemap_id = $redis->hget( "LRR_FILEMAP", $file );
 
-            $logger->debug( "$file was logged again but is already in the filemap, duplicate inotify events? "
-                  . "Cleaning cache just to make sure" );
+            $logger->debug("$file was logged but is already in the filemap!");
 
-            invalidate_cache();
+            if ( $filemap_id ne $id ) {
+                $logger->debug("$file has a different ID than the one in the filemap! ($filemap_id)");
+                $logger->info("$file has been modified, updating its ID from $filemap_id to $id.");
+
+                LANraragi::Utils::Database::change_archive_id( $filemap_id, $id, $redis );
+
+            } else {
+                $logger->debug(
+                    "$file has the same ID as the one in the filemap. Duplicate inotify events? Cleaning cache just to make sure");
+                invalidate_cache();
+            }
+
             return;
 
         } else {
@@ -304,9 +313,8 @@ sub deleted_file_callback {
 
 sub add_new_file {
 
-    my ( $id, $file, $redis,$outputname ) = @_;
-	$outputname = decode("utf8", $file);
-    $logger->info("Adding new file $outputname with ID $id");
+    my ( $id, $file, $redis ) = @_;
+    $logger->info("Adding new file $file with ID $id");
 
     eval {
         LANraragi::Utils::Database::add_archive_to_redis( $id, $file, $redis );

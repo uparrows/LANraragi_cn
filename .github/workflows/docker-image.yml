@@ -8,7 +8,7 @@ on:
 
 env:
   APP_NAME: lanraragi_cn
-  DOCKERHUB_REPO: dezhao/lanraragi_cn
+  DOCKERHUB_REPO: dezhao/lanraragi_test
 
 jobs:
   main:
@@ -46,9 +46,9 @@ jobs:
           # 生成多平台镜像, see https://github.com/docker-library/bashbrew/blob/v0.1.1/architecture/oci-platform.go
           platforms: |
             linux/amd64
-            linux/arm/v6
-            linux/arm/v7
-            linux/arm64/v8
+            #linux/arm/v6
+            #linux/arm/v7
+            #linux/arm64/v8
           # docker build arg, 注入 APP_NAME/APP_VERSION
           build-args: |
             APP_NAME=${{ env.APP_NAME }}
@@ -56,4 +56,4 @@ jobs:
           # 生成两个 docker tag: ${APP_VERSION} 和 latest
           tags: |
             ${{ env.DOCKERHUB_REPO }}:latest
-            ${{ env.DOCKERHUB_REPO }}:0.8.5
+            ${{ env.DOCKERHUB_REPO }}:0.8.6

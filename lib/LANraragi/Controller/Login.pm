@@ -16,10 +16,16 @@ sub check {
     my $ppr = Authen::Passphrase->from_rfc2307( $self->LRR_CONF->get_password );
 
     if ( $ppr->match($pw) ) {
+
+        $self->LRR_LOGGER->info( "³¢ÊÔ´Ó "  $self->tx->remote_address "µÇÂ¼³É¹¦" );
+
         $self->session( is_logged  => 1 );
         $self->session( expiration => 60 * 60 * 24 );
         $self->redirect_to('index');
     } else {
+
+        $self->LRR_LOGGER->warn( "Ê¹ÓÃÃÜÂë '$pw' ³¢ÊÔ´Ó "  $self->tx->remote_address "µÇÂ¼Ê§°Ü");
+
         $self->render(
             template  => "login",
             title     => $self->LRR_CONF->get_htmltitle,
@@ -50,7 +56,7 @@ sub logged_in_api {
     # The API key is in the Authentication header.
     my $expected_key = $self->LRR_CONF->get_apikey;
 
-    my $auth_header     = $self->req->headers->authorization || "";
+    my $auth_header = $self->req->headers->authorization || "";
     my $expected_header = "Bearer " . encode_base64( $expected_key, "" );
 
     return 1

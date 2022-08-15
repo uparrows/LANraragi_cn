@@ -17,16 +17,16 @@ Index.pageSize = 100;
  */
 Index.initializeAll = function () {
     // Bind events to DOM
-    $(document).on("click.edit-header-1", "#edit-header-1", () => { Index.promptCustomColumn(1); });
-    $(document).on("click.edit-header-2", "#edit-header-2", () => { Index.promptCustomColumn(2); });
+    $(document).on("click.edit-header-1", "#edit-header-1", () => Index.promptCustomColumn(1));
+    $(document).on("click.edit-header-2", "#edit-header-2", () => Index.promptCustomColumn(2));
     $(document).on("click.mode-toggle", ".mode-toggle", Index.toggleMode);
     $(document).on("change.page-select", "#page-select", () => IndexTable.dataTable.page($("#page-select").val() - 1).draw("page"));
     $(document).on("change.thumbnail-crop", "#thumbnail-crop", Index.toggleCrop);
     $(document).on("change.namespace-sortby", "#namespace-sortby", Index.handleCustomSort);
     $(document).on("click.order-sortby", "#order-sortby", Index.toggleOrder);
-    $(document).on("click.open_carousel", ".collapsible-title", Index.toggleCarousel);
+    $(document).on("click.open-carousel", ".collapsible-title", Index.toggleCarousel);
     $(document).on("click.reload-carousel", "#reload-carousel", Index.updateCarousel);
-    $(document).on("click.close_overlay", "#overlay-shade", LRR.closeOverlay);
+    $(document).on("click.close-overlay", "#overlay-shade", LRR.closeOverlay);
 
     // 0 = List view
     // 1 = Thumbnail view
@@ -58,10 +58,11 @@ Index.initializeAll = function () {
 
     // Force-open the collapsible if carouselOpen = true
     if (localStorage.carouselOpen === "1") {
-        localStorage.carouselOpen = "0"; // Bad hack since clicking collapsible-title will trigger toggleCarousel and modify this
-        $(".collapsible-title").click();
+        $(".collapsible-title").trigger("click", [false]);
+        // Index.updateCarousel(); will be executed by toggleCarousel
+    } else {
+        Index.updateCarousel();
     }
-    Index.updateCarousel();
 
     // Initialize carousel mode menu
     $.contextMenu({
@@ -85,43 +86,41 @@ Index.initializeAll = function () {
     if (localStorage.getItem("sawContextMenuToast") === null) {
         localStorage.sawContextMenuToast = true;
 
-        $.toast({
+        LRR.toast({
             heading: `欢迎使用 LANraragi ${Index.serverVersion}!`,
             text: "如果要对存档执行高级操作，请记住只需右键单击其名称。 祝您阅读愉快！",
-            hideAfter: false,
-            position: "top-left",
             icon: "info",
+            hideAfter: 13000,
         });
     }
 
     // Get some info from the server: version, debug mode, local progress
-    Server.callAPI("/api/info", "GET", null, "获取服务器基础信息时出错!", (data) => {
-        Index.serverVersion = data.version;
-        Index.debugMode = data.debug_mode === "1";
-        Index.isProgressLocal = data.server_tracks_progress !== "1";
-        Index.pageSize = data.archives_per_page;
+    Server.callAPI("/api/info", "GET", null, "获取服务器基础信息时出错!",
+        (data) => {
+            Index.serverVersion = data.version;
+            Index.debugMode = data.debug_mode === "1";
+            Index.isProgressLocal = data.server_tracks_progress !== "1";
+            Index.pageSize = data.archives_per_page;
 
-        // Check version if not in debug mode
-        if (!Index.debugMode) {
-            Index.checkVersion();
-            Index.fetchChangelog();
-        } else {
-            $.toast({
-                heading: "<i class=\"fas fa-bug\"></i> 您正在调试模式下运行!",
+            // Check version if not in debug mode
+            if (!Index.debugMode) {
+                Index.checkVersion();
+                Index.fetchChangelog();
+            } else {
+                LRR.toast({
+                    heading: "<i class=\"fas fa-bug\"></i> 您正在调试模式下运行!",
                 text: "可以在<a href=\"./debug\">此处.</a>查看高级服务器统计信息",
-                hideAfter: false,
-                position: "top-left",
-                icon: "warning",
-            });
-        }
+                    icon: "warning",
+                });
+            }
 
-        Index.migrateProgress();
-        Index.loadTagSuggestions();
-        Index.loadCategories();
+            Index.migrateProgress();
+            Index.loadTagSuggestions();
+            Index.loadCategories();
 
-        // Initialize DataTables
-        IndexTable.initializeAll();
-    });
+            // Initialize DataTables
+            IndexTable.initializeAll();
+        });
 
     Index.updateTableHeaders();
 };
@@ -131,22 +130,52 @@ Index.toggleMode = function () {
     IndexTable.dataTable.draw();
 };
 
-Index.toggleCarousel = function () {
-    localStorage.carouselOpen = (localStorage.carouselOpen === "1") ? "0" : "1";
+Index.toggleCarousel = function (e, updateLocalStorage = true) {
+    if (updateLocalStorage) localStorage.carouselOpen = (localStorage.carouselOpen === "1") ? "0" : "1";
 
     if (!Index.carouselInitialized) {
         Index.carouselInitialized = true;
         $("#reload-carousel").show();
 
         Index.swiper = new Swiper(".index-carousel-container", {
-            slidesPerView: "auto",
-            spaceBetween: 8,
+            breakpoints: (() => {
+                const breakpoints = {
+                    0: { // ensure every device have at least 1 slide
+                        slidesPerView: 1,
+                    },
+                };
+                // virtual Slides doesn't work with slidesPerView: 'auto'
+                // the following loops are meant to implement same functionality by doing mathworks
+                // it also helps avoid writing a billion slidesPerView combos for window widths
+                // when the screen width <= 560px, every thumbnails have a different width
+                // from 169px, when the width is 17px bigger, we display 0.1 more slide
+                for (let width = 169, sides = 1; width <= 424; width += 17, sides += 0.1) {
+                    breakpoints[width] = {
+                        slidesPerView: sides,
+                    };
+                }
+                // from 427px, when the width is 46px bigger, we display 0.2 more slide
+                // the width support up to 4K resolution
+                for (let width = 427, sides = 1.8; width <= 3840; width += 46, sides += 0.2) {
+                    breakpoints[width] = {
+                        slidesPerView: sides,
+                    };
+                }
+                return breakpoints;
+            })(),
+            breakpointsBase: "container",
+            centerInsufficientSlides: true,
+            mousewheel: true,
             navigation: {
                 nextEl: ".carousel-next",
                 prevEl: ".carousel-prev",
             },
-            mousewheel: true,
-            freeMode: true,
+            slidesPerView: 7,
+            virtual: {
+                enabled: true,
+                addSlidesAfter: 2,
+                addSlidesBefore: 2,
+            },
         });
 
         Index.updateCarousel();
@@ -191,20 +220,35 @@ Index.toggleCategory = function (button) {
  * @param {*} column Index of the column to modify, either 1 or 2
  */
 Index.promptCustomColumn = function (column) {
-    const promptText = "输入要在此列中显示的标签的命名空间。 \n\n"
-    + "输入不带冒号的完整命名空间，例如 \"artist\".\n"
-    + "如果您有多个具有相同命名空间的标签，则该列中只会显示最后一个.";
+    LRR.showPopUp({
+        title: "输入要在此列中显示的标签的命名空间",
+        text: "输入不带冒号的完整命名空间, 例如 \"artist\".\n如果您有多个具有相同命名空间的标签，则该列中只会显示最后一个.",
+        input: "text",
+        inputValue: localStorage.getItem(`customColumn${column}`),
+        inputPlaceholder: "标签名称空间",
+        inputAttributes: {
+            autocapitalize: "off",
+        },
+        showCancelButton: true,
+        reverseButtons: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return "请输入一个命名空间.";
+            }
+            return undefined;
+        },
+    }).then((result) => {
+        if (result.isConfirmed) {
+            if (!LRR.isNullOrWhitespace(result.value)) {
+                localStorage.setItem(`customColumn${column}`, result.value.trim());
 
-    const defaultText = localStorage.getItem(`customColumn${column}`);
-    const input = prompt(promptText, defaultText);
-
-    if (!LRR.isNullOrWhitespace(input)) {
-        localStorage.setItem(`customColumn${column}`, input.trim());
-
-        // Absolutely disgusting
-        IndexTable.dataTable.settings()[0].aoColumns[column].sName = input.trim();
-        Index.updateTableHeaders();
-    }
+                // Absolutely disgusting
+                IndexTable.dataTable.settings()[0].aoColumns[column].sName = result.value.trim();
+                Index.updateTableHeaders();
+                IndexTable.doSearch();
+            }
+        }
+    });
 };
 
 /**
@@ -268,9 +312,9 @@ Index.handleCustomSort = function () {
 Index.updateCarousel = function (e) {
     e?.preventDefault();
 
-    const carousel = $(".swiper-wrapper");
-    carousel.empty();
     $("#carousel-loading").show();
+    $(".swiper-wrapper").hide();
+    $("#reload-carousel").addClass("fa-spin");
 
     // Hit a different API endpoint depending on the requested localStorage carousel type
     let endpoint;
@@ -298,16 +342,19 @@ Index.updateCarousel = function (e) {
     }
 
     if (Index.carouselInitialized) {
-        Server.callAPI(endpoint,
-            "GET", null, "获取轮播数据时出错!",
+        Server.callAPI(endpoint, "GET", null, "获取轮播数据时出错!",
             (results) => {
-                results.data.forEach((archive) => {
-                    carousel.append(LRR.buildThumbnailDiv(archive));
-                });
+                Index.swiper.virtual.removeAllSlides();
+                const slides = results.data
+                    .map((archive) => LRR.buildThumbnailDiv(archive, false));
+                Index.swiper.virtual.appendSlide(slides);
+                Index.swiper.virtual.update();
 
-                Index.swiper.update();
                 $("#carousel-loading").hide();
-            });
+                $(".swiper-wrapper").show();
+                $("#reload-carousel").removeClass("fa-spin");
+            },
+        );
     }
 };
 
@@ -327,44 +374,49 @@ Index.updateTableHeaders = function () {
 };
 
 /**
- * Check the Github API to see if an update was released.
+ * Check the GitHub API to see if an update was released.
  * If so, flash another friendly notification inviting the user to check it out
  */
 Index.checkVersion = function () {
     const githubAPI = "https://api.github.com/repos/uparrows/LANraragi_cn/releases/latest";
 
-    $.getJSON(githubAPI).done((data) => {
-        const expr = /(\d+)/g;
-        const latestVersionArr = Array.from(data.tag_name.match(expr));
-        let latestVersion = "";
-        const currentVersionArr = Array.from(Index.serverVersion.match(expr));
-        let currentVersion = "";
+    fetch(githubAPI)
+        .then((response) => response.json())
+        .then((data) => {
+            const expr = /(\d+)/g;
+            const latestVersionArr = Array.from(data.tag_name.match(expr));
+            let latestVersion = "";
+            const currentVersionArr = Array.from(Index.serverVersion.match(expr));
+            let currentVersion = "";
 
-        latestVersionArr.forEach((element, index) => {
-            if (index + 1 < latestVersionArr.length) {
-                latestVersion = `${latestVersion}${element}`;
-            } else {
-                latestVersion = `${latestVersion}.${element}`;
-            }
-        });
-        currentVersionArr.forEach((element, index) => {
-            if (index + 1 < currentVersionArr.length) {
-                currentVersion = `${currentVersion}${element}`;
-            } else {
-                currentVersion = `${currentVersion}.${element}`;
-            }
-        });
-
-        if (latestVersion > currentVersion) {
-            $.toast({
-                heading: `新的 LANraragi (${data.tag_name}) 可用 !`,
-                text: `<a href="${data.html_url}">点击此处查看.</a>`,
-                hideAfter: false,
-                position: "top-left",
-                icon: "info",
+            latestVersionArr.forEach((element, index) => {
+                if (index + 1 < latestVersionArr.length) {
+                    latestVersion = `${latestVersion}${element}`;
+                } else {
+                    latestVersion = `${latestVersion}.${element}`;
+                }
             });
-        }
-    });
+            currentVersionArr.forEach((element, index) => {
+                if (index + 1 < currentVersionArr.length) {
+                    currentVersion = `${currentVersion}${element}`;
+                } else {
+                    currentVersion = `${currentVersion}.${element}`;
+                }
+            });
+
+            if (latestVersion > currentVersion) {
+                LRR.toast({
+                    heading: `新的 LANraragi (${data.tag_name}) 可用 !`,
+                    text: `<a href="${data.html_url}">点击此处查看.</a>`,
+                    icon: "info",
+                    closeOnClick: false,
+                    draggable: false,
+                    hideAfter: 7000,
+                });
+            }
+        })
+        // eslint-disable-next-line no-console
+        .catch((error) => console.log("检查最新版本时出错.", error));
 };
 
 /**
@@ -420,7 +472,8 @@ Index.loadContextMenuCategories = function (id) {
             }
 
             return items;
-        });
+        },
+    );
 };
 
 /**
@@ -447,9 +500,19 @@ Index.handleContextMenu = function (option, id) {
         LRR.openInNewTab(`./edit?id=${id}`);
         break;
     case "delete":
-        if (confirm("你确定删除该档案吗?")) {
-            Server.deleteArchive(id, () => { document.location.reload(true); });
-        }
+        LRR.showPopUp({
+            text: "你确定删除该档案吗?",
+            icon: "warning",
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "是的，删除!",
+            reverseButtons: true,
+            confirmButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Server.deleteArchive(id, () => { document.location.reload(true); });
+            }
+        });
         break;
     case "read":
         LRR.openInNewTab(`./reader?id=${id}`);
@@ -502,7 +565,8 @@ Index.loadTagSuggestions = function () {
                     this.input.value = `${before + text}, `;
                 },
             });
-        });
+        },
+    );
 };
 
 /**
@@ -554,7 +618,8 @@ Index.loadCategories = function () {
 
             // Add a listener on dropdown selection
             $("#catdropdown").on("change", () => Index.toggleCategory($("#catdropdown")[0].selectedOptions[0]));
-        });
+        },
+    );
 };
 
 /**
@@ -568,12 +633,11 @@ Index.migrateProgress = function () {
 
     const localProgressKeys = Object.keys(localStorage).filter((x) => x.endsWith("-reader")).map((x) => x.slice(0, -7));
     if (localProgressKeys.length > 0) {
-        $.toast({
+        LRR.toast({
             heading: "您的阅读进度现已保存在服务器上!",
             text: "您似乎有一些本地进度未上传 -- 我们正在为您将其迁移到服务器，请耐心等待。 ☕",
-            hideAfter: false,
-            position: "top-left",
             icon: "info",
+            hideAfter: 23000,
         });
 
         const promises = [];
@@ -584,7 +648,10 @@ Index.migrateProgress = function () {
                 .then((response) => response.json())
                 .then((data) => {
                     // Don't migrate if the server progress is already further
-                    if (progress !== null && data !== undefined && data !== null && progress > data.progress) {
+                    if (progress !== null
+                        && data !== undefined
+                        && data !== null
+                        && progress > data.progress) {
                         Server.callAPI(`api/archives/${id}/progress/${progress}?force=1`, "PUT", null, "更新阅读进度时出错!", null);
                     }
 
@@ -594,16 +661,18 @@ Index.migrateProgress = function () {
                 }));
         });
 
-        Promise.all(promises).then(() => $.toast({
+        Promise.all(promises).then(() => LRR.toast({
             heading: "阅读进度已完全迁移! 🎉",
             text: "您需要在阅读器中重新打开档案以查看已迁移的进度值",
-            hideAfter: false,
-            position: "top-left",
             icon: "success",
+            hideAfter: 13000,
         }));
     } else {
+        // eslint-disable-next-line no-console
         console.log("没有本地阅读进度可迁移");
     }
 };
 
-window.Index = Index;
+jQuery(() => {
+    Index.initializeAll();
+});

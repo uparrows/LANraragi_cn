@@ -13,8 +13,23 @@
 
 <tr>
     <td class="option-td">
-        <input id="genthumb-button" class='stdbtn' type='button' onclick="Server.regenerateThumbnails(false);"
-            value='生成缺少的缩略图' />
+        <h2 class="ih"> 为页面使用高质量的缩略图 </h2>
+    </td>
+    <td class="config-td">
+        [% IF hqthumbpages %]
+        <input id="hqthumbpages" name="hqthumbpages" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="hqthumbpages" name="hqthumbpages" class="fa" type="checkbox"> [% END %]
+        <label for="hqthumbpages">
+            <br>出于性能原因，LANraragi 为存档页面生成质量较低的缩略图.
+            <br>如果选中此选项，它将生成与封面质量相同的页面缩略图
+            thumbnails.
+        </label>
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <input id="genthumb-button" class='stdbtn' type='button' value='生成缺少的缩略图' />
     </td>
     <td class="config-td">
         为所有尚未创建缩略图的档案生成缩略图.
@@ -23,8 +38,7 @@
 
 <tr>
     <td class="option-td">
-        <input id="forcethumb-button" class='stdbtn' type='button' onclick="Server.regenerateThumbnails(true);"
-            value='重新生成所有缩略图' />
+        <input id="forcethumb-button" class='stdbtn' type='button' value='重新生成所有缩略图' />
     </td>
     <td class="config-td">
         重建缩略图中，这可能需要一段时间!

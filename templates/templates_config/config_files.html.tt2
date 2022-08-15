@@ -6,8 +6,22 @@
         <input class="stdinput" style="width:100%" maxlength="255" size="20" value="[% dirname %]" name="dirname"
             type="text" [% IF forceddirname %] disabled title="此选项由环境变量强制执行。" [%
             END %]>
-        <br> 档案将被放置的目录，如果不存在，将被自动创建。
+        <br> 档案将被放置的目录，如果不存在，将被自动创建.
         <br>确保运行 LANraragi 的系统的用户对该目录具有读取权限. <br>
+    </td>
+</tr>
+
+<tr>
+    <td class="option-td">
+        <h2 class="ih"> 群晖 eCryptFS 兼容模式 </h2>
+    </td>
+    <td class="config-td">
+        [% IF enablecryptofs %]
+        <input id="enablecryptofs" name="enablecryptofs" class="fa" type="checkbox" checked> [% ELSE %]
+        <input id="enablecryptofs" name="enablecryptofs" class="fa" type="checkbox"> [% END %]
+        <label for="enablecryptofs">
+            <br>如果启用，LANraragi 会将存档文件名截断为 143 字节，这是 eCryptFS 接受的最大值.
+        </label>
     </td>
 </tr>
 
@@ -15,8 +29,7 @@
 
 <tr>
     <td class="option-td">
-        <input id="rescan-button" class='stdbtn' type='button' onclick="rescanContentFolder()"
-            value='重新扫描存档目录' />
+        <input id="rescan-button" class='stdbtn' type='button' value='重新扫描存档目录' />
     </td>
     <td class="config-td">
         单击此按钮以触发存档目录的重新扫描，以防丢失文件， <br>
@@ -39,7 +52,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="Server.cleanTemporaryFolder();" value='清理临时文件夹' />
+        <input id='clean-temp' class='stdbtn' type='button' value='清理临时文件夹' />
     </td>
     <td class="config-td">
         当前大小:
@@ -52,7 +65,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="Server.invalidateCache();" value='重置搜索缓存' />
+        <input id='reset-search-cache' class='stdbtn' type='button' value='重置搜索缓存' />
     </td>
     <td class="config-td">
         存档索引中最后一次执行的搜索将被缓存以加快加载速度。 <br>
@@ -65,7 +78,7 @@
 
 <tr>
     <td class="option-td">
-        <input class='stdbtn' type='button' onclick="Server.clearAllNewFlags()" value='清理“NEW”标签' />
+        <input id='clear-new-tags' class='stdbtn' type='button' value='清理“NEW”标签' />
     </td>
     <td class="config-td">
         在您打开新归档文件之前，它们会在索引中标记为“NEW”。<br>

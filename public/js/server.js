@@ -23,12 +23,10 @@ Server.callAPI = function (endpoint, method, successMessage, errorMessage, succe
                 throw new Error(data.error);
             } else {
                 if (successMessage !== null) {
-                    $.toast({
-                        showHideTransition: "slide",
-                        position: "top-left",
-                        loader: false,
+                    LRR.toast({
                         heading: successMessage,
                         icon: "success",
+                        hideAfter: 7000,
                     });
                 }
 
@@ -84,10 +82,7 @@ Server.saveFormData = function (formSelector) {
         .then((response) => (response.ok ? response.json() : { success: 0, error: "响应不正确" }))
         .then((data) => {
             if (data.success) {
-                $.toast({
-                    showHideTransition: "slide",
-                    position: "top-left",
-                    loader: false,
+                LRR.toast({
                     heading: "保存成功!",
                     icon: "success",
                 });
@@ -115,21 +110,22 @@ Server.triggerScript = function (namespace) {
         .then(Server.callAPI(`/api/plugins/queue?plugin=${namespace}&arg=${scriptArg}`, "POST", null, "执行脚本时出错 :",
             (data) => {
                 // Check minion job state periodically while we're on this page
-                Server.checkJobStatus(data.job, true,
+                Server.checkJobStatus(
+                    data.job,
+                    true,
                     (d) => {
                         Server.isScriptRunning = false;
                         $(".script-running").hide();
                         $(".stdbtn").show();
 
                         if (d.result.success === 1) {
-                            $.toast({
-                                showHideTransition: "slide",
-                                position: "top-left",
-                                loader: false,
-                                heading: "Script result",
+                            LRR.toast({
+                                heading: "脚本效果",
                                 text: `<pre>${JSON.stringify(d.result.data, null, 4)}</pre>`,
-                                hideAfter: false,
                                 icon: "info",
+                                hideAfter: 10000,
+                                closeOnClick: false,
+                                draggable: false,
                             });
                         } else LRR.showErrorToast(`Script failed: ${d.result.error}`);
                     },
@@ -137,15 +133,18 @@ Server.triggerScript = function (namespace) {
                         Server.isScriptRunning = false;
                         $(".script-running").hide();
                         $(".stdbtn").show();
-                    });
-            }));
+                    },
+                );
+            },
+        ));
 };
 
 Server.cleanTemporaryFolder = function () {
     Server.callAPI("/api/tempfolder", "DELETE", "临时文件夹已清理！", "清理临时文件夹时出错 :",
         (data) => {
             $("#tempsize").html(data.newsize);
-        });
+        },
+    );
 };
 
 Server.invalidateCache = function () {
@@ -157,68 +156,81 @@ Server.clearAllNewFlags = function () {
 };
 
 Server.dropDatabase = function () {
-    if (confirm("危险！ 你确定要这么做吗?")) {
-        Server.callAPI("/api/database/drop", "POST", "再见! 重定向...", "重置数据库时出错？ 请检查日志.",
-            () => {
-                setTimeout(() => { document.location.href = "./"; }, 1500);
-            });
-    }
+    LRR.showPopUp({
+        title: "这是一个（非常）破坏性的操作! ",
+        text: "您确定要擦除数据库吗?",
+        icon: "warning",
+        showCancelButton: true,
+        focusConfirm: false,
+        confirmButtonText: "是的，这样做!",
+        reverseButtons: true,
+        confirmButtonColor: "#d33",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Server.callAPI("/api/database/drop", "POST", "再见! 重定向...", "重置数据库时出错？ 请检查日志.",
+                () => {
+                    setTimeout(() => { document.location.href = "./"; }, 1500);
+                },
+            );
+        }
+    });
 };
 
 Server.cleanDatabase = function () {
     Server.callAPI("/api/database/clean", "POST", null, "清理数据库时出错！ 请检查日志.",
         (data) => {
-            $.toast({
-                showHideTransition: "slide",
-                position: "top-left",
-                loader: false,
+            LRR.toast({
                 heading: `成功清理数据库并删除 ${data.deleted} 条!`,
                 icon: "success",
+                hideAfter: 7000,
             });
 
             if (data.unlinked > 0) {
-                $.toast({
-                    showHideTransition: "slide",
-                    position: "top-left",
-                    loader: false,
-                    heading: `${data.unlinked} 其他条目已从数据库中取消链接，将在下次清理时删除！ <br>如果某些文件从存档索引中消失，请立即进行备份.`,
-                    hideAfter: false,
+                LRR.toast({
+                    heading: `${data.unlinked} 其他条目已从数据库中取消链接，将在下次清理时删除!`,
+                    text: "如果某些文件从存档索引中消失，请立即进行备份.",
                     icon: "warning",
+                    hideAfter: 16000,
                 });
             }
-        });
+        },
+    );
 };
 
 Server.regenerateThumbnails = function (force) {
     const forceparam = force ? 1 : 0;
     Server.callAPI(`/api/regen_thumbs?force=${forceparam}`, "POST",
-        "正在排队处理重新生成缩略图工作! 请继续关注更新或检查 Minion 控制台.", "向 Minion 发送作业时出错:",
+        "正在排队处理重新生成缩略图工作! 请继续关注更新或检查 Minion 控制台.",
+        "向 Minion 发送作业时出错:",
         (data) => {
             // Disable the buttons to avoid accidental double-clicks.
             $("#genthumb-button").prop("disabled", true);
             $("#forcethumb-button").prop("disabled", true);
 
             // Check minion job state periodically while we're on this page
-            Server.checkJobStatus(data.job, true,
+            Server.checkJobStatus(
+                data.job,
+                true,
                 (d) => {
                     $("#genthumb-button").prop("disabled", false);
                     $("#forcethumb-button").prop("disabled", false);
-                    $.toast({
-                        showHideTransition: "slide",
-                        position: "top-left",
-                        loader: false,
+                    LRR.toast({
                         heading: "所有缩略图生成！ 但遇到以下错误:",
                         text: d.result.errors,
-                        hideAfter: false,
                         icon: "success",
+                        hideAfter: 15000,
+                        closeOnClick: false,
+                        draggable: false,
                     });
                 },
                 (error) => {
                     $("#genthumb-button").prop("disabled", false);
                     $("#forcethumb-button").prop("disabled", false);
                     LRR.showErrorToast("缩略图重建失败!", error);
-                });
-        });
+                },
+            );
+        },
+    );
 };
 
 // Adds an archive to a category. Basic implementation to use everywhere.
@@ -242,25 +254,20 @@ Server.deleteArchive = function (arcId, callback) {
         .then((response) => (response.ok ? response.json() : { success: 0, error: "响应不正确" }))
         .then((data) => {
             if (data.success === "0") {
-                $.toast({
-                    showHideTransition: "slide",
-                    position: "top-left",
-                    loader: false,
+                LRR.toast({
                     heading: "无法删除存档文件. <br> (或许已被删除?)",
                     text: "存档元数据已完整删除. <br> 请在返资源库之前手动删除文件.",
-                    hideAfter: false,
                     icon: "warning",
+                    hideAfter: 20000,
                 });
                 $(".stdbtn").hide();
                 $("#goback").show();
             } else {
-                $.toast({
-                    showHideTransition: "slide",
-                    position: "top-left",
-                    loader: false,
-                    heading: "存档已成功删除，重定向...",
-                    text: `...`,
+                LRR.toast({
+                    heading: "存档已成功删除，重定向 ...",
+                    text: `File name : ${data.filename}`,
                     icon: "success",
+                    hideAfter: 7000,
                 });
                 setTimeout(callback, 1500);
             }

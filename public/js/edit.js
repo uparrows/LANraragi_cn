@@ -7,33 +7,15 @@ const Edit = {};
 Edit.tagInput = {};
 Edit.suggestions = [];
 
-Edit.hideTags = function () {
-    $("#tag-spinner").css("display", "block");
-    $("#tagText").css("opacity", "0.5");
-    $("#tagText").prop("disabled", true);
-    $("#plugin-table").hide();
-};
-
-Edit.showTags = function () {
-    $("#tag-spinner").css("display", "none");
-    $("#tagText").prop("disabled", false);
-    $("#tagText").css("opacity", "1");
-    $("#plugin-table").show();
-};
-
-Edit.focusTagInput = function () {
-    // Focus child of tagger-new
-    $(".tagger-new").children()[0].focus();
-};
-
 Edit.initializeAll = function () {
     // bind events to DOM
+    $(document).on("change.plugin", "#plugin", Edit.updateOneShotArg);
     $(document).on("click.show-help", "#show-help", Edit.showHelp);
     $(document).on("click.run-plugin", "#run-plugin", Edit.runPlugin);
     $(document).on("click.save-metadata", "#save-metadata", Edit.saveMetadata);
     $(document).on("click.delete-archive", "#delete-archive", Edit.deleteArchive);
-    $(document).on("change.plugin", "#plugin", Edit.updateOneShotArg);
     $(document).on("click.tagger", ".tagger", Edit.focusTagInput);
+    $(document).on("click.goback", "#goback", () => { window.location.href = "/"; });
 
     Edit.updateOneShotArg();
 
@@ -48,7 +30,8 @@ Edit.initializeAll = function () {
                 res.push(label);
                 return res;
             }, []);
-        })
+        },
+    )
         .finally(() => {
             const input = $("#tagText")[0];
 
@@ -69,13 +52,32 @@ Edit.initializeAll = function () {
         });
 };
 
+Edit.hideTags = function () {
+    $("#tag-spinner").css("display", "block");
+    $("#tagText").css("opacity", "0.5");
+    $("#tagText").prop("disabled", true);
+    $("#plugin-table").hide();
+};
+
+Edit.showTags = function () {
+    $("#tag-spinner").css("display", "none");
+    $("#tagText").prop("disabled", false);
+    $("#tagText").css("opacity", "1");
+    $("#plugin-table").show();
+};
+
+Edit.focusTagInput = function () {
+    // Focus child of tagger-new
+    $(".tagger-new").children()[0].focus();
+};
+
 Edit.showHelp = function () {
-    $.toast({
-        heading: "About Plugins",
-        text: "您可以使用插件自动获取此存档的元数据。 <br/> 只需从下拉菜单中选择一个插件，然后点击 Go！<br/> 某些插件可能会提供一个可选参数供您指定。 如果是这种情况，一个文本框将可用于输入所述参数。",
-        hideAfter: false,
-        position: "top-left",
+    LRR.toast({
+        toastId: "pluginHelp",
+        heading: "关于插件",
+        text: "您可以使用插件自动获取此存档的元数据. <br/> 只需从下拉菜单中选择一个插件，然后点击! <br/> 某些插件可能会提供一个可选参数供您指定. 如果是这种情况，将有一个文本框将可用于输入所述参数.",
         icon: "info",
+        hideAfter: 33000,
     });
 };
 
@@ -107,11 +109,8 @@ Edit.saveMetadata = function () {
         .then((response) => (response.ok ? response.json() : { success: 0, error: "响应不正确" }))
         .then((data) => {
             if (data.success) {
-                $.toast({
-                    showHideTransition: "slide",
-                    position: "top-left",
-                    loader: false,
-                    heading: "元数据已保存！",
+                LRR.toast({
+                    heading: "元数据已保存!",
                     icon: "success",
                 });
             } else {
@@ -125,9 +124,19 @@ Edit.saveMetadata = function () {
 };
 
 Edit.deleteArchive = function () {
-    if (confirm("你确定要删除该档案吗?")) {
-        Server.deleteArchive($("#archiveID").val(), () => { document.location.href = "./"; });
-    }
+    LRR.showPopUp({
+        text: "你确定要删除该档案吗?",
+        icon: "warning",
+        showCancelButton: true,
+        focusConfirm: false,
+        confirmButtonText: "是的，删除!",
+        reverseButtons: true,
+        confirmButtonColor: "#d33",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Server.deleteArchive($("#archiveID").val(), () => { document.location.href = "./"; });
+        }
+    });
 };
 
 Edit.getTags = function () {
@@ -136,14 +145,11 @@ Edit.getTags = function () {
     const pluginID = $("select#plugin option:checked").val();
     const archivID = $("#archiveID").val();
     const pluginArg = $("#arg").val();
-    Server.callAPI(`../api/plugins/use?plugin=${pluginID}&id=${archivID}&arg=${pluginArg}`, "POST", null,
-        "Error while fetching tags :", (result) => {
+    Server.callAPI(`../api/plugins/use?plugin=${pluginID}&id=${archivID}&arg=${pluginArg}`, "POST", null, "获取标签时出错 :",
+        (result) => {
             if (result.data.title && result.data.title !== "") {
                 $("#title").val(result.data.title);
-                $.toast({
-                    showHideTransition: "slide",
-                    position: "top-left",
-                    loader: false,
+                LRR.toast({
                     heading: "存档标题更改为 :",
                     text: result.data.title,
                     icon: "info",
@@ -152,28 +158,25 @@ Edit.getTags = function () {
 
             if (result.data.new_tags !== "") {
                 result.data.new_tags.split(/,\s?/).forEach((tag) => {
-                    Edit.tagInput.add_tag(tag);
+                    // Remove trailing/leading spaces from tag before adding it
+                    Edit.tagInput.add_tag(tag.trim());
                 });
 
-                $.toast({
-                    showHideTransition: "slide",
-                    position: "top-left",
-                    loader: false,
+                LRR.toast({
                     heading: "添加了以下标签 :",
                     text: result.data.new_tags,
                     icon: "info",
+                    hideAfter: 7000,
                 });
             } else {
-                $.toast({
-                    showHideTransition: "slide",
-                    position: "top-left",
-                    loader: false,
-                    heading: "没有添加新标签！",
+                LRR.toast({
+                    heading: "没有添加新标签!",
                     text: result.data.new_tags,
                     icon: "info",
                 });
             }
-        }).finally(() => {
+        },
+    ).finally(() => {
         Edit.showTags();
     });
 };
@@ -182,8 +185,6 @@ Edit.runPlugin = function () {
     Edit.saveMetadata().then(() => Edit.getTags());
 };
 
-$(document).ready(() => {
+jQuery(() => {
     Edit.initializeAll();
 });
-
-window.Edit = Edit;

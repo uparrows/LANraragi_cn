@@ -36,9 +36,9 @@
       <dcterms:publisher>[% arc.circle %]</dcterms:publisher>
       <dcterms:issued>[% arc.event %]</dcterms:issued>
       [% IF arc.isnew %]
-      <category term="Archive"/>
+      <category term="档案"/>
       [% ELSE %]
-      <category term="New Archive"/>
+      <category term="新档案"/>
       [% END %]
       <summary>[% arc.tags %]</summary>
       
@@ -49,8 +49,8 @@
       <link rel="http://opds-spec.org/image" href="/api/archives/[% arc.arcid %]/thumbnail" type="image/jpeg"/>
       <link rel="http://opds-spec.org/image/thumbnail" href="/api/archives/[% arc.arcid %]/thumbnail" type="image/jpeg"/>
       <link rel="http://opds-spec.org/acquisition" href="/api/archives/[% arc.arcid %]/download" type="[% arc.mimetype %]"/>
-      <link rel="http://opds-spec.org/acquisition" href="/api/archives/[% arc.arcid %]/download" title="Read" type="[% arc.mimetype2 %]"/>
-      <link type="text/html" rel="alternate" title="Open in LANraragi" href="/reader?id=[% arc.arcid %]"/>
+      <link rel="http://opds-spec.org/acquisition" href="/api/archives/[% arc.arcid %]/download" title="阅读" type="[% arc.mimetype2 %]"/>
+      <link type="text/html" rel="alternate" title="在LANraragi中打开" href="/reader?id=[% arc.arcid %]"/>
   </entry>
   [% END %]
 
