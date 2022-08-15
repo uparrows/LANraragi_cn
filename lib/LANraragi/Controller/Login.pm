@@ -17,14 +17,14 @@ sub check {
 
     if ( $ppr->match($pw) ) {
 
-        $self->LRR_LOGGER->info( "登录成功，来自： " . $self->tx->remote_address );
+        $self->LRR_LOGGER->info( "Successful login attempt from " . $self->tx->remote_address );
 
         $self->session( is_logged  => 1 );
         $self->session( expiration => 60 * 60 * 24 );
         $self->redirect_to('index');
     } else {
 
-        $self->LRR_LOGGER->warn( "使用密码 '$pw' 登陆失败，来自： " . $self->tx->remote_address);
+        $self->LRR_LOGGER->warn( "Failed login attempt with password '$pw' from " . $self->tx->remote_address );
 
         $self->render(
             template  => "login",
@@ -64,7 +64,7 @@ sub logged_in_api {
       || $self->session('is_logged')
       || $self->LRR_CONF->enable_pass == 0;
     $self->render(
-        json   => { error => "此 API 受保护，需要登录或 API 密钥." },
+        json   => { error => "This API is protected and requires login or an API Key." },
         status => 401
     );
     return 0;
