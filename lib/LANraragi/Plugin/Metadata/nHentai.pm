@@ -2,7 +2,7 @@ package LANraragi::Plugin::Metadata::nHentai;
 
 use strict;
 use warnings;
-
+use utf8;
 #Plugins can freely use all Perl packages already installed on the system
 #Try however to restrain yourself to the ones already installed for LRR (see tools/cpanfile) to avoid extra installations by the end-user.
 use URI::Escape;
