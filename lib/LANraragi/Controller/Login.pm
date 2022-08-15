@@ -17,14 +17,14 @@ sub check {
 
     if ( $ppr->match($pw) ) {
 
-        $self->LRR_LOGGER->info( "³¢ÊÔ´Ó "  $self->tx->remote_address "µÇÂ¼³É¹¦" );
+        $self->LRR_LOGGER->info( "µÇÂ¼³É¹¦£¬À´×Ô£º " . $self->tx->remote_address );
 
         $self->session( is_logged  => 1 );
         $self->session( expiration => 60 * 60 * 24 );
         $self->redirect_to('index');
     } else {
 
-        $self->LRR_LOGGER->warn( "Ê¹ÓÃÃÜÂë '$pw' ³¢ÊÔ´Ó "  $self->tx->remote_address "µÇÂ¼Ê§°Ü");
+        $self->LRR_LOGGER->warn( "Ê¹ÓÃÃÜÂë '$pw' µÇÂ½Ê§°Ü£¬À´×Ô£º " . $self->tx->remote_address);
 
         $self->render(
             template  => "login",
@@ -64,7 +64,7 @@ sub logged_in_api {
       || $self->session('is_logged')
       || $self->LRR_CONF->enable_pass == 0;
     $self->render(
-        json   => { error => "This API is protected and requires login or an API Key." },
+        json   => { error => "´Ë API ÊÜ±£»¤£¬ĞèÒªµÇÂ¼»ò API ÃÜÔ¿." },
         status => 401
     );
     return 0;
