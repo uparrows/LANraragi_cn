@@ -3,7 +3,7 @@ package LANraragi::Plugin::Metadata::MEMS;
 use strict;
 use warnings;
 use LANraragi::Utils::Logging qw(get_plugin_logger);
-
+use utf8;
 # Meta-information about the plugin.
 sub plugin_info {
 
@@ -15,8 +15,8 @@ sub plugin_info {
         login_from  => "ehlogin",
         author      => 'Mayriad',
         version     => '1.1.1',
-        description => 'Accurately retrieves metadata from e-hentai.org using the identifiers appeneded to the '
-          . 'filenames of archives downloaded by Mayriad\'s EH Master Script.',
+        description => '使用附加到 的标识符准确地从 e-hentai.org 检索元数据 '
+          . '下载档案的文件名通过 Mayriad\'s EH 的主脚本提供.',
         icon => 'data:image/png;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAA'
           . 'AAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD'
           . '///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wARBmb/EQZm/xEGZv8RBmb/EQZm/'
@@ -36,12 +36,12 @@ sub plugin_info {
         # Custom arguments:
         parameters => [
             {   type => 'bool',
-                desc => 'Save the original Japanese title when available instead of the English or ' . 'romanised title'
+                desc => '如果可用，请保存原始日文标题，而不是英文或 ' . '罗马化标题'
             },
-            { type => 'bool', desc => 'Save additional timestamp (time posted) and uploader metadata' },
-            { type => 'bool', desc => 'Use ExHentai link for source instead of E-Hentai link' }
+            { type => 'bool', desc => '保存额外的时间戳（发布时间）和上传者元数据' },
+            { type => 'bool', desc => '使用 ExHentai 链接作为源而不是 E-Hentai 链接' }
         ],
-        oneshot_arg => 'Enter a valid EH gallery URL to copy metadata from this EH gallery to this LANraragi archive',
+        oneshot_arg => '输入有效的 EH 库 URL 以将此 EH 库中的元数据复制到此 LANraragi 存档',
         cooldown    => 4
     );
 }

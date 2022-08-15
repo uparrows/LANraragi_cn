@@ -3,7 +3,7 @@ package LANraragi::Plugin::Login::nHentai;
 use strict;
 use warnings;
 no warnings 'uninitialized';
-
+use utf8;
 use Mojo::UserAgent;
 use LANraragi::Utils::Logging qw(get_logger);
 
@@ -18,11 +18,11 @@ sub plugin_info {
         author    => "Pheromir",
         version   => "0.1",
         description =>
-          "Bypasses the Cloudflare Javascript-challenge by re-using cookies from your browser. Both CF cookies and the user-agent must originate from the same webbrowser.",
+          "通过重新使用浏览器中的 cookie 绕过Cloudflare的js。 CF cookie 和用户代理必须来自同一个网络浏览器.",
         parameters => [
-              { type => "string", desc => "Browser UserAgent string (Can be found at http://useragentstring.com/ for your browser)" },
-			{ type => "string", desc => "csrftoken cookie for domain nhentai.net" },
-			{ type => "string", desc => "cf_clearance cookie for domain nhentai.net" }
+              { type => "string", desc => "浏览器 UserAgent 字符串（可以在 http://useragentstring.com/ 找到您的浏览器）" },
+			{ type => "string", desc => "域名nhentai.net的csrftoken cookie" },
+			{ type => "string", desc => "域名nhentai.net的cf_clearance cookie" }
         ]
     );
 

@@ -2,7 +2,7 @@ package LANraragi::Plugin::Metadata::DateAdded;
 
 use strict;
 use warnings;
-
+use utf8;
 #Plugins can freely use all Perl packages already installed on the system
 #Try however to restrain yourself to the ones already installed for LRR (see tools/cpanfile) to avoid extra installations by the end-user.
 use Mojo::UserAgent;
@@ -21,7 +21,7 @@ sub plugin_info {
         author    => "Utazukin",
         version   => "1.0",
         description =>
-          "Adds a timestamp tag to your archive. <br> This plugin follows the server settings for the timestamp tag and will use file modification time if the server setting is set to 'Use Last modified Time'.",
+          "将时间戳标记添加到您的存档。 <br> 此插件遵循时间戳标签的服务器设置，如果服务器设置设置为“使用上次修改时间”，则将使用文件修改时间.",
         icon =>
           "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA\nB3RJTUUH4wYCFQY4HfiAJAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUH\nAAADKUlEQVQ4y6WVsUtrVxzHP+fmkkiqJr2CQWKkvCTwJgkJDpmyVAR1cVOhdq04tHNB7BD8A97S\nXYkO3dRRsMSlFoIOLYFEohiDiiTNNeaGpLn5dRDv06ev75V+4SyH8/2c3/n+zuEoEeFTqtfrb5RS\nJZ/P98m1iMirI5fLMT8/L+FwWEKhkIRCIXn79q2srKxIpVL5qE/7cINms8ny8rIkEgkpl8skk0lm\nZ2eZmZkhHo+TzWYJBoOyvr4u7Xb7RYHq6ZEvLi6Ynp6WVqvFwsIC4+PjRCIRDMNAKcXNzQ2lUols\nNsvOzg6xWIxMJqOeRuEAq9UqqVRKhoaGmJubY2pqCl3XiUajXF5e0t/fz+DgIIVCAbfbzdbWFtvb\n24yMjLC/v6+eZWjbNqurq5JIJGRtbU0syxLbtsU0TXmqXq8njUZDRERubm4knU6LYRiSyWScDBER\nGo0G4XBYFhcX5fz8XP4yTbGLf0hnd0s+plqtJru7u7K0tCSRSEQ6nc77ppycnFCv10kmk4yOjoII\n2kiIv3//lfbGu1dvh1KKVCrF2NgYmqaRy+UAHoCHh4f4fD4mJiZwuVz4fT74YhDvTz/TPv2TX378\ngWKx+Azo9/sZGBhAKYVhGBSLxa8doGmaABiGQT6fp9VqPbg0jcr897w7+I3FxUVs23aAlmVxe3tL\nPB7n/v6eWq22D6A/lq+UotlsEo1G8Xg8jvFNOMzCN99iGF/icrmc+b6+PrxeL6enp7hcLpR6aLT+\nuEDTNEqlErFYDMuy8Hq9AHg8HpaXv3uRYbfbRdM0TNNE096/Dweo6zoHBwfE43F0XXeAjyf4UJVK\nhUql8iwGJ8NHeb1e9vb2CAaDADQajRcgy7IACAQCHB0d/TtQ0zQuLi7Y3Nzk+vqacrkMwNXVFXd3\nd7Tbbc7Ozuh0OmxsbHB1dfViQ/21+3V8fIxpmkxOTmKaJrZt0263sW0b27ZJp9M0m010XX8RhwN8\nNPV6PQCKxSL5fB7DMAgEAnS7XarVKtVqFbfbjVIK27ZRSjkeB9jtdikUChQKBf6vlIg4Gb3Wzc/V\n8PDwV36//1x9zhfwX/QPryPQMvGWTdEAAAAASUVORK5CYII=",
         parameters => [],

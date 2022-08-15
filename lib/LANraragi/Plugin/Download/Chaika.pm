@@ -3,7 +3,7 @@ package LANraragi::Plugin::Download::Chaika;
 use strict;
 use warnings;
 no warnings 'uninitialized';
-
+use utf8;
 # Meta-information about your plugin.
 sub plugin_info {
 
@@ -14,7 +14,7 @@ sub plugin_info {
         namespace   => "chaikadl",
         author      => "Difegue",
         version     => "1.0",
-        description => "Downloads the given chaika.moe URL and adds it to LANraragi. No support for gallery links for now!",
+        description => "下载给定的 chaika.moe URL 并将其添加到 LANraragi。 暂时不支持图库链接!",
 
         # Downloader-specific metadata
         # https://panda.chaika.moe/archive/_____/

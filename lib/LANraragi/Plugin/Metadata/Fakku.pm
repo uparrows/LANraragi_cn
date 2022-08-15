@@ -2,7 +2,7 @@ package LANraragi::Plugin::Metadata::Fakku;
 
 use strict;
 use warnings;
-
+use utf8;
 #Plugins can freely use all Perl packages already installed on the system
 #Try however to restrain yourself to the ones already installed for LRR (see tools/cpanfile) to avoid extra installations by the end-user.
 use URI::Escape;
@@ -27,12 +27,12 @@ sub plugin_info {
         author     => "Difegue, Nodja",
         version    => "0.8",
         description =>
-          "Searches FAKKU for tags matching your archive. If you have an account, don't forget to enter the matching cookie in the login plugin to be able to access controversial content. <br/><br/>  
-           <i class='fa fa-exclamation-circle'></i> <b>This plugin can and will return invalid results depending on what you're searching for!</b> <br/>The FAKKU search API isn't very precise and I recommend you use the Chaika.moe plugin when possible.",
+          "在 FAKKU 中搜索与您的档案匹配的标签。 如果您有帐户，请不要忘记在登录插件中输入匹配的 cookie 才能访问有争议的内容。 <br/><br/>  
+           <i class='fa fa-exclamation-circle'></i> <b>此插件可以并且将根据您搜索的内容返回无效结果！!</b> <br/>FAKKU 搜索 API 不是很精确，我建议您尽可能使用 Chaika.moe 插件.",
         icon =>
           "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAACZSURBVDhPlY+xDYQwDEWvZgRGYA22Y4frqJDSZhFugiuuo4cqPGT0iTjAYL3C+fGzktc3hEcsQvJq6HtjE2Jdv4viH4a4pWnL8q4A6g+ET9P8YhS2/kqwIZXWnwqChDxPfCFfD76wOzJ2IOR/0DSwnuRKYAKUW3gq2OsJTYM0jr7QVRVwlabJEaw3ARYBcmFXeomxphIeEMIMmh3lOLQR+QQAAAAASUVORK5CYII=",
         parameters  => [ { type => "bool", desc => "Save archive title" } ],
-        oneshot_arg => "FAKKU Gallery URL (Will attach tags matching this exact gallery to your archive)"
+        oneshot_arg => "FAKKU 图库 URL（将与此确切图库匹配的标签附加到您的档案中）"
     );
 
 }

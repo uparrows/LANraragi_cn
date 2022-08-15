@@ -3,7 +3,7 @@ package LANraragi::Plugin::Scripts::BlacklistMigrate;
 use strict;
 use warnings;
 no warnings 'uninitialized';
-
+use utf8;
 use LANraragi::Utils::Logging qw(get_plugin_logger);
 use LANraragi::Utils::Database qw(save_computed_tagrules);
 use LANraragi::Utils::Tags qw(tags_rules_to_array restore_CRLF);
@@ -21,7 +21,7 @@ sub plugin_info {
         namespace   => "blist2rule",
         author      => "Difegue",
         version     => "1.0",
-        description => "Migrate your blacklist from LANraragi < 0.8.0 databases to the new Tag Rules system."
+        description => "将您的黑名单从 LANraragi < 0.8.0 的数据库迁移到新的标签规则系统."
     );
 
 }
