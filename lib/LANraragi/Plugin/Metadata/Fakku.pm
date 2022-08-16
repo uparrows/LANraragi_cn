@@ -31,7 +31,7 @@ sub plugin_info {
            <i class='fa fa-exclamation-circle'></i> <b>此插件可以并且将根据您搜索的内容返回无效结果！!</b> <br/>FAKKU 搜索 API 不是很精确，我建议您尽可能使用 Chaika.moe 插件.",
         icon =>
           "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAACZSURBVDhPlY+xDYQwDEWvZgRGYA22Y4frqJDSZhFugiuuo4cqPGT0iTjAYL3C+fGzktc3hEcsQvJq6HtjE2Jdv4viH4a4pWnL8q4A6g+ET9P8YhS2/kqwIZXWnwqChDxPfCFfD76wOzJ2IOR/0DSwnuRKYAKUW3gq2OsJTYM0jr7QVRVwlabJEaw3ARYBcmFXeomxphIeEMIMmh3lOLQR+QQAAAAASUVORK5CYII=",
-        parameters  => [ { type => "bool", desc => "Save archive title" } ],
+        parameters  => [ { type => "bool", desc => "保存档案名称" } ],
         oneshot_arg => "FAKKU 图库 URL（将与此确切图库匹配的标签附加到您的档案中）"
     );
 

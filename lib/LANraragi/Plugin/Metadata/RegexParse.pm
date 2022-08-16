@@ -29,7 +29,7 @@ sub plugin_info {
           "从给定档案的文件名派生标签. <br>遵循同人志命名标准（发布）[艺术家]TITLE（系列）[语言].",
         icon =>
           "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAL1JREFUOI1jZMABpNbH/sclx8DAwPAscDEjNnEMQUIGETIYhUOqYdgMhTPINQzdUEZqGIZsKBM1DEIGTOiuexqwCKdidDl0vtT62P9kuZCJEWuKYWBgYGBgRHbh04BFDNIb4jAUbbSrZTARUkURg6lD10OUC/0PNaMYgs1Skgwk1jCSDCQWoBg46dYmhite0+D8pwGLCMY6uotRDOy8toZBkI2HIhcO/pxCm8KBUkOxFl/kGoq3gCXFYFxVAACeoU/8xSNybwAAAABJRU5ErkJggg==",
-        parameters => [ { type => "bool", desc => "保存存档标题", default_value => "1" } ]
+        parameters => [ { type => "bool", desc => "保存档案名称", default_value => "1" } ]
     );
 
 }
