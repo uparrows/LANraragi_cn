@@ -1,4 +1,4 @@
 #!/bin/sh
-cd /root/lanraragi/
+cd /home/dezhao/lanraragi/
 export HOME=/root
-perl /root/lanraragi/script/launcher.pl -f /root/lanraragi/script/lanraragi
+perl /home/dezhao/lanraragi/script/launcher.pl -f /home/dezhao/lanraragi/script/lanraragi
