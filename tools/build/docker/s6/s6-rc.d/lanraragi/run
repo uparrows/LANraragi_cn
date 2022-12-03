@@ -1,4 +1,0 @@
-#!/bin/sh
-cd /root/lanraragi/
-export HOME=/root
-exec perl /root/lanraragi/script/launcher.pl -f /root/lanraragi/script/lanraragi

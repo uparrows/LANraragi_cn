@@ -10,5 +10,5 @@ You can write your own themes by modifying the existing ones - Dropping them in 
 
 {% hint style="warning" %}
 For users who don't have access to the app folder and want to make custom themes, your only option currently is to use a custom CSS browser extension.  
-Docker users can try binding a folder on their machine to the _/root/lanraragi/public/themes_ folder.
+Docker users can try binding a folder on their machine to the _/home/koyomi/lanraragi/public/themes_ folder.
 {% endhint %}

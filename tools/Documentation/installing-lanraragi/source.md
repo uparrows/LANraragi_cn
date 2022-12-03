@@ -20,14 +20,14 @@ For information, my personal tests are done using Debian's vendor Perl.
 apt-get update
 apt-get upgrade -y
 apt-get install build-essential make gnupg pkg-config \
-cpanminus redis-server libarchive-dev imagemagick webp libssl-dev zlib1g-dev libjxl-dev \
+cpanminus redis-server libarchive-dev imagemagick webp libssl-dev zlib1g-dev \
 perlmagick ghostscript npm
 ```
 
 _Base software dependencies._
 
 {% hint style="info" %}
-If your package manager requires you to specify which ImageMagick version to install, choose version 7.
+If your package manager requires you to specify which ImageMagick version to install you need to choose version 7.
 {% endhint %}
 
 {% hint style="info" %}
@@ -37,17 +37,14 @@ For macOS, you should be able to install the dependencies using Homebrew.
 ## Installing LRR
 
 All you need to do is clone the git repo somewhere (or download one of [the releases](https://github.com/Difegue/LANraragi/releases)) and run the installer.  
-I recommend doing this with a brand new Linux user account. (I'm using "root" here):
+I recommend doing this with a brand new Linux user account. (I'm using "koyomi" here):
 
 ```
-git clone -b master http://github.com/Difegue/LANraragi /root/lanraragi
-cd /root/lanraragi && sudo npm run lanraragi-installer install-full
+git clone -b master http://github.com/Difegue/LANraragi /home/koyomi/lanraragi
+cd /home/koyomi/lanraragi && sudo npm run lanraragi-installer install-full
 ```
 
-{% hint style="info"}
-Do not use `sudo` in the above command if you are using `perlbrew`.  
-Arch users might need to install `perl-config-autoconf` and use env variable `export PERL5LIB=~/perl5/lib/perl5` before running the installer.
-{% endhint %}
+Note: Do not use `sudo` in the above command if you are using `perlbrew`.
 
 Once this is done, you can get started by running `npm start` and opening [http://localhost:3000](http://localhost:3000).
 

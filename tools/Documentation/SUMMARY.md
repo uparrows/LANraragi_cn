@@ -11,6 +11,7 @@
 * [🛠 Source Code (Linux/macOS)](installing-lanraragi/source.md)
 * [🐧 Community (Linux)](installing-lanraragi/community.md)
 * [👿 Jail (FreeBSD)](installing-lanraragi/jail.md)
+* [🕸 Vagrant (Deprecated)](installing-lanraragi/vagrant.md)
 
 ## Basic Operations
 
@@ -29,7 +30,6 @@
 * [💾 Backup and Restore](advanced-usage/backup-and-restore.md)
 * [📱 Using External Readers](advanced-usage/external-readers.md)
 * [🌐 Network Interface Setup](advanced-usage/network-interfaces.md)
-* [🕵️ Proxy Setup](advanced-usage/proxy-setup.md)
 * [📏 Tag Rules](advanced-usage/tag-rules.md)
 
 ## Developer Guide <a href="extending-lanraragi" id="extending-lanraragi"></a>
@@ -45,7 +45,6 @@
 * [Database API](api-documentation/database-api.md)
 * [Category API](api-documentation/category-api.md)
 * [Shinobu API](api-documentation/shinobu-api.md)
-* [Minion API](api-documentation/minion-api.md)
 * [Miscellaneous other API](api-documentation/miscellaneous-other-api.md)
 
 ## Writing Plugins <a href="plugin-docs" id="plugin-docs"></a>
