@@ -40,7 +40,7 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY
 RUN tar -C / -xzf /tmp/s6-overlay-nobin.tar.gz && rm -f /tmp/s6-overlay-nobin.tar.gz
 
 
-WORKDIR /home/dezhao/lanraragi
+WORKDIR /root/lanraragi
 
 #Copy cpanfile and install script before copying the entire context
 #This allows for Docker cache to preserve cpan dependencies
@@ -49,7 +49,7 @@ COPY --chown=root:root /package.json package.json
 
 # Run the install script as root
 RUN sh ./tools/install-everything.sh
-RUN rm -f /home/dezhao/lanraragi/public/js/vendor/jquery.dataTables.min.js
+RUN rm -f /root/lanraragi/public/js/vendor/jquery.dataTables.min.js
 #Copy remaining LRR files from context
 # consider chowning in s6 setup scripts instead
 COPY --chown=root:root /lib lib
@@ -62,9 +62,9 @@ COPY --chown=root:root /tools/build/docker/redis.conf tools/build/docker/
 COPY /tools/build/docker/wsl.conf /etc/wsl.conf
 COPY /tools/build/docker/s6/cont-init.d/ /etc/cont-init.d/
 COPY /tools/build/docker/s6/services.d/ /etc/services.d/
-COPY --chown=root:root /jquery.dataTables.min.js /home/dezhao/lanraragi/public/js/vendor/jquery.dataTables.min.js
+COPY --chown=root:root /jquery.dataTables.min.js /root/lanraragi/public/js/vendor/jquery.dataTables.min.js
 #COPY /tools/build/docker/s6/fix-attrs.d/ /etc/fix-attrs.d/
 
 # Persistent volumes
-VOLUME [ "/home/dezhao/lanraragi/content" ]
-VOLUME [ "/home/dezhao/lanraragi/database"]
+VOLUME [ "/root/lanraragi/content" ]
+VOLUME [ "/root/lanraragi/database"]

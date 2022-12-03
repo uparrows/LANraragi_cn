@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/bin/redis-server /home/dezhao/lanraragi/tools/build/docker/redis.conf
+/usr/bin/redis-server /root/lanraragi/tools/build/docker/redis.conf

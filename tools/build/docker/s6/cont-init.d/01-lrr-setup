@@ -3,38 +3,38 @@
 
 
 #Ensure LRR folder is writable
-chown root /home/dezhao/lanraragi
-chmod u+rwx /home/dezhao/lanraragi
+chown root /root/lanraragi
+chmod u+rwx /root/lanraragi
 
 #Crash with an error if content folder doesn't exist
-if [ ! -d "/home/dezhao/lanraragi/content" ]; then
+if [ ! -d "/root/lanraragi/content" ]; then
   echo "Content folder doesn't exist! Please ensure your Docker mappings are correct."
   exit 1
 fi
 
 #Ensure database is writable
-chown -R root /home/dezhao/lanraragi/database
-chmod -R 777 /home/dezhao/lanraragi/database
+chown -R root /root/lanraragi/database
+chmod -R 777 /root/lanraragi/database
 
 #Ensure thumbnail folder is writable
-chmod -R 744 /home/dezhao/lanraragi/content/thumb
-find /home/dezhao/lanraragi/content/thumb -type f -exec chmod u+rw  {} \;
-find /home/dezhao/lanraragi/content/thumb -type d -exec chmod u+rwx {} \;
+chmod -R 744 /root/lanraragi/content/thumb
+find /root/lanraragi/content/thumb -type f -exec chmod u+rw  {} \;
+find /root/lanraragi/content/thumb -type d -exec chmod u+rwx {} \;
 
 #Ensure log folder is writable
-mkdir /home/dezhao/lanraragi/log
-chown -R root /home/dezhao/lanraragi/log
-chmod u+rwx /home/dezhao/lanraragi/log
+mkdir /root/lanraragi/log
+chown -R root /root/lanraragi/log
+chmod u+rwx /root/lanraragi/log
 
 #Ensure temp folder is writable
-mkdir /home/dezhao/lanraragi/public/temp
-chown -R root /home/dezhao/lanraragi/public/temp
-chmod u+rwx /home/dezhao/lanraragi/public/temp
+mkdir /root/lanraragi/public/temp
+chown -R root /root/lanraragi/public/temp
+chmod u+rwx /root/lanraragi/public/temp
 
 #Remove mojo, minion and shinobu pid files
-rm /home/dezhao/lanraragi/public/temp/server.pid
-rm /home/dezhao/lanraragi/public/temp/shinobu.pid
-rm /home/dezhao/lanraragi/public/temp/minion.pid
+rm /root/lanraragi/public/temp/server.pid
+rm /root/lanraragi/public/temp/shinobu.pid
+rm /root/lanraragi/public/temp/minion.pid
 
 # https://redis.io/topics/faq#background-saving-fails-with-a-fork-error-under-linux-even-if-i-have-a-lot-of-free-ram
 OVERCOMMIT=$(cat /proc/sys/vm/overcommit_memory)
