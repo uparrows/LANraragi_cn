@@ -68,7 +68,7 @@ COPY /tools/build/docker/wsl.conf /etc/wsl.conf
 COPY /tools/build/docker/s6/s6-rc.d/ /etc/s6-overlay/s6-rc.d/
 #Copy setup script as-is since no changes are needed between 2.x and 3.x
 COPY /tools/build/docker/s6/cont-init.d/01-lrr-setup /etc/s6-overlay/s6-rc.d/init/
-COPY --chown=root:root /jquery.dataTables.min.js /root/lanraragi/public/js/vendor/jquery.dataTables.min.js
+COPY --chown=koyomi:koyomi /jquery.dataTables.min.js /root/lanraragi/public/js/vendor/jquery.dataTables.min.js
 #COPY /tools/build/docker/s6/fix-attrs.d/ /etc/fix-attrs.d/
 
 # Persistent volumes
