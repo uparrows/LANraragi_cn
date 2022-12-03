@@ -85,8 +85,7 @@
     <td class="config-td">
         <input id="tagruleson" name="tagruleson" class="fa" type="checkbox" [% IF tagruleson %]checked[% END %]>
         <br>
-        <textarea class="stdinput" size="20" style='width:100%; height:196px' name="tagrules"
-            maxlength='5000'>[% tagrules %]</textarea>
+        <textarea class="stdinput" size="20" style='width:100%; height:196px' name="tagrules">[% tagrules %]</textarea>
         <br>使用插件标记档案时，此处指定的规则将在保存之前应用于标记档案
         到数据库.
         <br>使用换行符拆分规则.

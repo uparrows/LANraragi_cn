@@ -157,6 +157,7 @@ Batch.startBatch = function () {
     const commandBase = {
         operation: Batch.currentOperation,
         plugin: Batch.currentPlugin,
+        category: $("#category").val(),
         args,
     };
 
@@ -222,6 +223,11 @@ Batch.updateBatchStatus = function (event) {
             break;
         case "tagrules":
             $("#log-container").append(`修改 ID ${msg.id} (新标签: ${msg.tags})\n\n`);
+            break;
+        case "addcat":
+            // Append the message at the end of this log,
+            // as it can contain the warning about the ID already being in the category
+            $("#log-container").append(`已添加 ID ${msg.id} 到分类 ${msg.category}! ${msg.message} \n\n`);
             break;
         case "clearnew": {
             $("#log-container").append(`清除了NEW标志 ID ${msg.id}\n\n`);

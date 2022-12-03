@@ -29,6 +29,17 @@ sub get_category_list {
     return @result;
 }
 
+# get_static_category_list()
+#   Returns a list of all the static category objects.
+sub get_static_category_list() {
+
+    my @categories = get_category_list;
+
+    # Filter out dynamic categories
+    @categories = grep { %$_{"search"} eq "" } @categories;
+    return @categories;
+}
+
 # get_categories_containing_archive(id)
 #   Returns a list of all the categories that contain the given archive.
 sub get_categories_containing_archive {
@@ -178,7 +189,7 @@ sub add_to_category {
     if ( $redis->exists($cat_id) ) {
 
         unless ( $redis->hget( $cat_id, "search" ) eq "" ) {
-            $err = "$cat_id 是收藏搜索，无法向其添加档案.";
+            $err = "$cat_id 是喜爱的搜索/动态类别，无法向其添加档案.";
             $logger->error($err);
             $redis->quit;
             return ( 0, $err );
@@ -203,7 +214,8 @@ sub add_to_category {
         }
 
         if ( "@cat_archives" =~ m/$arc_id/ ) {
-            $logger->warn("$arc_id 已经存在于类别 $cat_id 中, 什么也不做.");
+            $err = "$arc_id 已经存在于类别 $cat_id 中, 什么也不做.";
+            $logger->warn($err);
             $redis->quit;
             return ( 1, $err );
         }

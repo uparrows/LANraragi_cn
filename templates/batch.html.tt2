@@ -19,7 +19,7 @@
 	<script src="/js/vendor/preact.umd.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/hooks.umd.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/compat.umd.js" type="text/JAVASCRIPT"></script>
-	<script>window.React=window.preactCompat;window.react=window.preactCompat;</script>
+	<script>window.React = window.preactCompat; window.react = window.preactCompat;</script>
 	<script src="/js/vendor/clsx.min.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/react-toastify.umd.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/sweetalert2.min.js" type="text/JAVASCRIPT"></script>
@@ -54,6 +54,7 @@
 									<option value="plugin">🧩 调用插件</option>
 									<option value="clearnew">🆕 移除NEW标签</option>
 									<option value="tagrules">📏 应用标签规则</option>
+									<option value="addcat">📚 添加到分类</option>
 									<option value="delete">🗑️ 删除档案</option>
 								</select>
 							</td>
@@ -120,6 +121,17 @@
 
 									这将从所选档案中删除“NEW”标志.
 									<br>
+								</td>
+							</tr>
+
+							<tr class="operation addcat-operation">
+								<td>添加到分类 :</td>
+								<td>
+									<select id="category" class="favtag-btn">
+										[% FOREACH categories %]
+										<option value="[% id %]">[% name %]</option>
+										[% END %]
+									</select>
 								</td>
 							</tr>
 

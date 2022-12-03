@@ -44,6 +44,7 @@
 			<h1 style="margin-bottom: 2px">LANraragi</h1>
 			版本 [% version %], "[% vername %]"
 			<br>
+			汉化：<a href="http://yuanfangblog.xyz"> 昭君 </a>
 			<h2>选择一个分类以显示相关设置。</h2>
 			<br />
 			<input id='save' class='stdbtn' type='button' value='保存配置' /><br />
