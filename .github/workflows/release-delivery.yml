@@ -1,0 +1,126 @@
+on: 
+  release:
+    types: [published]
+name: New Version Release
+jobs:
+
+  exportDockerRootFS:
+    name: Build and export Docker rootfs for Windows build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Docker Build and export
+      run: |
+        docker build -t difegue/lanraragi -f ./tools/build/docker/Dockerfile-legacy .
+        docker create --name rootfs difegue/lanraragi 
+        docker export --output=package.tar rootfs
+    - name: Upload rootfs
+      uses: actions/upload-artifact@v1
+      with:
+        name: package
+        path: package.tar 
+        
+  buildReleaseWSL:
+    name: Build Windows Installer
+    needs: exportDockerRootFS
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Download package
+      uses: actions/download-artifact@v1
+      with:
+        name: package
+    - name: Build MSI Installer
+      shell: powershell
+      run: |
+        [array]$installPath = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -property installationpath
+        # Get first line of installPath in case we have multiple VS installs
+        Import-Module (Join-Path $installPath[0] "Common7\Tools\Microsoft.VisualStudio.DevShell.dll")
+        # Import the VS shell module 
+        Enter-VsDevShell -VsInstallPath $installPath[0] -SkipAutomaticLocation
+        $ErrorActionPreference = 'Continue'
+        git submodule init
+        git submodule update
+        choco install nuget.commandline
+        ./tools/build/windows/build.ps1
+    - name: Upload Installer
+      uses: actions/upload-artifact@v1
+      with:
+        name: wsl
+        path: ./tools/build/windows/Karen/Setup/bin/LANraragi.msi
+  uploadWSLRelease:
+    name: Add Windows Installer to release
+    needs: buildReleaseWSL
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download package
+      uses: actions/download-artifact@v1
+      with:
+        name: wsl
+    - name: Upload Installer to release
+      uses: JasonEtco/upload-to-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: wsl/LANraragi.msi application/octet-stream
+    - uses: Ilshidur/action-discord@master
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      with:
+        args: 'Windows Installer built and available on the Release page! <:logo:821516019179978772>🪟'
+
+  buildLatestDocker:
+    name: Build Latest Docker image
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - uses: actions/cache@v3
+      with: 
+        path: /tmp/buildxcache
+        key: ${{ runner.os }}-docker-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-docker-buildx-
+    - name: Docker Login
+      env:
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      run: |
+        echo "${DOCKER_PASSWORD}" | docker login -u ${DOCKER_USERNAME} --password-stdin
+    - name: Build/Push Latest Docker image and tag with Release number
+      run: |
+        TAG=${GITHUB_REF:10:10}
+        docker buildx build \
+          --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64 \
+          --output "type=image,push=true" \
+          --tag difegue/lanraragi:latest \
+          --tag difegue/lanraragi:$TAG \
+          --cache-from "type=local,src=/tmp/buildxcache" \
+          --cache-to "type=local,dest=/tmp/buildxcache" \
+          --file ./tools/build/docker/Dockerfile .
+    - uses: Ilshidur/action-discord@master
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      with:
+        args: 'Docker image built and available on Docker Hub! 🐳'
+
+  discordNotifications:
+    name: Send out some notifications
+    runs-on: ubuntu-latest
+    env:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+    steps:
+    - name: Extract version number from GITHUB_REF
+      run: echo "RELEASE_VERSION=${GITHUB_REF:10}" >> $GITHUB_ENV
+    - uses: Ilshidur/action-discord@master
+      with:
+        args: 'LANraragi {{ RELEASE_VERSION }} is now available! @everyone'
+    - uses: Ilshidur/action-discord@master
+      with:
+        args: 'https://github.com/Difegue/LANraragi/releases/tag/{{ RELEASE_VERSION }}'
+    - uses: Ilshidur/action-discord@master
+      with:
+        args: 'Docker image and Windows installer are building... Please wait warmly. ☕'

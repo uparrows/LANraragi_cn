@@ -1,9 +1,9 @@
 package LANraragi::Plugin::Login::Fakku;
-
+use utf8;
 use strict;
 use warnings;
 no warnings 'uninitialized';
-use utf8;
+
 use Mojo::UserAgent;
 use LANraragi::Utils::Logging qw(get_logger);
 

@@ -93,7 +93,6 @@
 		</ul>
 
 		<br>
-		<br>
 		<input id="goback" type="button" value="返回资料库" class="stdbtn">
 
 	</div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-	<title>LANraragi ·þÎñÆ÷´íÎó</title>
+	<title>LanraragiæœåŠ¡å™¨é”™è¯¯</title>
 
 	<meta name="viewport" content="width=device-width" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -13,13 +13,13 @@
 
 	<img src='/img/flubbed.gif' />
 	<br />
-	<h2>ÎÒÔÚäÖÈ¾ÄãµÄÒ³ÃæÊ±¸ãÔÒÁË!</h2>
-	´ËÊ±·þÎñÆ÷¿ÉÄÜ´æÔÚ´íÎó.<br />
+	<h2>æˆ‘åœ¨æ¸²æŸ“æ‚¨çš„é¡µé¢æ—¶å¯¹å…¶è¿›è¡Œäº†ã€‚!</h2>
+	æ­¤æ—¶æœåŠ¡å™¨å¯èƒ½æœ‰ä¸€ä¸ªé”™è¯¯.<br />
 	<p>
 		<%= $exception->message %>
 	</p>
 
-	<h3>ÏÂÃæ¿ÉÄÜÌá¹©ÁËÒ»Ð©ÓÐÓÃµÄÐÅÏ¢:</h3>
+	<h3>ä¸‹é¢çš„æ›´å¤šä¿¡æ¯å¦‚æžœå¯ç”¨:</h3>
 	<pre><%= dumper $snapshot %></pre>
 
 </body>

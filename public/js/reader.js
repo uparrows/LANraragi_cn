@@ -45,7 +45,7 @@ Reader.initializeAll = function () {
     $(document).on("click.edit-metadata", "#edit-archive", () => LRR.openInNewTab(`./edit?id=${Reader.id}`));
     $(document).on("click.add-category", "#add-category", () => Server.addArchiveToCategory(Reader.id, $("#category").val()));
     $(document).on("click.set-thumbnail", "#set-thumbnail", () => Server.callAPI(`/api/archives/${Reader.id}/thumbnail?page=${Reader.currentPage + 1}`,
-        "PUT", `Successfully set page ${Reader.currentPage + 1} as the thumbnail!`, "Error updating thumbnail!", null));
+        "PUT", `已将第 ${Reader.currentPage + 1} 页设置为缩略图!`, "更新缩略图出现错误!", null));
 
     $(document).on("click.thumbnail", ".quick-thumbnail", (e) => {
         LRR.closeOverlay();
@@ -307,6 +307,7 @@ Reader.checkFiletypeSupport = function (extension) {
             heading: "这个存档似乎是 RAR 格式!",
             text: "RAR 档案在 LANraragi 中可能无法正常工作，具体取决于它们的制作方式。 如果您在阅读时遇到错误，请考虑将您的存档转换为 zip。",
             icon: "warning",
+            hideAfter: 23000,
         });
     } else if (extension === "epub" && !localStorage.epubWarningShown) {
         localStorage.epubWarningShown = true;

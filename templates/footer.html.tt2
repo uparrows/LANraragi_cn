@@ -5,5 +5,5 @@
     [% descstr %]
     <br>
     [% END %]
-    由 <a href="https://github.com/Difegue/LANraragi"> LANraragi </a>驱动.
+    由 <a href="https://github.com/Difegue/LANraragi"> LANraragi </a>强力驱动.
 </p>

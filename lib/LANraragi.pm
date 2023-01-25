@@ -12,9 +12,8 @@ use Sys::Hostname;
 use Config;
 
 use LANraragi::Utils::Generic qw(start_shinobu start_minion);
-use LANraragi::Utils::Logging qw(get_logger);
+use LANraragi::Utils::Logging qw(get_logger get_logdir);
 use LANraragi::Utils::Plugins qw(get_plugins);
-use LANraragi::Utils::Database qw(invalidate_cache);
 use LANraragi::Utils::TempFolder qw(get_temp);
 use LANraragi::Utils::Routing;
 use LANraragi::Utils::Minion;
@@ -96,16 +95,21 @@ sub startup {
         $self->mode('development');
         $self->LRR_LOGGER->info("LANraragi $version (re-)started. (Debug Mode)");
 
-        #Tell the mojo logger to print to stdout as well
+        my $logpath = get_logdir . "/mojo.log";
+
+        #Tell the mojo logger to log to file
         $self->log->on(
             message => sub {
                 my ( $time, $level, @lines ) = @_;
 
-                print "[Mojolicious] ";
-                print $lines[0];
-                print "\n";
+                open( my $fh, '>>', $logpath )
+                  or die "Could not open file '$logpath' $!";
+
+                print $fh "[Mojolicious] " . $lines[0] . " " . $lines[1] . "\n";
+                close $fh;
             }
         );
+
     } else {
         $self->mode('production');
         $self->LRR_LOGGER->info("LANraragi $version started. (Production Mode)");
@@ -142,10 +146,9 @@ sub startup {
     LANraragi::Utils::Minion::add_tasks( $self->minion );
     $self->LRR_LOGGER->debug("Registered tasks with Minion.");
 
-    # Warm search cache
+    # Rebuild stat hashes
     # /!\ Enqueuing tasks must be done either before starting the worker, or once the IOLoop is started!
     # Anything else can cause weird database lockups.
-    $self->minion->enqueue('warm_cache');
     $self->minion->enqueue('build_stat_hashes');
 
     # Start a Minion worker in a subprocess

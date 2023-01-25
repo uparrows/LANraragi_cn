@@ -1,5 +1,14 @@
 #!/bin/sh
 
+USER_ID=${LRR_UID}
+GROUP_ID=${LRR_GID}
+
+echo "用UDI/GID启动lanraragi : $USER_ID/$GROUP_ID"
+
+#Update the koyomi user, using the specified uid/gid.
+#This solves permission problems on the content folder if the Docker user sets the same uid as the owner of the folder.
+#usermod -o -u $USER_ID koyomi
+#groupmod -o -g $GROUP_ID koyomi
 
 
 #Ensure LRR folder is writable
@@ -8,7 +17,7 @@ chmod u+rwx /root/lanraragi
 
 #Crash with an error if content folder doesn't exist
 if [ ! -d "/root/lanraragi/content" ]; then
-  echo "Content folder doesn't exist! Please ensure your Docker mappings are correct."
+  echo "内容文件夹不存在！请确保您的Docker映射正确。"
   exit 1
 fi
 
@@ -17,7 +26,7 @@ chown -R root /root/lanraragi/database
 chmod -R 777 /root/lanraragi/database
 
 #Ensure thumbnail folder is writable
-chmod -R 744 /root/lanraragi/content/thumb
+chmod -R 777 /root/lanraragi/content/thumb
 find /root/lanraragi/content/thumb -type f -exec chmod u+rw  {} \;
 find /root/lanraragi/content/thumb -type d -exec chmod u+rwx {} \;
 
@@ -34,7 +43,9 @@ chmod u+rwx /root/lanraragi/public/temp
 #Remove mojo, minion and shinobu pid files
 rm /root/lanraragi/public/temp/server.pid
 rm /root/lanraragi/public/temp/shinobu.pid
+rm /root/lanraragi/public/temp/shinobu.pid-s6
 rm /root/lanraragi/public/temp/minion.pid
+rm /root/lanraragi/public/temp/minion.pid-s6
 
 # https://redis.io/topics/faq#background-saving-fails-with-a-fork-error-under-linux-even-if-i-have-a-lot-of-free-ram
 OVERCOMMIT=$(cat /proc/sys/vm/overcommit_memory)

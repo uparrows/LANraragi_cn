@@ -1,11 +1,12 @@
 package LANraragi::Plugin::Login::EHentai;
-
+use utf8;
 use strict;
 use warnings;
 no warnings 'uninitialized';
-use utf8;
+
 use Mojo::UserAgent;
 use LANraragi::Utils::Logging qw(get_logger);
+my ( $ipb_member_id, $ipb_pass_hash, $star ,$igneous ) = @_;
 
 #Meta-information about your plugin.
 sub plugin_info {
@@ -16,13 +17,14 @@ sub plugin_info {
         type      => "login",
         namespace => "ehlogin",
         author    => "Difegue",
-        version   => "2.2",
+        version   => "2.3",
         description =>
           "处理E-H登录。 如果您有一个可以访问 fjorded 内容或 exhentai 的帐户，则在此处添加凭据将使更多档案可用于解析.",
         parameters => [
             { type => "int",    desc => "ipb_member_id cookie" },
             { type => "string", desc => "ipb_pass_hash cookie" },
-            { type => "string", desc => "star cookie (可选，如果存在，您可以在没有 exhentai 的情况下查看 fjorded 内容)" }
+            { type => "string", desc => "star cookie (可选，如果存在，您可以在没有 exhentai 的情况下查看 fjorded 内容)" },
+            { type => "string", desc => "igneous cookie(optional, if present you can view exhentai without Europe and America IP)" }
         ]
     );
 
@@ -34,8 +36,8 @@ sub do_login {
 
     # Login plugins only receive the parameters entered by the user.
     shift;
-    my ( $ipb_member_id, $ipb_pass_hash, $star ) = @_;
-    return get_user_agent( $ipb_member_id, $ipb_pass_hash, $star );
+    
+    return get_user_agent( $ipb_member_id, $ipb_pass_hash, $star ,$igneous );
 }
 
 # get_user_agent(ipb cookies)
@@ -43,13 +45,11 @@ sub do_login {
 # Returns the UA object created.
 sub get_user_agent {
 
-    my ( $ipb_member_id, $ipb_pass_hash, $star ) = @_;
-
     my $logger = get_logger( "E-Hentai Login", "plugins" );
     my $ua     = Mojo::UserAgent->new;
 
     if ( $ipb_member_id ne "" && $ipb_pass_hash ne "" ) {
-        $logger->info("Cookies provided ($ipb_member_id $ipb_pass_hash $star)!");
+        $logger->info("Cookies provided ($ipb_member_id $ipb_pass_hash $star $igneous)!");
 
         #Setup the needed cookies with both domains
         #They should translate to exhentai cookies with the igneous value generated
@@ -100,6 +100,15 @@ sub get_user_agent {
 
         $ua->cookie_jar->add(
             Mojo::Cookie::Response->new(
+                name   => 'igneous',
+                value  => $igneous,
+                domain => 'exhentai.org',
+                path   => '/'
+            )
+        );
+        
+        $ua->cookie_jar->add(
+            Mojo::Cookie::Response->new(
                 name   => 'star',
                 value  => $star,
                 domain => 'e-hentai.org',
@@ -107,6 +116,15 @@ sub get_user_agent {
             )
         );
 
+        $ua->cookie_jar->add(
+            Mojo::Cookie::Response->new(
+                name   => 'igneous',
+                value  => $igneous,
+                domain => 'e-hentai.org',
+                path   => '/'
+            )
+        );
+        
         $ua->cookie_jar->add(
             Mojo::Cookie::Response->new(
                 name   => 'ipb_coppa',

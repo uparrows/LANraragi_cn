@@ -1,8 +1,8 @@
 package LANraragi::Plugin::Metadata::CopyTags;
-
+use utf8;
 use strict;
 use warnings;
-use utf8;
+
 use LANraragi::Model::Plugins;
 use LANraragi::Utils::Logging qw(get_logger);
 

@@ -1,5 +1,6 @@
+# Currently unused, see Dockerfile
 # second field in user is fallback uid
-# path                               recurse user             fperm dperm
+# path                        recurse user     fperm dperm
 /root/lanraragi               false   root,0:0 0644  0744
 /root/lanraragi/database      true    root,0:0 0777  0777
 /root/lanraragi/content/thumb true    root,0:0 0644  0744

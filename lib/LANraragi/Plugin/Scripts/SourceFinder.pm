@@ -3,12 +3,12 @@ package LANraragi::Plugin::Scripts::SourceFinder;
 use strict;
 use warnings;
 no warnings 'uninitialized';
-use utf8;
+
 use Mojo::UserAgent;
 use LANraragi::Utils::Logging qw(get_plugin_logger);
 use LANraragi::Model::Stats;
 use LANraragi::Utils::Generic qw(trim_url);
-
+use utf8;
 #Meta-information about your plugin.
 sub plugin_info {
 

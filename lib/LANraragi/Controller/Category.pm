@@ -27,18 +27,18 @@ sub index {
 
     #Parse the archive list and build <li> elements accordingly.
     my $arclist = "";
-
     #Only show IDs that still have their files present.
     foreach my $id (@keys) {
         my $zipfile = $redis->hget( $id, "file" );
         my $title   = $redis->hget( $id, "title" );
         $title = redis_decode($title);
         $title = xml_escape($title);
-
-        if ( -e $zipfile ) {
-            $arclist .=
-              "<li><input type='checkbox' name='archive' id='$id' class='archive' onchange='Category.updateArchiveInCategory(this.id, this.checked)'>";
-            $arclist .= "<label for='$id'> $title</label></li>";
+        if (defined $zipfile) {
+            if ( -e $zipfile ) {
+                $arclist .=
+                  "<li><input type='checkbox' name='archive' id='$id' class='archive' onchange='Category.updateArchiveInCategory(this.id, this.checked)'>";
+                $arclist .= "<label for='$id'> $title</label></li>";
+            }
         }
     }
 

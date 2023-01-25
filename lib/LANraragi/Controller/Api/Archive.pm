@@ -8,7 +8,7 @@ use Mojo::JSON qw(decode_json);
 use Scalar::Util qw(looks_like_number);
 
 use LANraragi::Utils::Generic qw(render_api_response);
-use LANraragi::Utils::Database qw(get_archive_json);
+use LANraragi::Utils::Database qw(get_archive_json set_isnew);
 
 use LANraragi::Model::Archive;
 use LANraragi::Model::Category;
@@ -36,9 +36,13 @@ sub serve_archivelist {
 }
 
 sub serve_untagged_archivelist {
-    my $self   = shift;
-    my @idlist = LANraragi::Model::Archive::find_untagged_archives;
-    $self->render( json => \@idlist );
+    my $self  = shift;
+    my $redis = $self->LRR_CONF->get_redis_search;
+
+    my @untagged = $redis->smembers("LRR_UNTAGGED");
+    $redis->quit;
+
+    $self->render( json => \@untagged );
 }
 
 sub serve_metadata {
@@ -52,7 +56,7 @@ sub serve_metadata {
     if ($arcdata) {
         $self->render( json => $arcdata );
     } else {
-        render_api_response( $self, "metadata", "服务器上不存在该ID." );
+        render_api_response( $self, "metadata", "此ID不存在于服务器上." );
     }
 }
 
@@ -127,17 +131,7 @@ sub clear_new {
     my $self = shift;
     my $id = check_id_parameter( $self, "clear_new" ) || return;
 
-    my $redis = $self->LRR_CONF->get_redis();
-
-    # Just set isnew to false for the provided ID.
-    if ( $redis->hget( $id, "isnew" ) ne "false" ) {
-
-        # Bust search cache...partially!
-        LANraragi::Utils::Database::invalidate_isnew_cache();
-
-        $redis->hset( $id, "isnew", "false" );
-    }
-    $redis->quit();
+    set_isnew( $id, "false" );
 
     $self->render(
         json => {

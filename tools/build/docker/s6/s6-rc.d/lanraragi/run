@@ -1,0 +1,4 @@
+#!/bin/sh
+cd /root/lanraragi/
+export HOME=/root
+exec s6-setuidgid root perl /root/lanraragi/script/launcher.pl -f /root/lanraragi/script/lanraragi

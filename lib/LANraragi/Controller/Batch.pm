@@ -7,7 +7,7 @@ use Mojo::JSON qw(decode_json);
 
 use LANraragi::Utils::Generic qw(generate_themes_header);
 use LANraragi::Utils::Tags qw(rewrite_tags split_tags_to_array restore_CRLF);
-use LANraragi::Utils::Database qw(get_computed_tagrules);
+use LANraragi::Utils::Database qw(get_computed_tagrules set_tags set_title set_isnew invalidate_cache);
 use LANraragi::Utils::Plugins qw(get_plugins get_plugin get_plugin_parameters);
 use LANraragi::Utils::Logging qw(get_logger);
 
@@ -43,7 +43,7 @@ sub socket {
 
     my $logger = get_logger( "Batch Tagging", "lanraragi" );
 
-    $logger->info('客户端连接到批量标签服务');
+    $logger->info('Client connected to Batch Tagging service');
 
     # Increase inactivity timeout for connection a bit to account for clientside timeouts
     $self->inactivity_timeout(80);
@@ -59,16 +59,16 @@ sub socket {
             my $id         = $command->{"archive"};
 
             unless ($id) {
-                $client->finish( 1001 => '没有提供档案。' );
+                $client->finish( 1001 => 'No archives provided.' );
                 return;
             }
-            $logger->debug("处理 $id");
+            $logger->debug("Processing $id");
 
             if ( $operation eq "plugin" ) {
 
                 my $plugin = get_plugin($pluginname);
                 unless ($plugin) {
-                    $client->finish( 1001 => '插件不存在' );
+                    $client->finish( 1001 => 'Plugin not found.' );
                     return;
                 }
 
@@ -76,7 +76,7 @@ sub socket {
                 my @args = @{ $command->{"args"} };
 
                 if ( !@args ) {
-                    $logger->debug("未给出用户覆盖。");
+                    $logger->debug("No user overrides given.");
 
                     # Try getting the saved defaults
                     @args = get_plugin_parameters($pluginname);
@@ -88,7 +88,7 @@ sub socket {
             }
 
             if ( $operation eq "clearnew" ) {
-                $redis->hset( $id, "isnew", "false" );
+                set_isnew( $id, "false" );
 
                 $client->send(
                     {   json => {
@@ -118,7 +118,7 @@ sub socket {
 
             if ( $operation eq "tagrules" ) {
 
-                $logger->debug("应用标签规则到 $id...");
+                $logger->debug("Applying tag rules to $id...");
                 my $tags = $redis->hget( $id, "tags" );
 
                 my @tagarray = split_tags_to_array($tags);
@@ -127,8 +127,8 @@ sub socket {
 
                 # Merge array with commas
                 my $newtags = join( ', ', @tagarray );
-                $logger->debug("新标签: $newtags");
-                $redis->hset( $id, "tags", $newtags );
+                $logger->debug("New tags: $newtags");
+                set_tags( $id, $newtags );
 
                 $client->send(
                     {   json => {
@@ -138,11 +138,14 @@ sub socket {
                         }
                     }
                 );
+
+                invalidate_cache();
+
                 return;
             }
 
             if ( $operation eq "delete" ) {
-                $logger->debug("删除 $id...");
+                $logger->debug("Deleting $id...");
 
                 my $delStatus = LANraragi::Utils::Database::delete_archive($id);
 
@@ -150,7 +153,7 @@ sub socket {
                     {   json => {
                             id       => $id,
                             filename => $delStatus,
-                            message  => $delStatus ? "档案已删除." : "未找到档案.",
+                            message  => $delStatus ? "Archive deleted." : "Archive not found.",
                             success  => $delStatus ? 1 : 0
                         }
                     }
@@ -162,7 +165,7 @@ sub socket {
             $client->send(
                 {   json => {
                         id      => $id,
-                        message => "未知操作类型 $operation.",
+                        message => "Unknown operation type $operation.",
                         success => 0
                     }
                 }
@@ -174,7 +177,7 @@ sub socket {
 
         # If the client doesn't respond, halt processing
         finish => sub {
-            $logger->info('客户端断开连接，停止其余操作。');
+            $logger->info('Client disconnected, halting remaining operations');
             $cancelled = 1;
             $redis->quit();
         }
@@ -195,10 +198,10 @@ sub batch_plugin {
 
     # If the plugin exec returned tags, add them
     unless ( exists $plugin_result{error} ) {
-        LANraragi::Utils::Database::add_tags( $id, $plugin_result{new_tags} );
+        set_tags( $id, $plugin_result{new_tags}, 1 );
 
         if ( exists $plugin_result{title} ) {
-            LANraragi::Utils::Database::set_title( $id, $plugin_result{title} );
+            set_title( $id, $plugin_result{title} );
         }
     }
 

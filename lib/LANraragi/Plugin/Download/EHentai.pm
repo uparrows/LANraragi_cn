@@ -1,9 +1,9 @@
 package LANraragi::Plugin::Download::EHentai;
-
+use utf8;
 use strict;
 use warnings;
 no warnings 'uninitialized';
-use utf8;
+
 use URI;
 use Mojo::UserAgent;
 
@@ -21,7 +21,7 @@ sub plugin_info {
         author     => "Difegue",
         version    => "1.0",
         description =>
-          "下载给定的 e*hentai URL 并将其添加到 LANraragi。 这将使用 GP 调用存档，因此请确保您有足够的GP!",
+          "下载给定的 E*hentai URL 并将其添加到 LANraragi。 这将使用 GP 调用存档，因此请确保您有足够的GP!",
 
         # Downloader-specific metadata
         url_regex => "https?:\/\/e(-|x)hentai.org\/g\/.*\/.*"

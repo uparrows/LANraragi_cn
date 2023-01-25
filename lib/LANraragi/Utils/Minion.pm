@@ -17,6 +17,7 @@ use LANraragi::Utils::TempFolder qw(get_temp);
 use LANraragi::Model::Upload;
 use LANraragi::Model::Config;
 use LANraragi::Model::Stats;
+use utf8;
 
 # Add Tasks to the Minion instance.
 sub add_tasks {
@@ -81,29 +82,6 @@ sub add_tasks {
             };
 
             $job->finish( { errors => \@errors } );
-        }
-    );
-
-    $minion->add_task(
-        warm_cache => sub {
-            my ( $job, @args ) = @_;
-            my $logger = get_logger( "Minion", "minion" );
-
-            $logger->info("Warming up search cache...");
-
-            # Cache warm performs a search for the base index (no search)
-            LANraragi::Model::Search::do_search( "", "", 0, "title", "asc", 0, 0 );
-
-            # And for every category defined by the user.
-            my @categories = LANraragi::Model::Category->get_category_list;
-            for my $category (@categories) {
-                my $catid = %{$category}{"id"};
-                $logger->debug("Warming category $catid");
-                LANraragi::Model::Search::do_search( "", $catid, 0, "title", "asc", 0, 0 );
-            }
-
-            $logger->info("Done!");
-            $job->finish;
         }
     );
 

@@ -1,9 +1,9 @@
 package LANraragi::Plugin::Metadata::MEMS;
-
+use utf8;
 use strict;
 use warnings;
 use LANraragi::Utils::Logging qw(get_plugin_logger);
-use utf8;
+
 # Meta-information about the plugin.
 sub plugin_info {
 

@@ -35,9 +35,7 @@ my @vendor_js = (
 );
 
 my @vendor_woff = (
-    "/\@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff",
     "/\@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2",
-    "/\@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff",
     "/\@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2",
     "/open-sans-fontface/fonts/Regular/OpenSans-Regular.woff",
     "/open-sans-fontface/fonts/Bold/OpenSans-Bold.woff",
@@ -143,10 +141,9 @@ if ( $back || $full ) {
     say("\r\nInstalling Perl modules... This might take a while.\r\n");
 
     if ( $Config{"osname"} ne "darwin" ) {
-        say("Installing Linux::Inotify2 (2.3) for non-macOS systems...");
+        say("Installing Linux::Inotify2 for non-macOS systems... (This will do nothing if the package is there already)");
 
-        # Install 2.2 explicitly as 2.3 doesn't work properly on WSL
-        install_package( "MLEHMANN/Linux-Inotify2-2.3.tar.gz", $cpanopt . "--reinstall" );
+        install_package( "Linux::Inotify2", $cpanopt );
     }
 
     if ( system( "cpanm --installdeps ./tools/. --notest" . $cpanopt ) != 0 ) {
@@ -166,7 +163,7 @@ if ( $front || $full ) {
     say("\r\nProvisioning...\r\n");
 
     #Load File::Copy
-    install_package("File::Copy");
+    install_package( "File::Copy", $cpanopt );
     File::Copy->import("copy");
 
     make_path getcwd . "/public/css/vendor";

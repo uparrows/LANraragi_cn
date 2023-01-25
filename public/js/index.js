@@ -74,10 +74,10 @@ Index.initializeAll = function () {
                 Index.updateCarousel();
             },
             items: {
-                random: { name: "随机", icon: "fas fa-random" },
+                random: { name: "随机选择", icon: "fas fa-random" },
                 inbox: { name: "新档案", icon: "fas fa-envelope-open-text" },
-                untagged: { name: "无标签档案", icon: "fas fa-edit" },
-                // ondeck: { name: "列表", icon: "fas fa-book-reader" },
+                untagged: { name: "未标记的档案", icon: "fas fa-edit" },
+                // ondeck: { name: "在甲板上", icon: "fas fa-book-reader" },
             },
         }),
     });
@@ -164,7 +164,7 @@ Index.toggleCarousel = function (e, updateLocalStorage = true) {
                 return breakpoints;
             })(),
             breakpointsBase: "container",
-            centerInsufficientSlides: true,
+            centerInsufficientSlides: false,
             mousewheel: true,
             navigation: {
                 nextEl: ".carousel-next",
@@ -311,9 +311,10 @@ Index.handleCustomSort = function () {
 
 Index.updateCarousel = function (e) {
     e?.preventDefault();
-
+    $("#carousel-empty").hide();
     $("#carousel-loading").show();
     $(".swiper-wrapper").hide();
+
     $("#reload-carousel").addClass("fa-spin");
 
     // Hit a different API endpoint depending on the requested localStorage carousel type
@@ -346,9 +347,13 @@ Index.updateCarousel = function (e) {
             (results) => {
                 Index.swiper.virtual.removeAllSlides();
                 const slides = results.data
-                    .map((archive) => LRR.buildThumbnailDiv(archive, false));
+                .map((archive) => LRR.buildThumbnailDiv(archive));
                 Index.swiper.virtual.appendSlide(slides);
                 Index.swiper.virtual.update();
+
+                if (results.data.length === 0) {
+                    $("#carousel-empty").show();
+                }
 
                 $("#carousel-loading").hide();
                 $(".swiper-wrapper").show();
@@ -378,7 +383,7 @@ Index.updateTableHeaders = function () {
  * If so, flash another friendly notification inviting the user to check it out
  */
 Index.checkVersion = function () {
-    const githubAPI = "https://api.github.com/repos/uparrows/LANraragi_cn/releases/latest";
+    const githubAPI = "https://api.github.com/repos/difegue/lanraragi/releases/latest";
 
     fetch(githubAPI)
         .then((response) => response.json())
@@ -426,7 +431,7 @@ Index.fetchChangelog = function () {
     if (localStorage.lrrVersion !== Index.serverVersion) {
         localStorage.lrrVersion = Index.serverVersion;
 
-        fetch("https://api.github.com/repos/uparrows/LANraragi_cn/releases/latest", { method: "GET" })
+        fetch("https://api.github.com/repos/difegue/lanraragi/releases/latest", { method: "GET" })
             .then((response) => (response.ok ? response.json() : { error: "响应不正确" }))
             .then((data) => {
                 if (data.error) throw new Error(data.error);
@@ -506,6 +511,7 @@ Index.handleContextMenu = function (option, id) {
             showCancelButton: true,
             focusConfirm: false,
             confirmButtonText: "是的，删除!",
+            cancelButtonText: "取消",
             reverseButtons: true,
             confirmButtonColor: "#d33",
         }).then((result) => {

@@ -56,13 +56,18 @@ sub get_logger {
         $log->level('debug');
     }
 
+    # Step down into trace if we're launched from npm run dev-server
+    if ( $ENV{LRR_DEVSERVER} ) {
+        $log->level('trace');
+    }
+
     #Copy logged messages to STDOUT with the matching name
     $log->on(
         message => sub {
             my ( $time, $level, @lines ) = @_;
 
             #Like with logging to file, debug logs are only printed in debug mode
-            unless ( $devmode == 0 && $level eq 'debug' ) {
+            unless ( $devmode == 0 && ( $level eq 'debug' || $level eq 'trace' ) ) {
                 print "[$pgname] [$level] ";
                 say $lines[0];
             }

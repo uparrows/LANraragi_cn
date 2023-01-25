@@ -18,6 +18,7 @@ use LANraragi::Utils::Generic qw(is_archive remove_spaces remove_newlines trim_u
 use LANraragi::Model::Config;
 use LANraragi::Model::Plugins;
 use LANraragi::Model::Category;
+use utf8;
 
 # Handle files uploaded by the user, or downloaded from remote endpoints.
 
@@ -51,8 +52,9 @@ sub handle_incoming_file {
 
     #Check if the ID is already in the database, and
     #that the file it references still exists on the filesystem
-    my $redis = LANraragi::Model::Config->get_redis();
-    my $isdupe = $redis->exists($id) && -e $redis->hget( $id, "file" );
+    my $redis        = LANraragi::Model::Config->get_redis;
+    my $redis_search = LANraragi::Model::Config->get_redis_search;
+    my $isdupe       = $redis->exists($id) && -e $redis->hget( $id, "file" );
 
     # Stop here if file is a dupe.
     if ( -e $output_file || $isdupe ) {
@@ -91,7 +93,9 @@ sub handle_incoming_file {
                 $logger->debug("添加 $url 作为 $id 的链接");
                 trim_url($url);
                 $logger->debug("处理: $url");
-                $redis->hset( "LRR_URLMAP", $url, $id );    # No need to encode the value, as URLs are already encoded by design
+
+                # No need to encode the value, as URLs are already encoded by design
+                $redis_search->hset( "LRR_URLMAP", $url, $id );
             }
         }
     }
@@ -112,6 +116,7 @@ sub handle_incoming_file {
     LANraragi::Utils::Database::add_timestamp_tag( $redis, $id );
     LANraragi::Utils::Database::add_pagecount( $redis, $id );
     $redis->quit();
+    $redis_search->quit();
 
     $logger->debug("在新上传的文件上运行自动插件 $id...");
 

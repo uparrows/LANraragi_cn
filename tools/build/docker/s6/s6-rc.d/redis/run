@@ -1,0 +1,2 @@
+#!/bin/sh
+exec s6-setuidgid root /usr/bin/redis-server /root/lanraragi/tools/build/docker/redis.conf

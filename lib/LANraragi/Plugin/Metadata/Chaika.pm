@@ -1,8 +1,8 @@
 package LANraragi::Plugin::Metadata::Chaika;
-
+use utf8;
 use strict;
 use warnings;
-use utf8;
+
 use URI::Escape;
 use Mojo::UserAgent;
 use Mojo::DOM;

@@ -20,7 +20,7 @@
 	<script src="/js/vendor/preact.umd.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/hooks.umd.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/compat.umd.js" type="text/JAVASCRIPT"></script>
-	<script>window.React=window.preactCompat;window.react=window.preactCompat;</script>
+	<script>window.React = window.preactCompat; window.react = window.preactCompat;</script>
 	<script src="/js/vendor/clsx.min.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/react-toastify.umd.js" type="text/JAVASCRIPT"></script>
 	<script src="/js/vendor/allcollapsible.min.js" type="text/JAVASCRIPT"></script>
@@ -45,6 +45,8 @@
 			版本 [% version %], "[% vername %]"
 			<br>
 			汉化：<a href="http://yuanfangblog.xyz"> 昭君 </a>
+			<br>
+			汉化：<a href="http://windycloud.cn"> WindyMadman </a>
 			<h2>选择一个分类以显示相关设置。</h2>
 			<br />
 			<input id='save' class='stdbtn' type='button' value='保存配置' /><br />
@@ -133,6 +135,7 @@
 		</form>
 	</div>
 	[% INCLUDE footer %]
+	<a href="https://holopin.io/collect/clcv0owgf187308lgzgmbys80">🐫</a>
 </body>
 
 </html>

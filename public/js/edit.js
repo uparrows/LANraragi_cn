@@ -22,7 +22,7 @@ Edit.initializeAll = function () {
     // Hide tag input while statistics load
     Edit.hideTags();
 
-    Server.callAPI("/api/database/stats?minweight=2", "GET", null, "ÎŞ·¨¼ÓÔØ±êÇ©Í³¼ÆĞÅÏ¢",
+    Server.callAPI("/api/database/stats?minweight=2", "GET", null, "æ— æ³•åŠ è½½æ ‡ç­¾ç»Ÿè®¡ä¿¡æ¯",
         (data) => {
             Edit.suggestions = data.reduce((res, tag) => {
                 let label = tag.text;
@@ -74,8 +74,8 @@ Edit.focusTagInput = function () {
 Edit.showHelp = function () {
     LRR.toast({
         toastId: "pluginHelp",
-        heading: "¹ØÓÚ²å¼ş",
-        text: "Äú¿ÉÒÔÊ¹ÓÃ²å¼ş×Ô¶¯»ñÈ¡´Ë´æµµµÄÔªÊı¾İ. <br/> Ö»Ğè´ÓÏÂÀ­²Ëµ¥ÖĞÑ¡ÔñÒ»¸ö²å¼ş£¬È»ºóµã»÷! <br/> Ä³Ğ©²å¼ş¿ÉÄÜ»áÌá¹©Ò»¸ö¿ÉÑ¡²ÎÊı¹©ÄúÖ¸¶¨. Èç¹ûÊÇÕâÖÖÇé¿ö£¬½«ÓĞÒ»¸öÎÄ±¾¿ò½«¿ÉÓÃÓÚÊäÈëËùÊö²ÎÊı.",
+        heading: "å…³äºæ’ä»¶",
+        text: "æ‚¨å¯ä»¥ä½¿ç”¨æ’ä»¶è‡ªåŠ¨è·å–æ­¤å­˜æ¡£çš„å…ƒæ•°æ®ã€‚<br/> åªéœ€ä»ä¸‹æ‹‰åˆ—è¡¨ä¸­é€‰æ‹©ä¸€ä¸ªæ’ä»¶ï¼Œç„¶åç‚¹å‡» Goï¼ <br/> ä¸€äº›æ’ä»¶å¯èƒ½ä¼šæä¾›å¯é€‰çš„å‚æ•°ä¾›æ‚¨æŒ‡å®šã€‚ å¦‚æœæ˜¯è¿™æ ·ï¼Œå°†æä¾›ä¸€ä¸ªæ–‡æœ¬æ¡†æ¥è¾“å…¥æ‰€è¿°å‚æ•°ã€‚",
         icon: "info",
         hideAfter: 33000,
     });
@@ -106,18 +106,18 @@ Edit.saveMetadata = function () {
     formData.append("title", $("#title").val());
 
     return fetch(`api/archives/${id}/metadata`, { method: "PUT", body: formData })
-        .then((response) => (response.ok ? response.json() : { success: 0, error: "ÏìÓ¦²»ÕıÈ·" }))
+        .then((response) => (response.ok ? response.json() : { success: 0, error: "å“åº”ä¸æ­£å¸¸" }))
         .then((data) => {
             if (data.success) {
                 LRR.toast({
-                    heading: "ÔªÊı¾İÒÑ±£´æ!",
+                    heading: "å…ƒæ•°æ®å·²ä¿å­˜ï¼",
                     icon: "success",
                 });
             } else {
                 throw new Error(data.message);
             }
         })
-        .catch((error) => LRR.showErrorToast("±£´æ´æµµÊı¾İÊ±³ö´í :", error))
+        .catch((error) => LRR.showErrorToast("ä¿å­˜å­˜æ¡£æ•°æ®æ—¶å‡ºé”™ :", error))
         .finally(() => {
             Edit.showTags();
         });
@@ -125,11 +125,12 @@ Edit.saveMetadata = function () {
 
 Edit.deleteArchive = function () {
     LRR.showPopUp({
-        text: "ÄãÈ·¶¨ÒªÉ¾³ı¸Ãµµ°¸Âğ?",
+        text: "æ‚¨ç¡®å®šè¦åˆ é™¤æ­¤å­˜æ¡£å—ï¼Ÿ",
         icon: "warning",
         showCancelButton: true,
         focusConfirm: false,
-        confirmButtonText: "ÊÇµÄ£¬É¾³ı!",
+        confirmButtonText: "æ˜¯çš„ï¼Œåˆ é™¤å®ƒ!",
+        cancelButtonText: "å–æ¶ˆ",
         reverseButtons: true,
         confirmButtonColor: "#d33",
     }).then((result) => {
@@ -145,12 +146,12 @@ Edit.getTags = function () {
     const pluginID = $("select#plugin option:checked").val();
     const archivID = $("#archiveID").val();
     const pluginArg = $("#arg").val();
-    Server.callAPI(`../api/plugins/use?plugin=${pluginID}&id=${archivID}&arg=${pluginArg}`, "POST", null, "»ñÈ¡±êÇ©Ê±³ö´í :",
+    Server.callAPI(`../api/plugins/use?plugin=${pluginID}&id=${archivID}&arg=${pluginArg}`, "POST", null, "è·å–æ ‡ç­¾æ—¶é”™è¯¯ :",
         (result) => {
             if (result.data.title && result.data.title !== "") {
                 $("#title").val(result.data.title);
                 LRR.toast({
-                    heading: "´æµµ±êÌâ¸ü¸ÄÎª :",
+                    heading: "å­˜æ¡£æ ‡é¢˜æ›´æ”¹ä¸º :",
                     text: result.data.title,
                     icon: "info",
                 });
@@ -163,14 +164,14 @@ Edit.getTags = function () {
                 });
 
                 LRR.toast({
-                    heading: "Ìí¼ÓÁËÒÔÏÂ±êÇ© :",
+                    heading: "æ·»åŠ äº†ä»¥ä¸‹æ ‡ç­¾ :",
                     text: result.data.new_tags,
                     icon: "info",
                     hideAfter: 7000,
                 });
             } else {
                 LRR.toast({
-                    heading: "Ã»ÓĞÌí¼ÓĞÂ±êÇ©!",
+                    heading: "æ²¡æœ‰æ·»åŠ æ–°æ ‡ç­¾!",
                     text: result.data.new_tags,
                     icon: "info",
                 });

@@ -98,7 +98,7 @@
 				<input id='save' class='stdbtn' type='button' value='保存插件配置' />
 				<span id="plugin-upload" class='stdbtn fileinput-button'
 					style="margin-bottom: -10px; font-weight:normal">
-					<span style="position:absolute; top:5px; left:25%">上传插件</span>
+					<span style="position:absolute; top:5px; left:33%">上传插件</span>
 					<input type='file' name='file' multiple id='fileupload'>
 				</span>
 				<input id='return' class='stdbtn' type='button' value='返回资料库' />
