@@ -59,7 +59,7 @@ sub socket {
             my $id         = $command->{"archive"};
 
             unless ($id) {
-                $client->finish( 1001 => 'No archives provided.' );
+                $client->finish( 1001 => '没有选择档案.' );
                 return;
             }
             $logger->debug("Processing $id");
@@ -68,7 +68,7 @@ sub socket {
 
                 my $plugin = get_plugin($pluginname);
                 unless ($plugin) {
-                    $client->finish( 1001 => 'Plugin not found.' );
+                    $client->finish( 1001 => '找不到插件.' );
                     return;
                 }
 

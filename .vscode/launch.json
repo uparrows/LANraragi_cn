@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "type": "perl",
+            "request": "launch",
+            "name": "LANraragi半成品请勿使用",
+            "program": "${workspaceFolder}/script/launcher.pl",
+            "stopOnEntry": false,
+            "reloadModules": false,
+            "args":[
+                "${workspaceFolder}/script/lanraragi"
+            ],
+            "cwd": "${workspaceFolder}",
+        },
+        {
+            "type": "perl",
+            "request": "launch",
+            "name": "LANraragi-File",
+            "program": "${workspaceFolder}/lib/LANraragi.pm",
+            "stopOnEntry": false,
+            "reloadModules": false,
+            "args":[
+            ],
+            "cwd": "${workspaceFolder}",
+        }
+    ]
+}

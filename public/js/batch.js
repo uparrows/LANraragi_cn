@@ -189,7 +189,7 @@ Batch.startBatch = function () {
         }
 
         if (timeout !== 0) {
-            $("#log-container").append(`休眠 ${timeout} 秒.\n`);
+            $("#log-container").append(`暂停 ${timeout} 秒.\n`);
         }
         // Wait timeout and pass next archive
         setTimeout(() => {

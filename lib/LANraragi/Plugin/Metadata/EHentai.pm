@@ -43,7 +43,7 @@ sub plugin_info {
             { type => "bool", desc => "搜索已删除的图库" },
 
         ],
-        oneshot_arg => "E-H Gallery URL (Will attach tags matching this exact gallery to your archive)",
+        oneshot_arg => "E-Hentai 库 URL (将此页面的标题与Tag附加到您的原数据)",
         cooldown    => 4
     );
 

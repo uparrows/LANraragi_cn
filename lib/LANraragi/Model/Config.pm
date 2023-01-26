@@ -96,9 +96,13 @@ sub get_redis_conf {
         my $value = LANraragi::Utils::Database::redis_decode( $redis->hget( "LRR_CONFIG", $param ) );
 
         # Failsafe against blank config values
-        unless ( $value =~ /^\s*$/ ) {
-            $redis->quit();
-            return $value;
+        if(defined $value){
+            unless ( $value =~ /^\s*$/ ) {
+                $redis->quit();
+                return $value;
+            }
+        } else{
+            return "";
         }
     }
     $redis->quit();

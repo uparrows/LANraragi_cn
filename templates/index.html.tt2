@@ -131,10 +131,10 @@
 						<option selected value="date_added">日期</option>
 					</select>
 					<a class="fa fa-sort-alpha-down fa-2x table-option" id="order-sortby" href="#"
-						title="排列顺序"></a>
+						title="递减"></a>
 
 					<input id="thumbnail-crop" class="fa table-option" type="checkbox"
-						title="如果启用，不适合常规A4页面的缩略图将被裁剪为仅显示左边部分.">
+						title="如果启用本选项，不符合常规A4页面的缩略图将被裁剪为仅显示左边部分.">
 					<label for="thumbnail-crop" style="vertical-align: middle; padding-top:6px">缩略图裁切</label>
 				</div>
 				<div style="margin-left:auto">跳转到:

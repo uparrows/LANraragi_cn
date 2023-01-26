@@ -231,7 +231,7 @@ note('testing rules unflattening...');
     my @empty_rules;
     my @rules = LANraragi::Utils::Tags::unflat_tagrules( \@empty_rules );
     cmp_deeply( \@rules, [], 'unflattened empty rules' );
-    my @rules = LANraragi::Utils::Tags::unflat_tagrules(undef);
+    @rules = LANraragi::Utils::Tags::unflat_tagrules(undef);
     cmp_deeply( \@rules, [], 'unflattened undef array' );
 }
 

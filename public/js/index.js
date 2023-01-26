@@ -264,6 +264,11 @@ Index.updateTableControls = function (currentSort, currentOrder, totalPages, cur
 
     $("#namespace-sortby").val(currentSort);
     $("#order-sortby")[0].classList.remove("fa-sort-alpha-down", "fa-sort-alpha-up");
+    if(currentOrder === "asc"){
+        $("#order-sortby")[0].title = "递曾";
+    }else{
+        $("#order-sortby")[0].title = "递减";
+    }
     $("#order-sortby")[0].classList.add(currentOrder === "asc" ? "fa-sort-alpha-down" : "fa-sort-alpha-up");
 
     if (localStorage.indexViewMode === "1") {

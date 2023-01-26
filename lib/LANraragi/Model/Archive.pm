@@ -11,7 +11,6 @@ use File::Basename;
 use File::Copy "cp";
 use File::Path qw(make_path);
 
-use LANraragi::Model::Config;
 use LANraragi::Utils::Generic qw(remove_spaces remove_newlines render_api_response);
 use LANraragi::Utils::TempFolder qw(get_temp);
 use LANraragi::Utils::Logging qw(get_logger);

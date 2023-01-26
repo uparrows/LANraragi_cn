@@ -6,7 +6,6 @@ no warnings 'uninitialized';
 
 use Mojo::UserAgent;
 use LANraragi::Utils::Logging qw(get_logger);
-my ( $ipb_member_id, $ipb_pass_hash, $star ,$igneous ) = @_;
 
 #Meta-information about your plugin.
 sub plugin_info {
@@ -36,7 +35,7 @@ sub do_login {
 
     # Login plugins only receive the parameters entered by the user.
     shift;
-    
+        my ( $ipb_member_id, $ipb_pass_hash, $star ,$igneous ) = @_;
     return get_user_agent( $ipb_member_id, $ipb_pass_hash, $star ,$igneous );
 }
 
@@ -44,6 +43,8 @@ sub do_login {
 # Try crafting a Mojo::UserAgent object that can access E-Hentai.
 # Returns the UA object created.
 sub get_user_agent {
+
+    my ( $ipb_member_id, $ipb_pass_hash, $star, $igneous ) = @_;
 
     my $logger = get_logger( "E-Hentai Login", "plugins" );
     my $ua     = Mojo::UserAgent->new;
