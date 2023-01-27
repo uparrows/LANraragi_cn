@@ -116,8 +116,7 @@
 							<div id="carousel-empty"
 								style="height: 344px; display: flex; justify-content: center; align-items: center; flex-direction: column;">
 								<i class="fa fa-4x fa-sad-cry"></i>
-								<span style="margin-top: 12px;">No
-									results here.</span>
+								<span style="margin-top: 12px;">这里什么都没有 (╯‵□′)╯︵┻━┻ </span>
 							</div>
 						</div>
 					</div>
