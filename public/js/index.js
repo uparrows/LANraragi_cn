@@ -544,6 +544,7 @@ Index.loadTagSuggestions = function () {
     Server.callAPI("/api/database/stats?minweight=2", "GET", null, "无法加载标签建议",
         (data) => {
             // Get namespaces objects in the data array to fill the namespace-sortby combobox
+            // 这是生成主界面排序列表的一段代码, 没必要进行汉化, 除非要把整个Tag系统全部汉化否则只能进行词替换, 这将造成很大的工作量!
             const namespacesSet = new Set(data.map((element) => (element.namespace === "parody" ? "series" : element.namespace)));
             namespacesSet.forEach((element) => {
                 if (element !== "" && element !== "date_added") {
