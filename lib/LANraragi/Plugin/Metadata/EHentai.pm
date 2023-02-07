@@ -97,7 +97,7 @@ sub get_tags {
             return ( error => $gToken );
         }
 
-        $logger->info("No matching EH Gallery Found!");
+        $logger->info("找不到匹配的eh画廊!");
         return ( error => "No matching EH Gallery Found!" );
     } else {
         $logger->debug("EH API Tokens are $gID / $gToken");

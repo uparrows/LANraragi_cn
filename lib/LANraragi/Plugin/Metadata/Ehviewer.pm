@@ -45,11 +45,11 @@ sub get_tags {
     if ( $lrr_info->{oneshot_param} =~ /e(?:x|-)hentai\.org\/g\/(\d+)\/([0-9a-z]+)/i ) {
         $gallery_id    = $1;
         $gallery_token = $2;
-        $logger->debug("Directly using gallery ID $gallery_id and token $gallery_token from oneshot parameters.");
+        $logger->debug("直接使用给定的ID: $gallery_id 和 令牌: $gallery_token .");
     } elsif ( $lrr_info->{existing_tags} =~ /source:e(?:x|-)hentai\.org\/g\/(\d+)\/([0-9a-z]+)/i ) {
         $gallery_id    = $1;
         $gallery_token = $2;
-        $logger->debug("Directly using gallery ID $gallery_id and token $gallery_token from source tag.");
+        $logger->debug("直接使用源中的ID: $gallery_id 和 令牌: $gallery_token .");
     } else {
 
         # Use the gallery ID and token in the filename to directly locate the gallery. Note that the regex does not have
@@ -64,10 +64,10 @@ sub get_tags {
         #把.ehviewer从解压包提取出来
         if($path_in_archive) {
             $filepath = extract_file_from_archive( $lrr_info->{file_path}, $path_in_archive );
-            $logger->debug("Found file in archive at $filepath");
+            $logger->debug("在 $filepath 的压缩包中找到文件");
             $delete_after_parse = 1;
         } else {
-            return ( error => "No in-archive .ehviewer file found!" );
+            return ( error => "未在压缩包内查找到 .ehviewer 文件!" );
         }
 
         #打开.ehviewer
@@ -104,7 +104,7 @@ sub get_tags {
     }
 
     # Retrieve metadata directly using EH API.
-    $logger->info('Source identified. Calling E-Hentai metadata plugin to retrieve metadata from EH API.');
+    $logger->info('访问E-Hentai元数据插件从EH API中检索元数据.');
     my ( $eh_all_tags, $eh_title ) = LANraragi::Plugin::Metadata::EHentai::get_tags_from_EH( $ua, $gallery_id,
         $gallery_token, $save_jpn_title, $save_additional_metadata );
 
@@ -123,7 +123,7 @@ sub get_tags {
         # Return a hash containing the new metadata to be added to LRR.
         return %metadata;
     } else {
-        my $source_error = 'No matching EH gallery found. The archive title may have incorrect gallery identifiers.';
+        my $source_error = '找不到匹配的EH画廊。档案标题可能具有不正确的画廊标题。';
         $logger->error($source_error);
         return ( error => $source_error );
     }
